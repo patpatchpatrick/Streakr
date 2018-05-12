@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">LifeTrackerLite</string>
+
+    <!-- Labels for different app features [CHAR LIMIT=TBD] -->
+    <string name="feature_goals_habits">Goals/Habits</string>
+    <string name="feature_reminders">Reminders</string>
+    <string name="title_activity_goals_habits_feature">GoalsHabitsFeatureActivity</string>
+
+
 </resources>

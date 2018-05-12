@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Goals/Habits"
+            android:text="@string/feature_goals_habits"
             android:gravity="center"
             android:padding="16dp"
             />
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Reminders"
+            android:text="@string/feature_reminders"
             android:gravity="center"
             android:padding="16dp"
             />

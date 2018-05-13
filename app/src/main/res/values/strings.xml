@@ -6,5 +6,9 @@
     <string name="feature_reminders">Reminders</string>
     <string name="title_activity_goals_habits_feature">GoalsHabitsFeatureActivity</string>
 
+    <!-- Goal editor activity strings [CHAR LIMIT=TBD] -->
+    <string name="goal_name">Goal Name</string>
+    <string name="goal_name_hint">Name</string>
+    <string name="goal_type">Goal Type</string>
 
 </resources>

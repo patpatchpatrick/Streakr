@@ -11,6 +11,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/list_view_goals_habits"></ListView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/goal_icon"/>
+
 
 
 </RelativeLayout>

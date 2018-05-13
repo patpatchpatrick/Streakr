@@ -19,7 +19,8 @@
         <activity
             android:name=".GoalsHabitsFeatureActivity"
             android:label="@string/title_activity_goals_habits_feature"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".GoalEditorActivity"></activity>
     </application>
 
 </manifest>

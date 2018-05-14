@@ -3,6 +3,7 @@ package com.example.android.lifetrackerlite;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,8 +44,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //Insert Test Data before inserting a provider
-                insertTestGoal();
+                Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+                startActivity(intent);
 
             }
         });

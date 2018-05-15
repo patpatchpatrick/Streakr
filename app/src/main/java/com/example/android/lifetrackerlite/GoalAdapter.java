@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.android.lifetrackerlite.data.LTContract;
 
 public class GoalAdapter extends CursorAdapter{
+    //Cursor adapter for the goals data
+
     public GoalAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }

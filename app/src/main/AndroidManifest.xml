@@ -23,6 +23,10 @@
         <activity
             android:name=".GoalEditorActivity"
             android:label="Add a Goal"></activity>
+        <provider
+            android:authorities="com.example.android.lifetrackerlite"
+            android:name=".data.LTProvider"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

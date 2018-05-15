@@ -1,12 +1,33 @@
 package com.example.android.lifetrackerlite.data;
 
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 public final class LTContract {
 
+    //Contract for DB used to store data for this app
+
+    //URI Information
+    public static final String CONTENT_AUTHORITY = "com.example.android.lifetrackerlite";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final String PATH_GOALSHABITS = "goalshabits";
+
     private LTContract(){}
 
     public static final class GoalsHabitsEntry implements BaseColumns {
+
+        //The MIME type of the {@link #CONTENT_URI} for a list of pets.
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GOALSHABITS;
+
+
+         //The MIME type of the {@link #CONTENT_URI} for a single pet.
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GOALSHABITS;
+
+        //URI for GoalsHabits table
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,  PATH_GOALSHABITS);
 
 
         //Define table and columns for goals and habits data

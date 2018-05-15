@@ -22,7 +22,9 @@ import com.example.android.lifetrackerlite.data.LTDbHelper;
 
 import java.util.List;
 
-public class GoalsHabitsFeatureActivity extends AppCompatActivity {
+public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    private static final int GOALSHABITS_LOADER = 0;
 
     private GoalAdapter mGoalAdapter;
     private LTDbHelper mLTDbHelper;
@@ -32,12 +34,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
-
-        //Helper and DB to test database before implementing a provider
-        mLTDbHelper = new LTDbHelper(this);
-        mLTDatabase = mLTDbHelper.getReadableDatabase();
-        Cursor cursor = mLTDatabase.query(GoalsHabitsEntry.TABLE_NAME, null, null, null, null, null, null);
-
 
         FloatingActionButton addGoalButton = findViewById(R.id.add_goal);
         addGoalButton.setOnClickListener(new View.OnClickListener() {
@@ -50,18 +46,18 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity {
             }
         });
 
+        //Get background listview and set adapter to show goal data
         ListView goalsHabitsListView = (ListView) findViewById(R.id.list_view_goals_habits);
         mGoalAdapter = new GoalAdapter(this, null);
-        mGoalAdapter.swapCursor(cursor);
-
         goalsHabitsListView.setAdapter(mGoalAdapter);
 
-
+        //Initialize loader for goals data
+        getLoaderManager().initLoader(GOALSHABITS_LOADER, null, this);
 
 
     }
 
-    private void insertTestGoal() {
+   /** private void insertTestGoal() {
         SQLiteDatabase db = mLTDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, "Test Goal Name 2");
@@ -73,7 +69,37 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity {
         db.insert(GoalsHabitsEntry.TABLE_NAME, null, values);
 
 
+    } */
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
+        //Load all goals data to display
+
+        String[] projection = {
+                GoalsHabitsEntry._ID,
+                GoalsHabitsEntry.COLUMN_GOAL_NAME,
+                GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT,
+                GoalsHabitsEntry.COLUMN_GOAL_TYPE,
+                GoalsHabitsEntry.COLUMN_GOAL_START_DATE,
+                GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
+                GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
+
+        return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, null, null, null);
     }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+        mGoalAdapter.swapCursor(cursor);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        mGoalAdapter.swapCursor(null);
+
+    }
 }

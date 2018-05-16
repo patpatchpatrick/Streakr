@@ -74,7 +74,17 @@ public class LTProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+
+        final int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case GOALSHABITS:
+                return GoalsHabitsEntry.CONTENT_LIST_TYPE;
+            case GOALSHABITS_ID:
+                return GoalsHabitsEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 
     @Nullable
@@ -107,8 +117,34 @@ public class LTProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+
+        int rowsDeleted;
+
+        switch (match) {
+            case GOALSHABITS:
+                rowsDeleted = database.delete(GoalsHabitsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case GOALSHABITS_ID:
+                selection = GoalsHabitsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+
+                rowsDeleted = database.delete(GoalsHabitsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        //If 1 or more rows were deleted, notify all listeners that data at the given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 
     @Override

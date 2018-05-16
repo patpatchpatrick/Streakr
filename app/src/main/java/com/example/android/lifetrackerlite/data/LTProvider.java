@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 
@@ -79,7 +80,30 @@ public class LTProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case GOALSHABITS:
+                return insertGoal(uri, contentValues);
+            default:
+                //Query is not supported for a specific GOAL ID, will hit default exception
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
+
+    }
+
+    private Uri insertGoal(Uri uri, ContentValues values) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        long id = db.insert(GoalsHabitsEntry.TABLE_NAME, null, values);
+
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        //Notify any listeners that the data has changed for the URI
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return ContentUris.withAppendedId(uri, id);
     }
 
     @Override

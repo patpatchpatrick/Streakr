@@ -175,7 +175,88 @@ public class LTProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case GOALSHABITS:
+                return updateGoal(uri, contentValues, selection, selectionArgs);
+            case GOALSHABITS_ID:
+                // For the GOALSHABITS_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = GoalsHabitsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateGoal(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
     }
+
+    /**
+     * Update goals in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more goals).
+     * Return the number of rows that were successfully updated.
+     */
+    private int updateGoal(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // If the GoalsHabitsEntry.Name key is present,
+        // check that the name value is not null.
+        if (values.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NAME)) {
+            String goalName = values.getAsString(GoalsHabitsEntry.COLUMN_GOAL_NAME);
+            if (goalName == null) {
+                throw new IllegalArgumentException("Goal requires a name");
+            }
+        }
+
+        // If the GoalsHabitsEntry.GoalOrHabit key is present,
+        // check that the goal or habit value is valid.
+        if (values.containsKey(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT)) {
+            Integer goal = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT);
+            if (goal == null || !GoalsHabitsEntry.isValidGoal(goal)) {
+                throw new IllegalArgumentException("Goal requires valid goal or habit int");
+            }
+        }
+
+        // If the GoalsHabitsEntry.GoalType key is present,
+        // check that the goal or habit value is valid.
+        if (values.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)) {
+            Integer goalType = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
+            if (goalType == null || !GoalsHabitsEntry.isValidGoalType(goalType)) {
+                throw new IllegalArgumentException("Goal requires valid goal type");
+            }
+        }
+
+        // If the GoalsHabitsEntry.GoalCompleted key is present,
+        // check that the goal or habit value is valid.
+        if (values.containsKey(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED)) {
+            Integer goalCompleted = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED);
+            if (goalCompleted == null || !GoalsHabitsEntry.isValidGoalCompleted(goalCompleted)) {
+                throw new IllegalArgumentException("Goal requires valid goal completed int");
+            }
+        }
+
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        // Otherwise, get writeable database to update the data
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = database.update(GoalsHabitsEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
+    }
+
+
+
+
 }
+

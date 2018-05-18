@@ -4,6 +4,10 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public final class LTContract {
 
     //Contract for DB used to store data for this app
@@ -45,15 +49,46 @@ public final class LTContract {
         public static final int GOAL = 0;
         public static final int HABIT = 1;
 
+        public static final boolean isValidGoal(int goal) {
+            if (goal ==  GOAL || goal == HABIT ) {
+                return true;
+            }
+            return false;
+        }
+
+
         public static final int GOAL_TYPE_OTHER = 0;
+
         public static final int HABIT_TYPE_OTHER = 1;
         public static final int GOAL_TYPE_FITNESS = 2;
         public static final int GOAL_TYPE_READ = 3;
         public static final int HABIT_TYPE_NOFAP = 4;
         public static final int HABIT_TYPE_DRUGS = 5;
+        private static final ArrayList<Integer> goalTypes = new ArrayList<Integer>() {{
+            add(GOAL_TYPE_OTHER);
+            add(HABIT_TYPE_OTHER);
+            add(GOAL_TYPE_FITNESS);
+            add(GOAL_TYPE_READ);
+            add(HABIT_TYPE_NOFAP);
+            add(HABIT_TYPE_DRUGS);
+        }};
+
+        public static final boolean isValidGoalType(int goalType) {
+            if (goalTypes.contains(goalType)) {
+                return true;
+            }
+            return false;
+        }
 
         public static final int GOAL_COMPLETED_NO = 0;
         public static final int GOAL_COMPLETED_YES = 1;
+
+        public static final boolean isValidGoalCompleted(int goalCompleted) {
+            if (goalCompleted ==  GOAL_COMPLETED_NO || goalCompleted == GOAL_COMPLETED_YES ) {
+                return true;
+            }
+            return false;
+        }
 
     }
 

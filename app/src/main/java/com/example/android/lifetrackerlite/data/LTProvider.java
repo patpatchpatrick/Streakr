@@ -102,6 +102,33 @@ public class LTProvider extends ContentProvider {
     }
 
     private Uri insertGoal(Uri uri, ContentValues values) {
+
+        // Checks to determine values are ok before inserting into database
+        // Check to ensure name is not null
+        String goalName = values.getAsString(GoalsHabitsEntry.COLUMN_GOAL_NAME);
+        if (goalName == null) {
+            throw new IllegalArgumentException("Goal requires a name");
+        }
+
+        // Check that the goal is valid
+        Integer goal = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT);
+        if (goal == null || !GoalsHabitsEntry.isValidGoal(goal)) {
+            throw new IllegalArgumentException("Goal requires valid goal or habit int");
+        }
+
+        // Check that the goal type is valid
+        Integer goalType = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
+        if (goalType == null || !GoalsHabitsEntry.isValidGoalType(goalType)) {
+            throw new IllegalArgumentException("Goal requires valid goal type");
+        }
+
+        // Check that the goal completed int is valid
+        Integer goalCompleted = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED);
+        if (goalCompleted == null || !GoalsHabitsEntry.isValidGoalCompleted(goalCompleted)) {
+            throw new IllegalArgumentException("Goal requires valid goal completed int");
+        }
+
+        //If data is valid, insert data into SQL database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         long id = db.insert(GoalsHabitsEntry.TABLE_NAME, null, values);
 

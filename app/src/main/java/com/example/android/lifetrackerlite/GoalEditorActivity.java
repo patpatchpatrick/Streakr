@@ -2,6 +2,8 @@ package com.example.android.lifetrackerlite;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,33 +20,16 @@ import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 
 import java.util.Calendar;
 
-public class GoalEditorActivity extends AppCompatActivity {
+public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private Spinner mGoalTypeSpinner;
 
     private int mGoalType;
 
-    //Variables for DatePicker date used for Goal Start Date
-    private int mStartYear;
-    private int mStartMonth;
-    private int mStartDay;
     //Views for DatePicker used for Goal Start Date
-    private TextView mDateDisplay;
+    public TextView mDateDisplay;
     private Button mPickDate;
-
-    static final int DATE_DIALOG_ID = 0;
-
-    //Set input Goal Start Date variables based on date selection
-    private DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    mStartYear = year;
-                    mStartMonth = monthOfYear;
-                    mStartDay = dayOfMonth;
-                    updateDisplay();
-                }
-            };
+    private Button mAddGoal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +42,20 @@ public class GoalEditorActivity extends AppCompatActivity {
 
         mDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mPickDate = (Button) findViewById(R.id.goal_start_date_button);
+        mAddGoal = (Button) findViewById(R.id.add_goal_editor);
 
         mPickDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog(DATE_DIALOG_ID);
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(),  "datePicker");
             }
         });
-
-        // Get current date
-        final Calendar c = Calendar.getInstance();
-        mStartYear = c.get(Calendar.YEAR);
-        mStartMonth = c.get(Calendar.MONTH);
-        mStartDay = c.get(Calendar.DAY_OF_MONTH);
-
-        // Display current date
-        updateDisplay();
+        mAddGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Add the Database Insert method here
+            }
+        });
 
     }
 
@@ -111,23 +95,29 @@ public class GoalEditorActivity extends AppCompatActivity {
         });
     }
 
-    private void updateDisplay() {
-        this.mDateDisplay.setText(
-                new StringBuilder()
-                        // Month is 0 based so add 1
-                        .append(mStartMonth + 1).append("-")
-                        .append(mStartDay).append("-")
-                        .append(mStartYear).append(" "));
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        //Set date display when date set by DatePicker
+        //Add one to month since months indexed starting at 0
+        month = month + 1;
+        mDateDisplay.setText(year + "-" + month + "-" + day);
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                return new DatePickerDialog(this,
-                        mDateSetListener,
-                        mStartYear, mStartMonth, mStartDay);
+
+    public static class DatePickerFragment extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), (GoalEditorActivity)getActivity(), year, month, day);
         }
-        return null;
+
+
     }
 }

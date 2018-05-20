@@ -9,6 +9,9 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.android.lifetrackerlite.data.LTContract;
+import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+
+import java.text.SimpleDateFormat;
 
 public class GoalAdapter extends CursorAdapter{
     //Cursor adapter for the goals data
@@ -31,8 +34,17 @@ public class GoalAdapter extends CursorAdapter{
         String goalNameText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));
         goalName.setText(goalNameText);
 
+        //Set details string
         TextView goalDetails = (TextView) view.findViewById(R.id.goal_details);
-        goalDetails.setText("Test Goal Details");
+        String goalDetailString = "";
+        goalDetailString += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE))) + "\n";
+        //Convert unix start date to string and add to details
+        long startDate = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+        String date = sdf.format(startDate);
+        goalDetailString += date;
+        goalDetails.setText(goalDetailString);
+
 
     }
 }

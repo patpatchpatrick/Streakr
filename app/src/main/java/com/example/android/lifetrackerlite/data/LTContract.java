@@ -90,6 +90,19 @@ public final class LTContract {
             return false;
         }
 
+        public static final String getGoalTypeString(int goalType) {
+            switch (goalType){
+                case GOAL_TYPE_OTHER:
+                    return "Other";
+                case GOAL_TYPE_FITNESS:
+                    return "Fitness";
+                case GOAL_TYPE_READ:
+                    return "Read";
+                default:
+                    return "Unknown Goal";
+            }
+        }
+
     }
 
 }

@@ -3,31 +3,41 @@ package com.example.android.lifetrackerlite;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    private Spinner mGoalTypeSpinner;
 
     private int mGoalType;
+    private int mStartYear;
+    private int mStartMonth;
+    private int mStartDay;
 
     //Views for DatePicker used for Goal Start Date
     public TextView mDateDisplay;
+    private EditText mNameEditText;
+    private Spinner mGoalTypeSpinner;
     private Button mPickDate;
     private Button mAddGoal;
 
@@ -40,6 +50,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
         setupSpinner();
 
+        mNameEditText = (EditText) findViewById(R.id.name_edit_text);
         mDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mPickDate = (Button) findViewById(R.id.goal_start_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
@@ -53,7 +64,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mAddGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Add the Database Insert method here
+                //InsertGoal when Add Goal button is clicked
+                insertGoal();
             }
         });
 
@@ -95,12 +107,51 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         });
     }
 
+    public void insertGoal(){
+
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
+        long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        //Log.d("TestDate", "date unix time: " + startDate);
+        ContentValues values = new ContentValues();
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
+
+        //Insert values into database
+        Uri uri = getContentResolver().insert(GoalsHabitsEntry.CONTENT_URI, values);
+
+        Toast.makeText(this, "Goal Inserted", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private long dateToUnixTime(int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR, 5);
+        c.set(Calendar.MINUTE, 30);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTimeInMillis()/1000;
+    }
+
+
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         //Set date display when date set by DatePicker
+        mStartYear = year;
+        mStartMonth = month;
+        mStartDay = day;
+
         //Add one to month since months indexed starting at 0
         month = month + 1;
         mDateDisplay.setText(year + "-" + month + "-" + day);
+
     }
 
 

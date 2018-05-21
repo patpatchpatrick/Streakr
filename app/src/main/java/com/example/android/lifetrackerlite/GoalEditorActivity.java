@@ -3,7 +3,12 @@ package com.example.android.lifetrackerlite;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +31,10 @@ import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import java.util.Calendar;
 import java.util.Date;
 
-public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    private Uri mCurrentGoalUri;
+    private static final int GOAL_EDIT_LOADER = 1;
 
     private int mGoalType;
     private int mStartYear;
@@ -46,6 +53,26 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
 
+        //Get the intent that created activity to determine if activity should be in "insert mode"
+        //for inserting a new goal or "edit mode" for editing an existing goal.
+        Intent intent = getIntent();
+        mCurrentGoalUri = intent.getData();
+
+        if (mCurrentGoalUri == null) {
+            setTitle(R.string.add_goal_activity_title);
+            Button deleteButton = (Button) findViewById(R.id.delete_goal_editor);
+            Button addButton = (Button) findViewById(R.id.add_goal_editor);
+            deleteButton.setVisibility(View.GONE);
+            addButton.setText(R.string.add_goal_button);
+        } else {
+            setTitle(getString(R.string.edit_goal_activity_title));
+            getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
+            Button deleteButton = (Button) findViewById(R.id.delete_goal_editor);
+            Button addButton = (Button) findViewById(R.id.add_goal_editor);
+            deleteButton.setVisibility(View.VISIBLE);
+            addButton.setText(R.string.save_goal_button);
+        }
+
         //Find views to read user input from
         mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
         setupSpinner();
@@ -58,7 +85,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mPickDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getFragmentManager(),  "datePicker");
+                newFragment.show(getFragmentManager(), "datePicker");
             }
         });
         mAddGoal.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +93,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             public void onClick(View view) {
                 //InsertGoal when Add Goal button is clicked
                 insertGoal();
+                finish();
             }
         });
 
@@ -107,7 +135,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         });
     }
 
-    public void insertGoal(){
+    public void insertGoal() {
 
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
@@ -137,7 +165,68 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
 
-        return c.getTimeInMillis()/1000;
+        return c.getTimeInMillis() / 1000;
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String[] projection = {
+                GoalsHabitsEntry._ID,
+                GoalsHabitsEntry.COLUMN_GOAL_NAME,
+                GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT,
+                GoalsHabitsEntry.COLUMN_GOAL_TYPE,
+                GoalsHabitsEntry.COLUMN_GOAL_START_DATE,
+                GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
+                GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
+
+        return new CursorLoader(this,
+                mCurrentGoalUri,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if (cursor.getCount() >= 1) {
+            while (cursor.moveToNext()) {
+
+                // Load the data from the cursor for the single goal you are editing
+                String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+                int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+                int startDate = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
+
+                mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
+                //TODO Determine goal type spinner position... Find a way to remove this code by auomatically determining spinner position
+                int goalTypeSpinnerPosition = 0;
+                switch (goalType) {
+                    case GoalsHabitsEntry.GOAL_TYPE_FITNESS:
+                        goalTypeSpinnerPosition = 1;
+                        break;
+                    case GoalsHabitsEntry.GOAL_TYPE_READ:
+                        goalTypeSpinnerPosition = 2;
+                        break;
+                    default:
+                        break;
+                }
+                mGoalTypeSpinner.setSelection(goalTypeSpinnerPosition);
+
+            }
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        // Clear Edit Views upon reset.
+
+        mNameEditText.setText("", TextView.BufferType.EDITABLE);
+        mGoalTypeSpinner.setAdapter(null);
+
     }
 
 
@@ -154,7 +243,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     }
 
-
     public static class DatePickerFragment extends DialogFragment {
 
         @Override
@@ -166,7 +254,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             int day = c.get(Calendar.DAY_OF_MONTH);
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), (GoalEditorActivity)getActivity(), year, month, day);
+            return new DatePickerDialog(getActivity(), (GoalEditorActivity) getActivity(), year, month, day);
         }
 
 

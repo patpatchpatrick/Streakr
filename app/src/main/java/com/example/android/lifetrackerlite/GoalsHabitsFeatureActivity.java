@@ -1,6 +1,7 @@
 package com.example.android.lifetrackerlite;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.lifetrackerlite.data.LTContract;
@@ -40,6 +42,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             @Override
             public void onClick(View view) {
 
+                //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
                 startActivity(intent);
 
@@ -50,6 +53,21 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         ListView goalsHabitsListView = (ListView) findViewById(R.id.list_view_goals_habits);
         mGoalAdapter = new GoalAdapter(this, null);
         goalsHabitsListView.setAdapter(mGoalAdapter);
+        goalsHabitsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+
+                // Set the URI on the intent of the goal clicked to be the id of the clicked item
+                Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, id);
+
+                //Set the data on the intent to be the current URI
+                intent.setData(currentGoalUri);
+
+                // Launch the intent to the editor activity to open the activity in "edit mode"
+                startActivity(intent);
+            }
+        });
 
         //Initialize loader for goals data
         getLoaderManager().initLoader(GOALSHABITS_LOADER, null, this);

@@ -45,6 +45,8 @@ public class GoalAdapter extends CursorAdapter{
         goalDetailString += date;
         goalDetails.setText(goalDetailString);
 
+        TextView streakLength = (TextView) view.findViewById(R.id.streak_length);
+
 
     }
 }

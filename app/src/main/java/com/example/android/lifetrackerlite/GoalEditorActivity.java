@@ -47,6 +47,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private Spinner mGoalTypeSpinner;
     private Button mPickDate;
     private Button mAddGoal;
+    private Button mDeleteGoal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +59,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         Intent intent = getIntent();
         mCurrentGoalUri = intent.getData();
 
-        if (mCurrentGoalUri == null) {
-            setTitle(R.string.add_goal_activity_title);
-            Button deleteButton = (Button) findViewById(R.id.delete_goal_editor);
-            Button addButton = (Button) findViewById(R.id.add_goal_editor);
-            deleteButton.setVisibility(View.GONE);
-            addButton.setText(R.string.add_goal_button);
-        } else {
-            setTitle(getString(R.string.edit_goal_activity_title));
-            getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
-            Button deleteButton = (Button) findViewById(R.id.delete_goal_editor);
-            Button addButton = (Button) findViewById(R.id.add_goal_editor);
-            deleteButton.setVisibility(View.VISIBLE);
-            addButton.setText(R.string.save_goal_button);
-        }
-
         //Find views to read user input from
         mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
         setupSpinner();
@@ -81,6 +67,18 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mPickDate = (Button) findViewById(R.id.goal_start_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
+        mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
+
+        if (mCurrentGoalUri == null) {
+            setTitle(R.string.add_goal_activity_title);
+            mDeleteGoal.setVisibility(View.GONE);
+            mAddGoal.setText(R.string.add_goal_button);
+        } else {
+            setTitle(getString(R.string.edit_goal_activity_title));
+            getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
+            mDeleteGoal.setVisibility(View.VISIBLE);
+            mAddGoal.setText(R.string.save_goal_button);
+        }
 
         mPickDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -88,14 +86,28 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 newFragment.show(getFragmentManager(), "datePicker");
             }
         });
+
         mAddGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //InsertGoal when Add Goal button is clicked
-                insertGoal();
+                if (mCurrentGoalUri == null) {
+                    //Insert Goal when Add Goal button is clicked if in "Insert Mode"
+                    insertGoal();
+                } else {
+                    //Update Gal when Add Goal button is clicked  if in "Edit Mode"
+                    updateGoal();
+                }
                 finish();
             }
         });
+
+        mDeleteGoal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteGoal();
+            }
+        });
+
 
     }
 
@@ -137,6 +149,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     public void insertGoal() {
 
+        //TODO insert sanity checks for blank dates
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
@@ -153,6 +166,33 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         Toast.makeText(this, "Goal Inserted", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void updateGoal() {
+
+        //TODO insert sanity checks for blank dates
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
+        long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        //Log.d("TestDate", "date unix time: " + startDate);
+        ContentValues values = new ContentValues();
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
+
+        int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
+
+        Toast.makeText(this, "Goal Updated", Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteGoal() {
+        // If Delete Button is clicked from within Editor Activity, pet is deleted.
+
+        int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
+        Toast.makeText(this, "Goal Deleted", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private long dateToUnixTime(int year, int month, int day) {

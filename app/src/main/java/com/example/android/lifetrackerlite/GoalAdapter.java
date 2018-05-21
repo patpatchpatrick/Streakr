@@ -45,6 +45,7 @@ public class GoalAdapter extends CursorAdapter{
         goalDetailString += date;
         goalDetails.setText(goalDetailString);
 
+        //TODO set streak length based  on calculation from start date to today
         TextView streakLength = (TextView) view.findViewById(R.id.streak_length);
 
 

@@ -1,51 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/goal_icon"
+        android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"/>
+        android:src="@drawable/goal_icon" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="2">
+        android:layout_weight="2"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/goal_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:gravity="bottom"
-            tools:text = "Test"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/goal_name"/>
+            tools:text="Test" />
+
         <TextView
+            android:id="@+id/goal_details"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            tools:text = "Test"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/goal_details"/>
+            tools:text="Test" />
 
 
     </LinearLayout>
 
-    <TextView
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/streak_length"
-        android:layout_weight="1"
-        tools:text="Streak"
-        android:gravity="center"
-        />
+        android:layout_weight="1">
+
+        <!-- TODO find way to center textview in the parent linearlayout (may need to change
+         to a relative layout -->
+        <!-- TODO set text color in colors.xml file -->
+        <TextView
+            android:id="@+id/streak_length"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/streak_length_circle"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            tools:text="Streak" />
+
+    </RelativeLayout>
 
 </LinearLayout>

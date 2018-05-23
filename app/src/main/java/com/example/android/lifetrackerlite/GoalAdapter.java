@@ -30,11 +30,12 @@ public class GoalAdapter extends CursorAdapter{
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
+        //Set goal name
         TextView goalName = (TextView) view.findViewById(R.id.goal_name);
         String goalNameText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));
         goalName.setText(goalNameText);
 
-        //Set details string
+        //Set goal details string
         TextView goalDetails = (TextView) view.findViewById(R.id.goal_details);
         String goalDetailString = "";
         goalDetailString += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE))) + "\n";
@@ -45,9 +46,12 @@ public class GoalAdapter extends CursorAdapter{
         goalDetailString += date;
         goalDetails.setText(goalDetailString);
 
-        //TODO set streak length based  on calculation from start date to today
+        //Set streak length
+        long millis = System.currentTimeMillis();
+        long streakLengthMillis = millis - startDate;
+        long streakLengthDays = streakLengthMillis / (1000*60*60*24);
         TextView streakLength = (TextView) view.findViewById(R.id.streak_length);
-
+        streakLength.setText(Long.toString(streakLengthDays));
 
     }
 }

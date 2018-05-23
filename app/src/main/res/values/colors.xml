@@ -5,6 +5,36 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorDate">#FF4081</color>
 
+    <!-- Color for a streak length with magnitude 0 to 10% -->
+    <color name="streakLength10">#4A7BA7</color>
+
+    <!-- Color for a streak length with magnitude 10 to 20% -->
+    <color name="streakLength20">#04B4B3</color>
+
+    <!-- Color for a streak length with magnitude 20 to 30% -->
+    <color name="streakLength30">#10CAC9</color>
+
+    <!-- Color for a streak length with magnitude 30 to 40% -->
+    <color name="streakLength40">#F5A623</color>
+
+    <!-- Color for a streak length with magnitude 40 to 50% -->
+    <color name="streakLength50">#FF7D50</color>
+
+    <!-- Color for a streak length with magnitude 50 to 60% -->
+    <color name="streakLength60">#FC6644</color>
+
+    <!-- Color for a streak length with magnitude 60 to 70% -->
+    <color name="streakLength70">#E75F40</color>
+
+    <!-- Color for a streak length with magnitude 70 to 80% -->
+    <color name="streakLength80">#E13A20</color>
+
+    <!-- Color for a streak length with magnitude 80 to 90% -->
+    <color name="streakLength90">#D93218</color>
+
+    <!-- Color for a streak length with magnitude 100% + -->
+    <color name="streakLength100">#C03823</color>
+
 
 
 

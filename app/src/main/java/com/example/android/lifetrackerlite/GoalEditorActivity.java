@@ -195,20 +195,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         finish();
     }
 
-    private long dateToUnixTime(int year, int month, int day) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, day);
-        c.set(Calendar.HOUR, 5);
-        c.set(Calendar.MINUTE, 30);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return c.getTimeInMillis() / 1000;
-    }
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
@@ -267,6 +253,19 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mNameEditText.setText("", TextView.BufferType.EDITABLE);
         mGoalTypeSpinner.setAdapter(null);
 
+    }
+
+    private long dateToUnixTime(int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR, 5);
+        c.set(Calendar.MINUTE, 30);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTimeInMillis() / 1000;
     }
 
 

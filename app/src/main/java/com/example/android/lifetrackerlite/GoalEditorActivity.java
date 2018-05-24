@@ -205,8 +205,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
-        long endDate = dateToUnixTime(mEndYear, mStartMonth, mStartDay);
-        //Log.d("TestDate", "date unix time: " + startDate);
+        long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);

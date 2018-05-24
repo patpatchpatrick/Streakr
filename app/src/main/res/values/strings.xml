@@ -12,6 +12,8 @@
     <string name="goal_type">Goal Type</string>
     <string name="goal_start_date">Start Date</string>
     <string name="goal_start_date_button">Select Date</string>
+    <string name="goal_end_date_button">Select Date</string>
+    <string name="goal_end_date">Target End Date</string>
     <string name="add_goal_activity_title">Add a Goal</string>
     <string name="edit_goal_activity_title">Edit a Goal</string>
     <string name="save_goal_button">Save Goal</string>

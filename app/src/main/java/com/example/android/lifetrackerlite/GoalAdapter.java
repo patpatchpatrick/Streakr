@@ -31,19 +31,26 @@ public class GoalAdapter extends CursorAdapter{
     public void bindView(View view, Context context, Cursor cursor) {
 
         //Set goal name
-        TextView goalName = (TextView) view.findViewById(R.id.goal_name);
-        String goalNameText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));
-        goalName.setText(goalNameText);
+        TextView goalNameType = (TextView) view.findViewById(R.id.goal_name);
+        String goalNameTypeText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME)) + "\n";
+        goalNameTypeText += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE)));
+        goalNameType.setText(goalNameTypeText);
 
         //Set goal details string
         TextView goalDetails = (TextView) view.findViewById(R.id.goal_details);
         String goalDetailString = "";
-        goalDetailString += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE))) + "\n";
         //Convert unix start date to string and add to details
         long startDate = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-        String date = sdf.format(startDate);
-        goalDetailString += date;
+        SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+        String startDateString = startSdf.format(startDate);
+        goalDetailString += "S: " + startDateString + "\n";
+        //Convert unix end date to string and add to details
+        long endDate = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
+        SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
+        String endDateString = endSdf.format(startDate);
+        goalDetailString += "E: " + endDateString;
+
+
         goalDetails.setText(goalDetailString);
 
         //Set streak length

@@ -37,15 +37,25 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final int GOAL_EDIT_LOADER = 1;
 
     private int mGoalType;
+    private int mStartOrEndDate;
+    private static final int GOAL_START_DATE = 0;
+    private static final int GOAL_END_DATE = 1;
     private int mStartYear;
     private int mStartMonth;
     private int mStartDay;
+    private boolean mStartDateSet;
+    private boolean mEndDateSet;
+    private int mEndYear;
+    private int mEndMonth;
+    private int mEndDay;
 
     //Views for DatePicker used for Goal Start Date
-    public TextView mDateDisplay;
+    private TextView mGoalStartDateDisplay;
+    private TextView mGoalEndDateDisplay;
     private EditText mNameEditText;
     private Spinner mGoalTypeSpinner;
-    private Button mPickDate;
+    private Button mPickStartDate;
+    private Button mPickEndDate;
     private Button mAddGoal;
     private Button mDeleteGoal;
 
@@ -64,10 +74,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         setupSpinner();
 
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
-        mDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
-        mPickDate = (Button) findViewById(R.id.goal_start_date_button);
+        mGoalStartDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
+        mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
+        mPickStartDate = (Button) findViewById(R.id.goal_start_date_button);
+        mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
         mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
+
+        //Dates are not set when activity starts
+        mStartDateSet = false;
+        mEndDateSet = false;
 
         if (mCurrentGoalUri == null) {
             setTitle(R.string.add_goal_activity_title);
@@ -80,8 +96,22 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             mAddGoal.setText(R.string.save_goal_button);
         }
 
-        mPickDate.setOnClickListener(new View.OnClickListener() {
+        mPickStartDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //If selecting a start date, set the mStartorEndDate variable to be GOAL START DATE
+                //to let the system know to set dates for StartDate variable
+                mStartOrEndDate = GOAL_START_DATE;
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        mPickEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //If selecting an end date, set the mStartorEndDate variable to be GOAL END DATE
+                //to let the system know to set dates for EndDate variable
+                mStartOrEndDate = GOAL_END_DATE;
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
             }
@@ -153,12 +183,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
-        //Log.d("TestDate", "date unix time: " + startDate);
+        long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
 
         //Insert values into database
@@ -174,12 +205,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        long endDate = dateToUnixTime(mEndYear, mStartMonth, mStartDay);
         //Log.d("TestDate", "date unix time: " + startDate);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
 
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
@@ -268,17 +301,49 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         return c.getTimeInMillis() / 1000;
     }
 
+    private boolean endDateAfterStartDate() {
+        //Check if goal end date is after start date, if so, make Toast.
+        long startDateUnix = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        long endDateUnix = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
+        if (startDateUnix >= endDateUnix) {
+            Toast.makeText(this, "End Date must be after Start Date", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        //Set date display when date set by DatePicker
-        mStartYear = year;
-        mStartMonth = month;
-        mStartDay = day;
+        //Set date display when date set by DatePicker.  Determine if the date is a start date
+        //or if the date is an end date and set the date integer values accordingly.
+        if (mStartOrEndDate == GOAL_START_DATE) {
+            mStartYear = year;
+            mStartMonth = month;
+            mStartDay = day;
+            mStartDateSet = true;
+            //If end date is not after start date, display toast message and return
+            if (mEndDateSet && !endDateAfterStartDate()) {
+                return;
+            }
+            //Add one to month since months indexed starting at 0
+            month = month + 1;
+            mGoalStartDateDisplay.setText(year + "-" + month + "-" + day);
+        } else if (mStartOrEndDate == GOAL_END_DATE) {
+            mEndYear = year;
+            mEndMonth = month;
+            mEndDay = day;
+            mEndDateSet = true;
+            //If end date is not after start date, display toast message and return
+            if (mStartDateSet && !endDateAfterStartDate()) {
+                return;
+            }
+            month = month + 1;
+            mGoalEndDateDisplay.setText(year + "-" + month + "-" + day);
+        } else {
+            return;
+        }
 
-        //Add one to month since months indexed starting at 0
-        month = month + 1;
-        mDateDisplay.setText(year + "-" + month + "-" + day);
 
     }
 

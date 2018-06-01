@@ -18,6 +18,14 @@
     <string name="edit_goal_activity_title">Edit a Goal</string>
     <string name="save_goal_button">Save Goal</string>
     <string name="add_goal_button">Add Goal</string>
+    <string name="delete_goal_button">Delete Goal</string>
+    <string name="habit_name">Habit Name</string>
+    <string name="habit_type">Habit Type</string>
+    <string name="add_habit_activity_title">Add a Habit</string>
+    <string name="edit_habit_activity_title">Edit a Habit</string>
+    <string name="save_habit_button">Save Habit</string>
+    <string name="add_habit_button">Add Habit</string>
+    <string name="delete_habit_button">Delete Habit</string>
 
 
     <!-- Goal type spinner dropdown strings [CHAR LIMIT=TBD] -->

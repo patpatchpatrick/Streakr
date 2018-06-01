@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.lifetrackerlite.data.LTContract;
@@ -38,6 +39,15 @@ public class GoalAdapter extends CursorAdapter {
         String goalNameTypeText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME)) + "\n";
         goalNameTypeText += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE)));
         goalNameType.setText(goalNameTypeText);
+
+        int goalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
+        ImageView goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);
+        if (goalOrHabit == GoalsHabitsEntry.GOAL) {
+            goalHabitIcon.setImageResource(R.drawable.goal_icon);
+        }
+        if (goalOrHabit == GoalsHabitsEntry.HABIT) {
+            goalHabitIcon.setImageResource(R.drawable.habit_icon);
+        }
 
         //Get data for goal details string
 

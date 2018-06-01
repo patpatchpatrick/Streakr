@@ -48,6 +48,7 @@ public final class LTContract {
         //Define input variables for goals and habits table
         public static final int GOAL = 0;
         public static final int HABIT = 1;
+        public static final int NEITHER = 3;
 
         public static final boolean isValidGoal(int goal) {
             if (goal ==  GOAL || goal == HABIT ) {

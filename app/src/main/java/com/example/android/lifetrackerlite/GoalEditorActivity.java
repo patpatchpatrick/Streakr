@@ -38,6 +38,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final int GOAL_EDIT_LOADER = 1;
 
     private int mGoalType;
+    private int mGoalOrHabit;
     private int mStartOrEndDate;
     private static final int GOAL_START_DATE = 0;
     private static final int GOAL_END_DATE = 1;
@@ -51,6 +52,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private int mEndDay;
 
     //Views for DatePicker used for Goal Start Date
+    private TextView mGoalNameTextView;
+    private TextView mGoalTypeTextView;
     private TextView mGoalStartDateDisplay;
     private TextView mGoalEndDateDisplay;
     private EditText mNameEditText;
@@ -70,10 +73,15 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         Intent intent = getIntent();
         mCurrentGoalUri = intent.getData();
 
+        //Check if you are editing a goal or a habit. if neither then set the default value to NEITHER
+        mGoalOrHabit = intent.getIntExtra("GoalorHabit", GoalsHabitsEntry.NEITHER);
+
         //Find views to read user input from
         mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
         setupSpinner();
 
+        mGoalNameTextView = (TextView) findViewById(R.id.goal_name_textview);
+        mGoalTypeTextView = (TextView) findViewById(R.id.goal_type_textview);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
         mGoalStartDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
@@ -87,14 +95,21 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mEndDateSet = false;
 
         if (mCurrentGoalUri == null) {
-            setTitle(R.string.add_goal_activity_title);
-            mDeleteGoal.setVisibility(View.GONE);
-            mAddGoal.setText(R.string.add_goal_button);
+            //If editing a goal, set strings within editor activity to goal strings
+            if (mGoalOrHabit == GoalsHabitsEntry.GOAL) {
+                //Set up workspace and strings for Add Goal mode
+                setAddGoalWorkspace();
+            }
+            //If editing a habit, set strings within editor activity to habit strings
+            if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                //Set up workspace and strings for Add Habit mode
+                setAddHabitWorkspace();
+            }
+
         } else {
-            setTitle(getString(R.string.edit_goal_activity_title));
+            //Set up workspace and strings for Edit Goal mode
+            setEditGoalWorkspace();
             getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
-            mDeleteGoal.setVisibility(View.VISIBLE);
-            mAddGoal.setText(R.string.save_goal_button);
         }
 
         mPickStartDate.setOnClickListener(new View.OnClickListener() {
@@ -187,7 +202,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String nameString = mNameEditText.getText().toString().trim();
 
         //Ensure fields are properly defined before inserting a new goal
-        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate()) {
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
             Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -198,7 +213,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
@@ -220,7 +235,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String nameString = mNameEditText.getText().toString().trim();
 
         //Ensure fields are properly defined before updating a goal
-        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate()) {
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
             Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -229,7 +244,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
@@ -252,6 +267,43 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         clearStartAndEndDates();
         finish();
     }
+
+    private void setAddGoalWorkspace() {
+        //Set up workspace and strings for Add Goal mode
+        setTitle(R.string.add_goal_activity_title);
+        mDeleteGoal.setVisibility(View.GONE);
+        mAddGoal.setText(R.string.add_goal_button);
+        mGoalNameTextView.setText(R.string.goal_name);
+        mGoalTypeTextView.setText(R.string.goal_type);
+    }
+
+    private void setAddHabitWorkspace() {
+        //Set up workspace and strings for Add Habit mode
+        setTitle(R.string.add_habit_activity_title);
+        mDeleteGoal.setVisibility(View.GONE);
+        mAddGoal.setText(R.string.add_habit_button);
+        mGoalNameTextView.setText(R.string.habit_name);
+        mGoalTypeTextView.setText(R.string.habit_type);
+    }
+
+    private void setEditGoalWorkspace() {
+        //Set up workspace and strings for Edit Goal mode
+        setTitle(getString(R.string.edit_goal_activity_title));
+        mDeleteGoal.setVisibility(View.VISIBLE);
+        mAddGoal.setText(R.string.save_goal_button);
+        mDeleteGoal.setText(R.string.delete_goal_button);
+    }
+
+    private void setEditHabitWorkspace() {
+        //Set up workspace and strings for Edit Habit mode
+        setTitle(getString(R.string.edit_habit_activity_title));
+        mDeleteGoal.setVisibility(View.VISIBLE);
+        mAddGoal.setText(R.string.save_habit_button);
+        mGoalNameTextView.setText(R.string.habit_name);
+        mGoalTypeTextView.setText(R.string.habit_type);
+        mDeleteGoal.setText(R.string.delete_habit_button);
+    }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -280,6 +332,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                 // Load the data from the cursor for the single goal you are editing
                 String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+                mGoalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
                 int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                 long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                 long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
@@ -322,6 +375,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 mEndDateSet = true;
                 mGoalEndDateDisplay.setText(endDateString);
 
+                if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                    //If habit is loaded, set up workspace and strings for Edit Habit mode
+                    setEditHabitWorkspace();
+                }
+
 
             }
         }
@@ -335,6 +393,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         mNameEditText.setText("", TextView.BufferType.EDITABLE);
         mGoalTypeSpinner.setAdapter(null);
+        mGoalStartDateDisplay.setText("");
+        mGoalEndDateDisplay.setText("");
 
     }
 

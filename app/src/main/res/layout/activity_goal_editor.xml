@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
-            android:text="@string/goal_name" />
+            android:text="@string/goal_name"
+            android:id="@+id/goal_name_textview"/>
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
-            android:text="@string/goal_type" />
+            android:text="@string/goal_type"
+            android:id="@+id/goal_type_textview"/>
 
         <Spinner
             android:id="@+id/spinner_goal_type"

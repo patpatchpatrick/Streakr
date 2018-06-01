@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTDbHelper;
+import com.example.android.lifetrackerlite.GoalEditorActivity;
 
 import java.util.List;
 
@@ -44,6 +45,22 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
                 //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+                //Send over an extra int to indicate editing a goal
+                intent.putExtra("GoalorHabit", GoalsHabitsEntry.GOAL);
+                startActivity(intent);
+
+            }
+        });
+
+        FloatingActionButton addHabitButton = findViewById(R.id.add_habit);
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //New intent to open the editor activity in "insert mode"
+                Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+                //Send over an extra int to indicate editing a habit
+                intent.putExtra("GoalorHabit", GoalsHabitsEntry.HABIT);
                 startActivity(intent);
 
             }

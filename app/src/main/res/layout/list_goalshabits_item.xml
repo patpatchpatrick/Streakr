@@ -11,7 +11,8 @@
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
-        android:src="@drawable/goal_icon" />
+        android:src="@drawable/goal_icon"
+        android:id="@+id/goal_habit_icon"/>
 
     <LinearLayout
         android:layout_width="0dp"

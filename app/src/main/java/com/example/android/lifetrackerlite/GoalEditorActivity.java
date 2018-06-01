@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -120,14 +121,17 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mAddGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Boolean goalUpdatedorInserted = false;
                 if (mCurrentGoalUri == null) {
                     //Insert Goal when Add Goal button is clicked if in "Insert Mode"
-                    insertGoal();
+                    goalUpdatedorInserted = insertGoal();
                 } else {
                     //Update Gal when Add Goal button is clicked  if in "Edit Mode"
-                    updateGoal();
+                    goalUpdatedorInserted = updateGoal();
                 }
-                finish();
+                if (goalUpdatedorInserted) {
+                    finish();
+                }
             }
         });
 
@@ -177,14 +181,19 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         });
     }
 
-    public void insertGoal() {
+    public boolean insertGoal() {
 
-        //TODO insert sanity checks for blank dates.. find out how to check if ints or long variables are null
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+
+        //Ensure fields are properly defined before inserting a new goal
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate()) {
+            Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
-
 
 
         ContentValues values = new ContentValues();
@@ -201,14 +210,21 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         Toast.makeText(this, "Goal Inserted", Toast.LENGTH_SHORT).show();
 
         clearStartAndEndDates();
+        return true;
 
     }
 
-    private void updateGoal() {
+    private boolean updateGoal() {
 
-        //TODO insert sanity checks for blank dates
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+
+        //Ensure fields are properly defined before updating a goal
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate()) {
+            Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
@@ -224,6 +240,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         Toast.makeText(this, "Goal Updated", Toast.LENGTH_SHORT).show();
 
         clearStartAndEndDates();
+
+        return true;
     }
 
     public void deleteGoal() {
@@ -263,7 +281,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 // Load the data from the cursor for the single goal you are editing
                 String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
                 int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
-                int startDate = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
+                long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
+                long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
+
 
                 mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
                 //TODO Determine goal type spinner position... Find a way to remove this code by auomatically determining spinner position
@@ -279,6 +299,29 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         break;
                 }
                 mGoalTypeSpinner.setSelection(goalTypeSpinnerPosition);
+
+                //Set default goal start date
+                SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+                String startDateString = startSdf.format(startDateMillis);
+                Calendar startCal = Calendar.getInstance();
+                startCal.setTimeInMillis(startDateMillis);
+                mStartYear = startCal.get(Calendar.YEAR);
+                mStartMonth = startCal.get(Calendar.MONTH);
+                mStartDay = startCal.get(Calendar.DAY_OF_MONTH);
+                mStartDateSet = true;
+                mGoalStartDateDisplay.setText(startDateString);
+
+                //Set default goal end date
+                SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
+                String endDateString = endSdf.format(endDateMillis);
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTimeInMillis(endDateMillis);
+                mEndYear = endCal.get(Calendar.YEAR);
+                mEndMonth = endCal.get(Calendar.MONTH);
+                mEndDay = endCal.get(Calendar.DAY_OF_MONTH);
+                mEndDateSet = true;
+                mGoalEndDateDisplay.setText(endDateString);
+
 
             }
         }
@@ -333,9 +376,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             if (mEndDateSet && !endDateAfterStartDate()) {
                 return;
             }
-            //Add one to month since months indexed starting at 0
-            month = month + 1;
-            mGoalStartDateDisplay.setText(year + "-" + month + "-" + day);
+
+            long startDateMillis = dateToUnixTime(mStartYear, mStartMonth, mStartDay) * 1000;
+            SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+            String startDateString = startSdf.format(startDateMillis);
+            mGoalStartDateDisplay.setText(startDateString);
+
         } else if (mStartOrEndDate == GOAL_END_DATE) {
             mEndYear = year;
             mEndMonth = month;
@@ -345,8 +391,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             if (mStartDateSet && !endDateAfterStartDate()) {
                 return;
             }
-            month = month + 1;
-            mGoalEndDateDisplay.setText(year + "-" + month + "-" + day);
+
+            long endDateMillis = dateToUnixTime(mEndYear, mEndMonth, mEndDay) * 1000;
+            SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
+            String endDateString = endSdf.format(endDateMillis);
+            mGoalEndDateDisplay.setText(endDateString);
         } else {
             return;
         }
@@ -356,8 +405,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     public static class DatePickerFragment extends DialogFragment {
 
+        //TODO Find a way to default in the start or end date if they are already selected for a goal you are editing
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+
             // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
@@ -375,5 +427,21 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Clear out StartDateSet and EndDateSet booleans to indicate dates are no longer set
         mStartDateSet = false;
         mEndDateSet = false;
+    }
+
+    private boolean undefinedStartDate() {
+        //Check if date is properly defined
+        if (mStartYear == 0 || mStartMonth == 0 || mStartDay == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean undefinedEndDate() {
+        //Check if date is properly defined
+        if (mEndYear == 0 || mEndMonth == 0 || mEndDay == 0) {
+            return true;
+        }
+        return false;
     }
 }

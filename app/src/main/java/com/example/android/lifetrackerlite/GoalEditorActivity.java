@@ -179,11 +179,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     public void insertGoal() {
 
-        //TODO insert sanity checks for blank dates
+        //TODO insert sanity checks for blank dates.. find out how to check if ints or long variables are null
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
+
+
+
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
@@ -196,6 +199,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         Uri uri = getContentResolver().insert(GoalsHabitsEntry.CONTENT_URI, values);
 
         Toast.makeText(this, "Goal Inserted", Toast.LENGTH_SHORT).show();
+
+        clearStartAndEndDates();
 
     }
 
@@ -217,6 +222,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
         Toast.makeText(this, "Goal Updated", Toast.LENGTH_SHORT).show();
+
+        clearStartAndEndDates();
     }
 
     public void deleteGoal() {
@@ -224,6 +231,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
         Toast.makeText(this, "Goal Deleted", Toast.LENGTH_SHORT).show();
+        clearStartAndEndDates();
         finish();
     }
 
@@ -361,5 +369,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
 
 
+    }
+
+    private void clearStartAndEndDates() {
+        //Clear out StartDateSet and EndDateSet booleans to indicate dates are no longer set
+        mStartDateSet = false;
+        mEndDateSet = false;
     }
 }

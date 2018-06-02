@@ -1,5 +1,7 @@
 package com.example.android.lifetrackerlite;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -7,6 +9,7 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -43,17 +46,22 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private int mGoalType;
     private int mGoalOrHabit;
-    private int mStartOrEndDate;
+    private int mDateType;
     private static final int GOAL_START_DATE = 0;
     private static final int GOAL_END_DATE = 1;
+    private static final int GOAL_FAIL_DATE = 2;
     private int mStartYear;
     private int mStartMonth;
     private int mStartDay;
     private boolean mStartDateSet;
     private boolean mEndDateSet;
+    private boolean mFailDateSet;
     private int mEndYear;
     private int mEndMonth;
     private int mEndDay;
+    private int mFailYear;
+    private int mFailMonth;
+    private int mFailDay;
 
     //Views for DatePicker used for Goal Start Date
     private TextView mGoalNameTextView;
@@ -103,6 +111,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Dates are not set when activity starts
         mStartDateSet = false;
         mEndDateSet = false;
+        mFailDateSet = false;
 
         if (mCurrentGoalUri == null) {
             //If editing a goal, set strings within editor activity to goal strings
@@ -126,7 +135,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             public void onClick(View v) {
                 //If selecting a start date, set the mStartorEndDate variable to be GOAL START DATE
                 //to let the system know to set dates for StartDate variable
-                mStartOrEndDate = GOAL_START_DATE;
+                mDateType = GOAL_START_DATE;
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
             }
@@ -137,7 +146,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             public void onClick(View view) {
                 //If selecting an end date, set the mStartorEndDate variable to be GOAL END DATE
                 //to let the system know to set dates for EndDate variable
-                mStartOrEndDate = GOAL_END_DATE;
+                mDateType = GOAL_END_DATE;
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
             }
@@ -170,11 +179,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mFailResetStreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //If you are able to insert a streak, clear the start and end dates so new streak
-                //can be started
-                if (insertStreak()) {
-                    clearStartAndEndDates();
-                }
+
+                //Prompt user to ensure they want to reset streak
+                showResetStreakDialog();
             }
         });
 
@@ -300,6 +307,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         long failDate = System.currentTimeMillis() / 1000;
+
+        //If the failDate is set, set the fail date to be equal to user chosen value, otherwise use
+        //the current date as defined above
+        if (!undefinedFailDate()) {
+            failDate = dateToUnixTime(mFailYear, mFailMonth, mFailDay);
+        }
+
 
         ContentValues values = new ContentValues();
         values.put(StreaksEntry.COLUMN_PARENT_ID, mCurrentGoalID);
@@ -565,12 +579,56 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         return true;
     }
 
+    private boolean failDateAfterStartDate() {
+        //Check if goal end date is after start date, if so, make Toast.
+        long startDateUnix = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        long failDateUnix = dateToUnixTime(mFailYear, mFailMonth, mFailDay);
+        if (startDateUnix >= failDateUnix) {
+            Toast.makeText(this, "Fail Date must be after Start Date", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void showResetStreakDialog(){
+        AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
+        alertDialog.setTitle("Reset Streak?");
+        alertDialog.setMessage("Resetting your streak will clear your current streak dates.  Historical streak information will be saved.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Reset Streak",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        //Reset streak.  This will save historical streak info and clear dates
+                        //so that a new streak can be started
+                        if (insertStreak()) {
+                            clearStartAndEndDates();
+                            clearFailDate();
+                        }
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Choose Fail Date",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDateType = GOAL_FAIL_DATE;
+                        DialogFragment newFragment = new DatePickerFragment();
+                        newFragment.show(getFragmentManager(), "datePicker");
+                    }
+                });
+        alertDialog.show();
+    }
+
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         //Set date display when date set by DatePicker.  Determine if the date is a start date
         //or if the date is an end date and set the date integer values accordingly.
-        if (mStartOrEndDate == GOAL_START_DATE) {
+        if (mDateType == GOAL_START_DATE) {
             mStartYear = year;
             mStartMonth = month;
             mStartDay = day;
@@ -585,7 +643,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             String startDateString = startSdf.format(startDateMillis);
             mGoalStartDateDisplay.setText(startDateString);
 
-        } else if (mStartOrEndDate == GOAL_END_DATE) {
+        } else if (mDateType == GOAL_END_DATE) {
             mEndYear = year;
             mEndMonth = month;
             mEndDay = day;
@@ -599,6 +657,22 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
             String endDateString = endSdf.format(endDateMillis);
             mGoalEndDateDisplay.setText(endDateString);
+        } else if (mDateType == GOAL_FAIL_DATE) {
+            mFailYear = year;
+            mFailMonth = month;
+            mFailDay = day;
+            mFailDateSet = true;
+            //If fail date is not after start date, display toast message and return
+            if (mStartDateSet && !failDateAfterStartDate()) {
+                clearFailDate();
+                return;
+            }
+
+            //After choosing a fail date, show the reset streak dialog box to prompt user if they
+            //want to reset streak
+            showResetStreakDialog();
+
+
         } else {
             return;
         }
@@ -640,6 +714,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalEndDateDisplay.setText("");
     }
 
+    private void clearFailDate() {
+        //Clear FailDateSet boolean and set dates to 0
+        mFailDateSet = false;
+        mFailYear = 0;
+        mFailMonth = 0;
+        mFailDay = 0;
+    }
+
 
     private boolean undefinedStartDate() {
         //Check if date is properly defined
@@ -652,6 +734,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean undefinedEndDate() {
         //Check if date is properly defined
         if (mEndYear == 0 || mEndMonth == 0 || mEndDay == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean undefinedFailDate() {
+        //Check if date is properly defined
+        if (mFailYear == 0 || mFailMonth == 0 || mFailDay == 0) {
             return true;
         }
         return false;

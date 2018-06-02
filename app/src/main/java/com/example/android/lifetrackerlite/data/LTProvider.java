@@ -164,26 +164,32 @@ public class LTProvider extends ContentProvider {
         // Checks to determine values are ok before inserting into database
 
         // Check that the streak parent ID is valid
-        Integer streakParentID = values.getAsInteger(LTContract.StreaksEntry.COLUMN_PARENT_ID);
+        Integer streakParentID = values.getAsInteger(StreaksEntry.COLUMN_PARENT_ID);
         if (streakParentID == null) {
             throw new IllegalArgumentException("Streak requires valid parent ID");
         }
 
         // Check that the streak start date is valid
-        Integer streakStartDate = values.getAsInteger(LTContract.StreaksEntry.COLUMN_STREAK_START_DATE);
+        Integer streakStartDate = values.getAsInteger(StreaksEntry.COLUMN_STREAK_START_DATE);
         if (streakStartDate == null) {
             throw new IllegalArgumentException("Streak requires valid start date");
         }
 
         // Check that the streak end date is valid
-        Integer streakEndDate = values.getAsInteger(LTContract.StreaksEntry.COLUMN_STREAK_END_DATE);
+        Integer streakEndDate = values.getAsInteger(StreaksEntry.COLUMN_STREAK_END_DATE);
         if (streakEndDate == null) {
             throw new IllegalArgumentException("Streak requires valid end date");
         }
 
+        // Check that the streak fail date is valid
+        Integer streakFailDate = values.getAsInteger(StreaksEntry.COLUMN_STREAK_FAIL_DATE);
+        if (streakFailDate == null) {
+            throw new IllegalArgumentException("Streak requires valid fail date");
+        }
+
         //If data is valid, insert data into SQL database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long id = db.insert(LTContract.StreaksEntry.TABLE_NAME, null, values);
+        long id = db.insert(StreaksEntry.TABLE_NAME, null, values);
 
         if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);

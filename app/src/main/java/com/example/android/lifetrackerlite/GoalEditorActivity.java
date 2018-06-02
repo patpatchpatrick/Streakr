@@ -299,11 +299,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
+        long failDate = System.currentTimeMillis() / 1000;
 
         ContentValues values = new ContentValues();
         values.put(StreaksEntry.COLUMN_PARENT_ID, mCurrentGoalID);
         values.put(StreaksEntry.COLUMN_STREAK_START_DATE, startDate);
         values.put(StreaksEntry.COLUMN_STREAK_END_DATE, endDate);
+        values.put(StreaksEntry.COLUMN_STREAK_FAIL_DATE, failDate);
 
         //Insert values into database
         Uri uri = getContentResolver().insert(StreaksEntry.CONTENT_URI, values);
@@ -383,7 +385,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry._ID,
                         StreaksEntry.COLUMN_PARENT_ID,
                         StreaksEntry.COLUMN_STREAK_START_DATE,
-                        StreaksEntry.COLUMN_STREAK_END_DATE};
+                        StreaksEntry.COLUMN_STREAK_END_DATE,
+                        StreaksEntry.COLUMN_STREAK_FAIL_DATE};
 
                 String selection = StreaksEntry.COLUMN_PARENT_ID + "=?";
                 String[] selectionArgs = new String[]{String.valueOf(mCurrentGoalID)};
@@ -471,6 +474,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 case STREAK_LOADER:
 
                     String streakDetailString = "";
+                    String streakLengthString = "";
                     while (cursor.moveToNext()) {
 
                         //Convert unix start date to string and add to details
@@ -483,16 +487,30 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
                         String endDateString = endSdf.format(endDateMillis);
 
+                        //Convert unix fail date to string and add to details
+                        long failDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_FAIL_DATE)) * 1000;
+                        SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
+                        String failDateString = failSdf.format(failDateMillis);
+
+                        //Get data for streak length and percent
+                        long streakLengthMillis = failDateMillis - startDateMillis;
+                        long streakLengthDays = streakLengthMillis / (1000 * 60 * 60 * 24);
+                        long totalGoalLengthMillis = endDateMillis - startDateMillis;
+                        long totalGoalLengthDays = totalGoalLengthMillis / (1000 * 60 * 60 * 24);
+                        int streakCompletionPercent = (int) Math.round(((double) streakLengthDays / (double) totalGoalLengthDays) * 100);
+
+                        //Set streak details string
+                        streakLengthString += Long.toString(streakLengthDays) + " days" + "\n";
+
                         //Set goal details string
 
                         streakDetailString += "" + startDateString + " ---> ";
-                        streakDetailString += "" + endDateString + "\n";
-                        
-
+                        streakDetailString += "" + failDateString + "\n";
 
 
                     }
                     mStreakDataTextView.setText(streakDetailString);
+                    mStreakDataLengthTextView.setText(streakLengthString);
                     break;
             }
         }

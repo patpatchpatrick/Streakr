@@ -39,7 +39,8 @@ public class LTDbHelper extends SQLiteOpenHelper {
                 + StreaksEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + StreaksEntry.COLUMN_PARENT_ID + " INTEGER NOT NULL, "
                 + StreaksEntry.COLUMN_STREAK_START_DATE + " INTEGER NOT NULL, "
-                + StreaksEntry.COLUMN_STREAK_END_DATE + " INTEGER NOT NULL);";
+                + StreaksEntry.COLUMN_STREAK_END_DATE + " INTEGER NOT NULL, "
+                + StreaksEntry.COLUMN_STREAK_FAIL_DATE + " INTEGER NOT NULL);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_STREAKS_TABLE);

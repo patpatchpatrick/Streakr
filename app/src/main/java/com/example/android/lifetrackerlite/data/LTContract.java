@@ -129,6 +129,7 @@ public final class LTContract {
         public static final String COLUMN_PARENT_ID = "streakParentID";
         public static final String COLUMN_STREAK_START_DATE = "streakStartDate";
         public static final String COLUMN_STREAK_END_DATE = "streakEndDate";
+        public static final String COLUMN_STREAK_FAIL_DATE = "streakFailedDate";
 
 
 

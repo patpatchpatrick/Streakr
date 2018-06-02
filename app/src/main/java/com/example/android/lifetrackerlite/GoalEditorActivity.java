@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import java.util.Date;
 public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private Uri mCurrentGoalUri;
+    private int mCurrentGoalID;
     private static final int GOAL_EDIT_LOADER = 1;
     private static final int STREAK_LOADER = 2;
 
@@ -59,6 +61,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private TextView mGoalStartDateDisplay;
     private TextView mGoalEndDateDisplay;
     private TextView mStreakDataTextView;
+    private TextView mStreakDataLengthTextView;
     private EditText mNameEditText;
     private Spinner mGoalTypeSpinner;
     private Button mPickStartDate;
@@ -87,6 +90,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalNameTextView = (TextView) findViewById(R.id.goal_name_textview);
         mGoalTypeTextView = (TextView) findViewById(R.id.goal_type_textview);
         mStreakDataTextView = (TextView) findViewById(R.id.streak_data);
+        mStreakDataLengthTextView = (TextView) findViewById(R.id.streak_data_length);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
         mGoalStartDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
@@ -116,7 +120,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             //Set up workspace and strings for Edit Goal mode
             setEditGoalWorkspace();
             getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
-            getLoaderManager().initLoader(STREAK_LOADER, null, this);
         }
 
         mPickStartDate.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +170,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mFailResetStreak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                insertStreak();
+                //If you are able to insert a streak, clear the start and end dates so new streak
+                //can be started
+                if (insertStreak()) {
+                    clearStartAndEndDates();
+                }
             }
         });
 
@@ -284,15 +291,24 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     public boolean insertStreak() {
 
+        //Ensure fields are properly defined before inserting a new streak
+        if (undefinedStartDate() || undefinedEndDate()) {
+            Toast.makeText(this, "Date fields must be populated", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
+
         ContentValues values = new ContentValues();
-        values.put(StreaksEntry.COLUMN_PARENT_ID, 1);
-        values.put(StreaksEntry.COLUMN_STREAK_START_DATE, 3);
-        values.put(StreaksEntry.COLUMN_STREAK_END_DATE, 4);
+        values.put(StreaksEntry.COLUMN_PARENT_ID, mCurrentGoalID);
+        values.put(StreaksEntry.COLUMN_STREAK_START_DATE, startDate);
+        values.put(StreaksEntry.COLUMN_STREAK_END_DATE, endDate);
 
         //Insert values into database
         Uri uri = getContentResolver().insert(StreaksEntry.CONTENT_URI, values);
 
-        Toast.makeText(this, "Streak Inserted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Streak Reset", Toast.LENGTH_SHORT).show();
 
         return true;
 
@@ -369,11 +385,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry.COLUMN_STREAK_START_DATE,
                         StreaksEntry.COLUMN_STREAK_END_DATE};
 
+                String selection = StreaksEntry.COLUMN_PARENT_ID + "=?";
+                String[] selectionArgs = new String[]{String.valueOf(mCurrentGoalID)};
+
                 return new CursorLoader(this,
                         StreaksEntry.CONTENT_URI,
                         streakProjection,
-                        null,
-                        null,
+                        selection,
+                        selectionArgs,
                         null);
         }
 
@@ -391,6 +410,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             switch (loader.getId()) {
                 case GOAL_EDIT_LOADER:
                     while (cursor.moveToNext()) {
+
+                        //Load the current goal _ID, and once you have that info you can begin loading the Streak data for that goal
+                        mCurrentGoalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
+                        getLoaderManager().initLoader(STREAK_LOADER, null, this);
 
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
@@ -447,20 +470,29 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     break;
                 case STREAK_LOADER:
 
-                    String streakData = "";
+                    String streakDetailString = "";
                     while (cursor.moveToNext()) {
 
-                        // Load the data from the cursor for the streaks corresponding to the goal
-                        int streakID = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_PARENT_ID));
-                        int startDate = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE));
-                        int endDate = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_END_DATE));
-                        streakData += streakID;
-                        streakData += startDate;
-                        streakData += endDate;
-                        streakData += "\n";
+                        //Convert unix start date to string and add to details
+                        long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE)) * 1000;
+                        SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+                        String startDateString = startSdf.format(startDateMillis);
+
+                        //Convert unix end date to string and add to details
+                        long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_END_DATE)) * 1000;
+                        SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
+                        String endDateString = endSdf.format(endDateMillis);
+
+                        //Set goal details string
+
+                        streakDetailString += "" + startDateString + " ---> ";
+                        streakDetailString += "" + endDateString + "\n";
+                        
+
+
 
                     }
-                    mStreakDataTextView.setText(streakData);
+                    mStreakDataTextView.setText(streakDetailString);
                     break;
             }
         }
@@ -580,7 +612,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Clear out StartDateSet and EndDateSet booleans to indicate dates are no longer set
         mStartDateSet = false;
         mEndDateSet = false;
+        mStartYear = 0;
+        mStartMonth = 0;
+        mStartDay = 0;
+        mEndYear = 0;
+        mEndMonth = 0;
+        mEndDay = 0;
+        mGoalStartDateDisplay.setText("");
+        mGoalEndDateDisplay.setText("");
     }
+
 
     private boolean undefinedStartDate() {
         //Check if date is properly defined

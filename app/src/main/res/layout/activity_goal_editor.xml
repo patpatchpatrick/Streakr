@@ -14,12 +14,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/goal_name_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="@string/goal_name"
-            android:id="@+id/goal_name_textview"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -36,12 +37,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/goal_type_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="@string/goal_type"
-            android:id="@+id/goal_type_textview"/>
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinner_goal_type"
@@ -70,7 +72,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="@string/goal_start_date" />
+                android:text="@string/goal_start_date"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/goal_start_date_display"
@@ -109,7 +112,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="@string/goal_end_date" />
+                android:text="@string/goal_end_date"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/goal_end_date_display"
@@ -133,21 +137,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="16dp"
-        >
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
 
         <Button
+            android:id="@+id/delete_goal_editor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/delete_goal_editor"
             android:text="Delete Goal" />
 
         <Button
+            android:id="@+id/add_goal_editor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/add_goal_editor"
             android:text="Add Goal" />
 
 
@@ -156,38 +159,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="16dp"
+        android:orientation="horizontal"
         android:paddingBottom="16dp"
-        >
+        android:paddingTop="16dp">
 
         <Button
+            android:id="@+id/fail_reset_streak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/fail_reset_streak"
             android:text="Fail/Reset Streak" />
 
         <Button
+            android:id="@+id/goal_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/goal_completed"
             android:text="Goal Completed" />
 
 
     </LinearLayout>
+
     <TextView
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
         android:text="@string/historical_streaks"
-        android:paddingLeft="16dp"/>
-    <TextView
+        android:textStyle="bold" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Streak Data"
-        android:id="@+id/streak_data"
-        android:paddingLeft="16dp"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/streak_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            tools:text="Streak Data" />
+
+        <TextView
+            android:id="@+id/streak_data_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            tools:text="Streak Length" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

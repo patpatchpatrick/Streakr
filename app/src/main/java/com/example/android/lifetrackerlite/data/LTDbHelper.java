@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
 public class LTDbHelper extends SQLiteOpenHelper {
 
@@ -19,7 +20,7 @@ public class LTDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create a String that contains the SQL statement to create the pets table
+        // Create a String that contains the SQL statement to create the goals table
         String SQL_CREATE_GOALS_HABITS_TABLE =  "CREATE TABLE " + GoalsHabitsEntry.TABLE_NAME + " ("
                 + GoalsHabitsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + GoalsHabitsEntry.COLUMN_GOAL_NAME + " TEXT NOT NULL, "
@@ -32,6 +33,16 @@ public class LTDbHelper extends SQLiteOpenHelper {
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_GOALS_HABITS_TABLE);
+
+        // Create a String that contains the SQL statement to create the streaks table
+        String SQL_CREATE_STREAKS_TABLE =  "CREATE TABLE " + StreaksEntry.TABLE_NAME + " ("
+                + StreaksEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + StreaksEntry.COLUMN_PARENT_ID + " INTEGER NOT NULL, "
+                + StreaksEntry.COLUMN_STREAK_START_DATE + " INTEGER NOT NULL, "
+                + StreaksEntry.COLUMN_STREAK_END_DATE + " INTEGER NOT NULL);";
+
+        // Execute the SQL statement
+        db.execSQL(SQL_CREATE_STREAKS_TABLE);
 
     }
 

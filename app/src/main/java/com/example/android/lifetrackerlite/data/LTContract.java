@@ -16,17 +16,18 @@ public final class LTContract {
     public static final String CONTENT_AUTHORITY = "com.example.android.lifetrackerlite";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_GOALSHABITS = "goalshabits";
+    public static final String PATH_STREAKS = "streaks";
 
     private LTContract(){}
 
     public static final class GoalsHabitsEntry implements BaseColumns {
 
-        //The MIME type of the {@link #CONTENT_URI} for a list of pets.
+        //The MIME type of the {@link #CONTENT_URI} for a list of goals.
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GOALSHABITS;
 
 
-         //The MIME type of the {@link #CONTENT_URI} for a single pet.
+         //The MIME type of the {@link #CONTENT_URI} for a single goal.
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GOALSHABITS;
 
@@ -103,6 +104,33 @@ public final class LTContract {
                     return "Unknown Goal";
             }
         }
+
+    }
+
+    public static final class StreaksEntry implements BaseColumns{
+
+        //The MIME type of the {@link #CONTENT_URI} for a list of streaks.
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STREAKS;
+
+
+        //The MIME type of the {@link #CONTENT_URI} for a single streak.
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STREAKS;
+
+        //URI for GoalsHabits table
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,  PATH_STREAKS);
+
+
+        //Define table and columns for streaks data
+        public static final String TABLE_NAME = "Streaks";
+
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_PARENT_ID = "streakParentID";
+        public static final String COLUMN_STREAK_START_DATE = "streakStartDate";
+        public static final String COLUMN_STREAK_END_DATE = "streakEndDate";
+
+
 
     }
 

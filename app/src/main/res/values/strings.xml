@@ -26,6 +26,7 @@
     <string name="save_habit_button">Save Habit</string>
     <string name="add_habit_button">Add Habit</string>
     <string name="delete_habit_button">Delete Habit</string>
+    <string name="historical_streaks">Historical Streaks</string>
 
 
     <!-- Goal type spinner dropdown strings [CHAR LIMIT=TBD] -->

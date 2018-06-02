@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,6 +37,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private Uri mCurrentGoalUri;
     private static final int GOAL_EDIT_LOADER = 1;
+    private static final int STREAK_LOADER = 2;
 
     private int mGoalType;
     private int mGoalOrHabit;
@@ -56,12 +58,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private TextView mGoalTypeTextView;
     private TextView mGoalStartDateDisplay;
     private TextView mGoalEndDateDisplay;
+    private TextView mStreakDataTextView;
     private EditText mNameEditText;
     private Spinner mGoalTypeSpinner;
     private Button mPickStartDate;
     private Button mPickEndDate;
     private Button mAddGoal;
     private Button mDeleteGoal;
+    private Button mFailResetStreak;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         mGoalNameTextView = (TextView) findViewById(R.id.goal_name_textview);
         mGoalTypeTextView = (TextView) findViewById(R.id.goal_type_textview);
+        mStreakDataTextView = (TextView) findViewById(R.id.streak_data);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
         mGoalStartDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
@@ -89,6 +94,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
         mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
+        mFailResetStreak = (Button) findViewById(R.id.fail_reset_streak);
 
         //Dates are not set when activity starts
         mStartDateSet = false;
@@ -110,6 +116,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             //Set up workspace and strings for Edit Goal mode
             setEditGoalWorkspace();
             getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
+            getLoaderManager().initLoader(STREAK_LOADER, null, this);
         }
 
         mPickStartDate.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +161,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             @Override
             public void onClick(View view) {
                 deleteGoal();
+            }
+        });
+
+        mFailResetStreak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertStreak();
             }
         });
 
@@ -268,6 +282,23 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         finish();
     }
 
+    public boolean insertStreak() {
+
+        ContentValues values = new ContentValues();
+        values.put(StreaksEntry.COLUMN_PARENT_ID, 1);
+        values.put(StreaksEntry.COLUMN_STREAK_START_DATE, 3);
+        values.put(StreaksEntry.COLUMN_STREAK_END_DATE, 4);
+
+        //Insert values into database
+        Uri uri = getContentResolver().insert(StreaksEntry.CONTENT_URI, values);
+
+        Toast.makeText(this, "Streak Inserted", Toast.LENGTH_SHORT).show();
+
+        return true;
+
+
+    }
+
     private void setAddGoalWorkspace() {
         //Set up workspace and strings for Add Goal mode
         setTitle(R.string.add_goal_activity_title);
@@ -306,81 +337,131 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String[] projection = {
-                GoalsHabitsEntry._ID,
-                GoalsHabitsEntry.COLUMN_GOAL_NAME,
-                GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT,
-                GoalsHabitsEntry.COLUMN_GOAL_TYPE,
-                GoalsHabitsEntry.COLUMN_GOAL_START_DATE,
-                GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
-                GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
 
-        return new CursorLoader(this,
-                mCurrentGoalUri,
-                projection,
-                null,
-                null,
-                null);
+        //Create Goal and Streak loaders
+
+        switch (id) {
+
+            case GOAL_EDIT_LOADER:
+                String[] goalProjection = {
+                        GoalsHabitsEntry._ID,
+                        GoalsHabitsEntry.COLUMN_GOAL_NAME,
+                        GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT,
+                        GoalsHabitsEntry.COLUMN_GOAL_TYPE,
+                        GoalsHabitsEntry.COLUMN_GOAL_START_DATE,
+                        GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
+                        GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
+
+                return new CursorLoader(this,
+                        mCurrentGoalUri,
+                        goalProjection,
+                        null,
+                        null,
+                        null);
+
+            case STREAK_LOADER:
+                //TODO figure out way to only load streaks for current goal
+
+                String[] streakProjection = {
+                        StreaksEntry._ID,
+                        StreaksEntry.COLUMN_PARENT_ID,
+                        StreaksEntry.COLUMN_STREAK_START_DATE,
+                        StreaksEntry.COLUMN_STREAK_END_DATE};
+
+                return new CursorLoader(this,
+                        StreaksEntry.CONTENT_URI,
+                        streakProjection,
+                        null,
+                        null,
+                        null);
+        }
+
+        //TODO  Figure out what to return in default scenario
+        return null;
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+        //Load data for Goal and Streak loaders
+
         if (cursor.getCount() >= 1) {
-            while (cursor.moveToNext()) {
+            switch (loader.getId()) {
+                case GOAL_EDIT_LOADER:
+                    while (cursor.moveToNext()) {
 
-                // Load the data from the cursor for the single goal you are editing
-                String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
-                mGoalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
-                int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
-                long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
-                long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
-
-
-                mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
-                //TODO Determine goal type spinner position... Find a way to remove this code by auomatically determining spinner position
-                int goalTypeSpinnerPosition = 0;
-                switch (goalType) {
-                    case GoalsHabitsEntry.GOAL_TYPE_FITNESS:
-                        goalTypeSpinnerPosition = 1;
-                        break;
-                    case GoalsHabitsEntry.GOAL_TYPE_READ:
-                        goalTypeSpinnerPosition = 2;
-                        break;
-                    default:
-                        break;
-                }
-                mGoalTypeSpinner.setSelection(goalTypeSpinnerPosition);
-
-                //Set default goal start date
-                SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
-                String startDateString = startSdf.format(startDateMillis);
-                Calendar startCal = Calendar.getInstance();
-                startCal.setTimeInMillis(startDateMillis);
-                mStartYear = startCal.get(Calendar.YEAR);
-                mStartMonth = startCal.get(Calendar.MONTH);
-                mStartDay = startCal.get(Calendar.DAY_OF_MONTH);
-                mStartDateSet = true;
-                mGoalStartDateDisplay.setText(startDateString);
-
-                //Set default goal end date
-                SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
-                String endDateString = endSdf.format(endDateMillis);
-                Calendar endCal = Calendar.getInstance();
-                endCal.setTimeInMillis(endDateMillis);
-                mEndYear = endCal.get(Calendar.YEAR);
-                mEndMonth = endCal.get(Calendar.MONTH);
-                mEndDay = endCal.get(Calendar.DAY_OF_MONTH);
-                mEndDateSet = true;
-                mGoalEndDateDisplay.setText(endDateString);
-
-                if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
-                    //If habit is loaded, set up workspace and strings for Edit Habit mode
-                    setEditHabitWorkspace();
-                }
+                        // Load the data from the cursor for the single goal you are editing
+                        String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+                        mGoalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
+                        int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+                        long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
+                        long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
 
 
+                        mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
+                        //TODO Determine goal type spinner position... Find a way to remove this code by auomatically determining spinner position
+                        int goalTypeSpinnerPosition = 0;
+                        switch (goalType) {
+                            case GoalsHabitsEntry.GOAL_TYPE_FITNESS:
+                                goalTypeSpinnerPosition = 1;
+                                break;
+                            case GoalsHabitsEntry.GOAL_TYPE_READ:
+                                goalTypeSpinnerPosition = 2;
+                                break;
+                            default:
+                                break;
+                        }
+                        mGoalTypeSpinner.setSelection(goalTypeSpinnerPosition);
+
+                        //Set default goal start date
+                        SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+                        String startDateString = startSdf.format(startDateMillis);
+                        Calendar startCal = Calendar.getInstance();
+                        startCal.setTimeInMillis(startDateMillis);
+                        mStartYear = startCal.get(Calendar.YEAR);
+                        mStartMonth = startCal.get(Calendar.MONTH);
+                        mStartDay = startCal.get(Calendar.DAY_OF_MONTH);
+                        mStartDateSet = true;
+                        mGoalStartDateDisplay.setText(startDateString);
+
+                        //Set default goal end date
+                        SimpleDateFormat endSdf = new SimpleDateFormat("MMMM d, yyyy");
+                        String endDateString = endSdf.format(endDateMillis);
+                        Calendar endCal = Calendar.getInstance();
+                        endCal.setTimeInMillis(endDateMillis);
+                        mEndYear = endCal.get(Calendar.YEAR);
+                        mEndMonth = endCal.get(Calendar.MONTH);
+                        mEndDay = endCal.get(Calendar.DAY_OF_MONTH);
+                        mEndDateSet = true;
+                        mGoalEndDateDisplay.setText(endDateString);
+
+                        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                            //If habit is loaded, set up workspace and strings for Edit Habit mode
+                            setEditHabitWorkspace();
+                        }
+
+
+                    }
+                    break;
+                case STREAK_LOADER:
+
+                    String streakData = "";
+                    while (cursor.moveToNext()) {
+
+                        // Load the data from the cursor for the streaks corresponding to the goal
+                        int streakID = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_PARENT_ID));
+                        int startDate = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE));
+                        int endDate = cursor.getInt(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_END_DATE));
+                        streakData += streakID;
+                        streakData += startDate;
+                        streakData += endDate;
+                        streakData += "\n";
+
+                    }
+                    mStreakDataTextView.setText(streakData);
+                    break;
             }
         }
 
@@ -389,13 +470,25 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-        // Clear Edit Views upon reset.
+        switch (loader.getId()) {
 
-        mNameEditText.setText("", TextView.BufferType.EDITABLE);
-        mGoalTypeSpinner.setAdapter(null);
-        mGoalStartDateDisplay.setText("");
-        mGoalEndDateDisplay.setText("");
+            //Reset data for Goal and Streak loaders
 
+            case GOAL_EDIT_LOADER:
+                // Clear Edit Views upon reset.
+                mNameEditText.setText("", TextView.BufferType.EDITABLE);
+                mGoalTypeSpinner.setAdapter(null);
+                mGoalStartDateDisplay.setText("");
+                mGoalEndDateDisplay.setText("");
+                break;
+
+            case STREAK_LOADER:
+
+                //Clear streak data upon reset.
+                mStreakDataTextView.setText("");
+                break;
+
+        }
     }
 
     private long dateToUnixTime(int year, int month, int day) {

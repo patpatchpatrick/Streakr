@@ -12,11 +12,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
 public class LTProvider extends ContentProvider {
 
     private static final int GOALSHABITS = 100;
     private static final int GOALSHABITS_ID = 101;
+    private static final int STREAKS = 200;
+    private static final int STREAKS_ID = 201;
 
 
     //URI matcher to handle different URIs input into provider
@@ -25,6 +28,8 @@ public class LTProvider extends ContentProvider {
     static {
         sUriMatcher.addURI(LTContract.CONTENT_AUTHORITY, LTContract.PATH_GOALSHABITS, GOALSHABITS);
         sUriMatcher.addURI(LTContract.CONTENT_AUTHORITY, LTContract.PATH_GOALSHABITS + "/#", GOALSHABITS_ID);
+        sUriMatcher.addURI(LTContract.CONTENT_AUTHORITY, LTContract.PATH_STREAKS, STREAKS);
+        sUriMatcher.addURI(LTContract.CONTENT_AUTHORITY, LTContract.PATH_STREAKS + "/#", STREAKS_ID);
     }
 
     //Tag for log messages
@@ -63,6 +68,11 @@ public class LTProvider extends ContentProvider {
 
                 cursor = database.query(GoalsHabitsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case STREAKS:
+                //TODO Update the query to only query streaks of a specific ID depending on what goal you are querying streaks for
+                //Query the table for all streaks
+                cursor = database.query(StreaksEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
@@ -82,6 +92,10 @@ public class LTProvider extends ContentProvider {
                 return GoalsHabitsEntry.CONTENT_LIST_TYPE;
             case GOALSHABITS_ID:
                 return GoalsHabitsEntry.CONTENT_ITEM_TYPE;
+            case STREAKS:
+                return StreaksEntry.CONTENT_LIST_TYPE;
+            case STREAKS_ID:
+                return StreaksEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
@@ -94,6 +108,8 @@ public class LTProvider extends ContentProvider {
         switch (match) {
             case GOALSHABITS:
                 return insertGoal(uri, contentValues);
+            case STREAKS:
+                return insertStreak(uri, contentValues);
             default:
                 //Query is not supported for a specific GOAL ID, will hit default exception
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -141,6 +157,45 @@ public class LTProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
 
         return ContentUris.withAppendedId(uri, id);
+    }
+
+    private Uri insertStreak(Uri uri, ContentValues values) {
+
+        // Checks to determine values are ok before inserting into database
+
+        // Check that the streak parent ID is valid
+        Integer streakParentID = values.getAsInteger(LTContract.StreaksEntry.COLUMN_PARENT_ID);
+        if (streakParentID == null) {
+            throw new IllegalArgumentException("Streak requires valid parent ID");
+        }
+
+        // Check that the streak start date is valid
+        Integer streakStartDate = values.getAsInteger(LTContract.StreaksEntry.COLUMN_STREAK_START_DATE);
+        if (streakStartDate == null) {
+            throw new IllegalArgumentException("Streak requires valid start date");
+        }
+
+        // Check that the streak end date is valid
+        Integer streakEndDate = values.getAsInteger(LTContract.StreaksEntry.COLUMN_STREAK_END_DATE);
+        if (streakEndDate == null) {
+            throw new IllegalArgumentException("Streak requires valid end date");
+        }
+
+        //If data is valid, insert data into SQL database
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        long id = db.insert(LTContract.StreaksEntry.TABLE_NAME, null, values);
+
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        //Notify any listeners that the data has changed for the URI
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return ContentUris.withAppendedId(uri, id);
+
+
     }
 
     @Override

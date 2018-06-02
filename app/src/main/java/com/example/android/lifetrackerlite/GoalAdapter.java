@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 
 public class GoalAdapter extends CursorAdapter {
@@ -34,11 +36,15 @@ public class GoalAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        //Set goal name and type string
-        TextView goalNameType = (TextView) view.findViewById(R.id.goal_name);
-        String goalNameTypeText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME)) + "\n";
-        goalNameTypeText += GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE)));
-        goalNameType.setText(goalNameTypeText);
+        //Set goal name string
+        TextView goalName = (TextView) view.findViewById(R.id.goal_name);
+        String goalNameText = cursor.getString(cursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));
+        goalName.setText(goalNameText);
+
+        //Set goal type string
+        TextView goalType = (TextView) view.findViewById(R.id.goal_type);
+        String goalTypeText = GoalsHabitsEntry.getGoalTypeString(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE)));
+        goalType.setText(goalTypeText);
 
         int goalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
         ImageView goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);

@@ -92,21 +92,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     }
 
-   /** private void insertTestGoal() {
-        SQLiteDatabase db = mLTDbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, "Test Goal Name 2");
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, GoalsHabitsEntry.GOAL_TYPE_OTHER);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, 0);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, 0);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
-        db.insert(GoalsHabitsEntry.TABLE_NAME, null, values);
-
-
-    } */
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 

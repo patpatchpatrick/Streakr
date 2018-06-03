@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -68,8 +69,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private TextView mGoalTypeTextView;
     private TextView mGoalStartDateDisplay;
     private TextView mGoalEndDateDisplay;
+    private TextView mFailDateDisplay;
     private TextView mStreakDataTextView;
     private TextView mStreakDataLengthTextView;
+    private TextView mHistoricalStreaksHeader;
     private EditText mNameEditText;
     private Spinner mGoalTypeSpinner;
     private Button mPickStartDate;
@@ -77,6 +80,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private Button mAddGoal;
     private Button mDeleteGoal;
     private Button mFailResetStreak;
+    private Button mGoalCompleted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +106,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
         mGoalStartDateDisplay = (TextView) findViewById(R.id.goal_start_date_display);
         mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
+        mFailDateDisplay = (TextView) findViewById(R.id.failure_date_display);
+        mHistoricalStreaksHeader = (TextView) findViewById(R.id.historical_streaks_header);
         mPickStartDate = (Button) findViewById(R.id.goal_start_date_button);
         mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
         mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
         mFailResetStreak = (Button) findViewById(R.id.fail_reset_streak);
+        mGoalCompleted = (Button) findViewById(R.id.goal_completed);
 
         //Dates are not set when activity starts
         mStartDateSet = false;
@@ -231,7 +238,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Ensure fields are properly defined before inserting a new goal
         if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
-            Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -250,7 +257,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Insert values into database
         Uri uri = getContentResolver().insert(GoalsHabitsEntry.CONTENT_URI, values);
 
-        Toast.makeText(this, "Goal Inserted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, this.getResources().getString(R.string.goal_inserted), Toast.LENGTH_SHORT).show();
 
         clearStartAndEndDates();
         return true;
@@ -264,7 +271,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Ensure fields are properly defined before updating a goal
         if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
-            Toast.makeText(this, "All Fields Must Be Populated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -280,7 +287,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
-        Toast.makeText(this, "Goal Updated", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, this.getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT).show();
 
         clearStartAndEndDates();
 
@@ -288,19 +295,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     }
 
     public void deleteGoal() {
-        // If Delete Button is clicked from within Editor Activity, pet is deleted.
-
-        int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
-        Toast.makeText(this, "Goal Deleted", Toast.LENGTH_SHORT).show();
-        clearStartAndEndDates();
-        finish();
+        // If Delete Button is clicked from within Editor Activity, goal is deleted.
+        // Dialog is displayed confirming if user wants to delete goal
+        showDeleteGoalDialog();
     }
 
     public boolean insertStreak() {
 
         //Ensure fields are properly defined before inserting a new streak
         if (undefinedStartDate() || undefinedEndDate()) {
-            Toast.makeText(this, "Date fields must be populated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, this.getResources().getString(R.string.date_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -338,6 +342,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mAddGoal.setText(R.string.add_goal_button);
         mGoalNameTextView.setText(R.string.goal_name);
         mGoalTypeTextView.setText(R.string.goal_type);
+        mFailResetStreak.setVisibility(View.GONE);
+        mGoalCompleted.setVisibility(View.GONE);
+        mHistoricalStreaksHeader.setVisibility(View.GONE);
+
     }
 
     private void setAddHabitWorkspace() {
@@ -347,6 +355,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mAddGoal.setText(R.string.add_habit_button);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
+        mFailResetStreak.setVisibility(View.GONE);
+        mGoalCompleted.setVisibility(View.GONE);
+        mHistoricalStreaksHeader.setVisibility(View.GONE);
     }
 
     private void setEditGoalWorkspace() {
@@ -355,6 +366,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mDeleteGoal.setVisibility(View.VISIBLE);
         mAddGoal.setText(R.string.save_goal_button);
         mDeleteGoal.setText(R.string.delete_goal_button);
+        mFailResetStreak.setVisibility(View.VISIBLE);
+        mGoalCompleted.setVisibility(View.VISIBLE);
     }
 
     private void setEditHabitWorkspace() {
@@ -365,6 +378,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
         mDeleteGoal.setText(R.string.delete_habit_button);
+        mHistoricalStreaksHeader.setVisibility(View.VISIBLE);
     }
 
 
@@ -573,7 +587,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         long startDateUnix = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDateUnix = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         if (startDateUnix >= endDateUnix) {
-            Toast.makeText(this, "End Date must be after Start Date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, GoalEditorActivity.this.getResources().getString(R.string.end_date_after_start_date), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -584,7 +598,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         long startDateUnix = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long failDateUnix = dateToUnixTime(mFailYear, mFailMonth, mFailDay);
         if (startDateUnix >= failDateUnix) {
-            Toast.makeText(this, "Fail Date must be after Start Date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, GoalEditorActivity.this.getResources().getString(R.string.fail_date_after_start_date), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -592,15 +606,43 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private void showResetStreakDialog(){
         AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
-        alertDialog.setTitle("Reset Streak?");
-        alertDialog.setMessage("Resetting your streak will clear your current streak dates.  Historical streak information will be saved.");
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+        alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_header));
+        alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_message));
+
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.view_resetstreak_alertdialog, null);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        alertDialog.setView(dialogView);
+
+        // Set the fail date display as either current time or user chosen time
+        if (undefinedFailDate()) {
+            long failDateMillis = System.currentTimeMillis();
+            SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
+            String failDateString = "";
+            failDateString += failSdf.format(failDateMillis);
+            TextView failDateDisplay = (TextView) dialogView.findViewById(R.id.failure_date_display);
+            failDateDisplay.setText(failDateString);
+        } else {
+            long failDateMillis = dateToUnixTime(mFailYear, mFailMonth, mFailDay) * 1000;
+            SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
+            String failDateString = "";
+            failDateString += failSdf.format(failDateMillis);
+            TextView failDateDisplay = (TextView) dialogView.findViewById(R.id.failure_date_display);
+            failDateDisplay.setText(failDateString);
+        }
+
+        // Dismiss dialog if cancelled
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, GoalEditorActivity.this.getResources().getString(R.string.reset_streak_cancel_button),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Reset Streak",
+
+        // Reset streak
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, GoalEditorActivity.this.getResources().getString(R.string.reset_streak_button),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -612,7 +654,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         }
                     }
                 });
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Choose Fail Date",
+
+        // User can manually choose fail date, after chosen, alert dialog will be recreated
+        // and user selected fail date will be displayed
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, GoalEditorActivity.this.getResources().getString(R.string.reset_streak_fail_date_button),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         mDateType = GOAL_FAIL_DATE;
@@ -620,6 +665,38 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         newFragment.show(getFragmentManager(), "datePicker");
                     }
                 });
+        alertDialog.show();
+    }
+
+    private void showDeleteGoalDialog() {
+
+        // Dialog to confirm if user wants to delete goal
+
+        AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
+        alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
+        alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_message));
+        
+        // Dismiss dialog if cancelled
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, GoalEditorActivity.this.getResources().getString(R.string.delete_goal_cancel_button),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        // Delete goal
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, GoalEditorActivity.this.getResources().getString(R.string.delete_goal_delete_button),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
+                        Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.goal_deleted), Toast.LENGTH_SHORT).show();
+                        clearStartAndEndDates();
+                        clearFailDate();
+                        finish();
+                    }
+                });
+
         alertDialog.show();
     }
 

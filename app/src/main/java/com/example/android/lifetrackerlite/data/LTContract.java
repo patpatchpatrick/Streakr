@@ -44,6 +44,7 @@ public final class LTContract {
         public static final String COLUMN_GOAL_TYPE = "goalType";
         public static final String COLUMN_GOAL_START_DATE = "goalStartDate";
         public static final String COLUMN_GOAL_END_DATE = "goalEndDate";
+        public static final String COLUMN_GOAL_NOTES = "goalNotes";
         public static final String COLUMN_GOAL_COMPLETED = "goalCompleted";
 
         //Define input variables for goals and habits table
@@ -130,6 +131,7 @@ public final class LTContract {
         public static final String COLUMN_STREAK_START_DATE = "streakStartDate";
         public static final String COLUMN_STREAK_END_DATE = "streakEndDate";
         public static final String COLUMN_STREAK_FAIL_DATE = "streakFailedDate";
+        public static final String COLUMN_STREAK_NOTES = "streakNotes";
 
 
 

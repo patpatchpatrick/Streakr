@@ -57,6 +57,7 @@
     <string name="goal_inserted">Goal Inserted</string>
     <string name="goal_updated">Goal Updated</string>
     <string name="goal_deleted">Goal Deleted</string>
+    <string name="note_updated">Note Updated</string>
     <string name="end_date_after_start_date">End Date must be after Start Date</string>
     <string name="fail_date_after_start_date">Fail Date must be after Start Date</string>
     <string name="all_fields_populated">All Fields Must Be Populated</string>

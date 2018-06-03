@@ -3,6 +3,8 @@ package com.example.android.lifetrackerlite.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.android.lifetrackerlite.GoalEditorActivity;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
@@ -28,6 +30,7 @@ public class LTDbHelper extends SQLiteOpenHelper {
                 + GoalsHabitsEntry.COLUMN_GOAL_TYPE + " INTEGER NOT NULL DEFAULT 0, "
                 + GoalsHabitsEntry.COLUMN_GOAL_START_DATE + " INTEGER NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_END_DATE + " INTEGER, "
+                + GoalsHabitsEntry.COLUMN_GOAL_NOTES  + " TEXT DEFAULT '', "
                 + GoalsHabitsEntry.COLUMN_GOAL_COMPLETED + " INTEGER NOT NULL);";
 
 
@@ -40,7 +43,8 @@ public class LTDbHelper extends SQLiteOpenHelper {
                 + StreaksEntry.COLUMN_PARENT_ID + " INTEGER NOT NULL, "
                 + StreaksEntry.COLUMN_STREAK_START_DATE + " INTEGER NOT NULL, "
                 + StreaksEntry.COLUMN_STREAK_END_DATE + " INTEGER NOT NULL, "
-                + StreaksEntry.COLUMN_STREAK_FAIL_DATE + " INTEGER NOT NULL);";
+                + StreaksEntry.COLUMN_STREAK_FAIL_DATE + " INTEGER NOT NULL, "
+                + StreaksEntry.COLUMN_STREAK_NOTES + " TEXT);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_STREAKS_TABLE);

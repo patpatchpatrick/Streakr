@@ -70,6 +70,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private int mFailYear;
     private int mFailMonth;
     private int mFailDay;
+    private String mCurrentGoalNotes = "";
 
     //Views for DatePicker used for Goal Start Date
     private TextView mGoalNameTextView;
@@ -219,9 +220,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             @Override
             public void onClick(View view) {
 
+                //Inflate new popup window to edit notes related to goal/streak
                 LayoutInflater inflater = getLayoutInflater();
-                View notesView = inflater.inflate(R.layout.view_streak_notes,null);
-
+                final View notesView = inflater.inflate(R.layout.view_streak_notes,null);
                 mNotesPopupWindow = new PopupWindow(
                         notesView,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -229,11 +230,21 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 );
 
                 Button closeButton = (Button) notesView.findViewById(R.id.notes_close_button);
+                EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
+
+                //Set note editText to contain current note string data
+                notesEditText.setText(mCurrentGoalNotes, TextView.BufferType.EDITABLE);
 
                 // Set a click listener for the popup window close button
                 closeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
+
+                        // Update the goal note with user note editText value
+                        updateNote(notesEditText);
+
                         // Dismiss the popup window
                         mNotesPopupWindow.dismiss();
                     }
@@ -388,6 +399,20 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     }
 
+    private void updateNote(EditText notesEditText) {
+
+        // Get note string from edit text field
+        String notesString = notesEditText.getText().toString().trim();
+
+        // Update goal database table to contain user inputted note
+        ContentValues values = new ContentValues();
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_NOTES, notesString);
+
+        int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
+
+        Toast.makeText(this, this.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
+    }
+
     private void setAddGoalWorkspace() {
         //Set up workspace and strings for Add Goal mode
         setTitle(R.string.add_goal_activity_title);
@@ -398,6 +423,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mFailResetStreak.setVisibility(View.GONE);
         mGoalCompleted.setVisibility(View.GONE);
         mHistoricalStreaksHeader.setVisibility(View.GONE);
+        mNotesButton.setVisibility(View.GONE);
 
     }
 
@@ -411,6 +437,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mFailResetStreak.setVisibility(View.GONE);
         mGoalCompleted.setVisibility(View.GONE);
         mHistoricalStreaksHeader.setVisibility(View.GONE);
+        mNotesButton.setVisibility(View.GONE);
     }
 
     private void setEditGoalWorkspace() {
@@ -421,6 +448,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mDeleteGoal.setText(R.string.delete_goal_button);
         mFailResetStreak.setVisibility(View.VISIBLE);
         mGoalCompleted.setVisibility(View.VISIBLE);
+        mNotesButton.setVisibility(View.VISIBLE);
     }
 
     private void setEditHabitWorkspace() {
@@ -450,6 +478,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         GoalsHabitsEntry.COLUMN_GOAL_TYPE,
                         GoalsHabitsEntry.COLUMN_GOAL_START_DATE,
                         GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
+                        GoalsHabitsEntry.COLUMN_GOAL_NOTES,
                         GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
 
                 return new CursorLoader(this,
@@ -502,9 +531,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
                         mGoalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
+                        mCurrentGoalNotes = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NOTES));
                         int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                         long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
+
 
 
                         mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);

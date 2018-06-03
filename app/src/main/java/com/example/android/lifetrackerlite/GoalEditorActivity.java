@@ -222,7 +222,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                 //Inflate new popup window to edit notes related to goal/streak
                 LayoutInflater inflater = getLayoutInflater();
-                final View notesView = inflater.inflate(R.layout.view_streak_notes,null);
+                final View notesView = inflater.inflate(R.layout.view_streak_notes, null);
                 mNotesPopupWindow = new PopupWindow(
                         notesView,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -388,6 +388,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         values.put(StreaksEntry.COLUMN_STREAK_START_DATE, startDate);
         values.put(StreaksEntry.COLUMN_STREAK_END_DATE, endDate);
         values.put(StreaksEntry.COLUMN_STREAK_FAIL_DATE, failDate);
+        values.put(StreaksEntry.COLUMN_STREAK_NOTES, mCurrentGoalNotes);
 
         //Insert values into database
         Uri uri = getContentResolver().insert(StreaksEntry.CONTENT_URI, values);
@@ -410,6 +411,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
+        // Clear old goal notes value and make toast that note has been updated
+        mCurrentGoalNotes = "";
         Toast.makeText(this, this.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
     }
 
@@ -496,7 +499,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry.COLUMN_PARENT_ID,
                         StreaksEntry.COLUMN_STREAK_START_DATE,
                         StreaksEntry.COLUMN_STREAK_END_DATE,
-                        StreaksEntry.COLUMN_STREAK_FAIL_DATE};
+                        StreaksEntry.COLUMN_STREAK_FAIL_DATE,
+                        StreaksEntry.COLUMN_STREAK_NOTES};
 
                 String selection = StreaksEntry.COLUMN_PARENT_ID + "=?";
                 String[] selectionArgs = new String[]{String.valueOf(mCurrentGoalID)};
@@ -535,7 +539,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                         long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
-
 
 
                         mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
@@ -589,6 +592,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     String streakLengthString = "";
                     while (cursor.moveToNext()) {
 
+                        String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
+
                         //Convert unix start date to string and add to details
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE)) * 1000;
                         SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
@@ -617,7 +622,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         //Set goal details string
 
                         streakDetailString += "" + startDateString + " ---> ";
-                        streakDetailString += "" + failDateString + "\n";
+                        streakDetailString += "" + failDateString + streakNotes + "\n";
 
 
                     }
@@ -688,7 +693,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         return true;
     }
 
-    private void showResetStreakDialog(){
+    private void showResetStreakDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_message));

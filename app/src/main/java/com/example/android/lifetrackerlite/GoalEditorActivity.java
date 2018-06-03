@@ -1,5 +1,6 @@
 package com.example.android.lifetrackerlite;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -19,13 +20,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +63,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean mStartDateSet;
     private boolean mEndDateSet;
     private boolean mFailDateSet;
+    private boolean mGoalHasChanged = false;
     private int mEndYear;
     private int mEndMonth;
     private int mEndDay;
@@ -79,8 +86,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private Button mPickEndDate;
     private Button mAddGoal;
     private Button mDeleteGoal;
+    private Button mNotesButton;
     private Button mFailResetStreak;
     private Button mGoalCompleted;
+
+    private PopupWindow mNotesPopupWindow;
+    private LinearLayout mNotesLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +123,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
         mAddGoal = (Button) findViewById(R.id.add_goal_editor);
         mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
+        mNotesButton = (Button) findViewById(R.id.notes_button);
         mFailResetStreak = (Button) findViewById(R.id.fail_reset_streak);
         mGoalCompleted = (Button) findViewById(R.id.goal_completed);
+        mNotesLinearLayout = (LinearLayout) findViewById(R.id.notes_linear_layout);
+
+        //Set onTouchListeners to all views that can be edited for discard changes dialog
+        mNameEditText.setOnTouchListener(mTouchListener);
+        mPickStartDate.setOnTouchListener(mTouchListener);
+        mPickEndDate.setOnTouchListener(mTouchListener);
+        mGoalTypeSpinner.setOnTouchListener(mTouchListener);
 
         //Dates are not set when activity starts
         mStartDateSet = false;
@@ -189,6 +208,40 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                 //Prompt user to ensure they want to reset streak
                 showResetStreakDialog();
+            }
+        });
+
+        mNotesButton.setOnClickListener(new View.OnClickListener() {
+
+            //When notes button is clicked, create new notes popup window to edit/save notes related
+            //to the current streak
+
+            @Override
+            public void onClick(View view) {
+
+                LayoutInflater inflater = getLayoutInflater();
+                View notesView = inflater.inflate(R.layout.view_streak_notes,null);
+
+                mNotesPopupWindow = new PopupWindow(
+                        notesView,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                Button closeButton = (Button) notesView.findViewById(R.id.notes_close_button);
+
+                // Set a click listener for the popup window close button
+                closeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Dismiss the popup window
+                        mNotesPopupWindow.dismiss();
+                    }
+                });
+
+                mNotesPopupWindow.setFocusable(true);
+                mNotesPopupWindow.showAtLocation(mNotesLinearLayout, Gravity.CENTER, 0, 0);
+
             }
         });
 
@@ -675,7 +728,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_message));
-        
+
         // Dismiss dialog if cancelled
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, GoalEditorActivity.this.getResources().getString(R.string.delete_goal_cancel_button),
                 new DialogInterface.OnClickListener() {
@@ -697,6 +750,59 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     }
                 });
 
+        alertDialog.show();
+    }
+
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mGoalHasChanged = true;
+            return false;
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        // If the goal hasn't changed, continue with handling back button press
+        if (!mGoalHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the goal.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 

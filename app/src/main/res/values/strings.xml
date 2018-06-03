@@ -19,6 +19,7 @@
     <string name="save_goal_button">Save Goal</string>
     <string name="add_goal_button">Add Goal</string>
     <string name="delete_goal_button">Delete Goal</string>
+    <string name="notes_button">Streak Notes</string>
     <string name="habit_name">Habit Name</string>
     <string name="habit_type">Habit Type</string>
     <string name="add_habit_activity_title">Add a Habit</string>
@@ -46,6 +47,10 @@
     <string name="delete_goal_message">Deletion Will Be Permanent</string>
     <string name="delete_goal_cancel_button">Cancel</string>
     <string name="delete_goal_delete_button">Delete</string>
+
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 
     <!-- Toast Messages [CHAR LIMIT=TBD] -->
     <string name="streak_reset">Streak Reset</string>

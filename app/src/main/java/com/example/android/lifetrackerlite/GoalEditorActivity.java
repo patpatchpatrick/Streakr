@@ -50,6 +50,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private int mCurrentGoalID;
     private static final int GOAL_EDIT_LOADER = 1;
     private static final int STREAK_LOADER = 2;
+    private boolean mLoadingNote = false;
 
     private int mGoalType;
     private int mGoalOrHabit;
@@ -409,6 +410,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NOTES, notesString);
 
+        mLoadingNote = true;
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
         // Clear old goal notes value and make toast that note has been updated
@@ -523,14 +525,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Load data for Goal and Streak loaders
 
-        if (cursor.getCount() >= 1) {
+        if (cursor.getCount() >= 1 && !mLoadingNote) {
             switch (loader.getId()) {
                 case GOAL_EDIT_LOADER:
                     while (cursor.moveToNext()) {
 
                         //Load the current goal _ID, and once you have that info you can begin loading the Streak data for that goal
                         mCurrentGoalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
-                        getLoaderManager().initLoader(STREAK_LOADER, null, this);
 
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
@@ -585,6 +586,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
                     }
+
+                    //Load Streak Data after goal has been loaded so that you have the goal ID to load streak data for
+                    getLoaderManager().initLoader(STREAK_LOADER, null, this);
+
                     break;
                 case STREAK_LOADER:
 
@@ -630,6 +635,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     mStreakDataLengthTextView.setText(streakLengthString);
                     break;
             }
+        } else {
+
+            // Will hit this criteria if only loading notes for a particular goal.  When loading notes for a particular
+            // goal, it is not necessary to reload the entire cursor
+            while (cursor.moveToNext()) {
+                mCurrentGoalNotes = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NOTES));
+            }
+            mLoadingNote = false;
         }
 
     }
@@ -738,7 +751,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         //Reset streak.  This will save historical streak info and clear dates
                         //so that a new streak can be started
                         if (insertStreak()) {
-                            clearStartAndEndDates();
                             clearFailDate();
                         }
                     }
@@ -965,4 +977,5 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
         return false;
     }
+
 }

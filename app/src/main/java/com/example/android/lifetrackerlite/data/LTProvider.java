@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.android.lifetrackerlite.GoalEditorActivity;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
@@ -315,8 +316,6 @@ public class LTProvider extends ContentProvider {
         // Return the number of rows updated
         return rowsUpdated;
     }
-
-
 
 
 }

@@ -5,21 +5,27 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+import android.widget.Toast;
 
+import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
+import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.data.LTContract;
+import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 
 //RecyclerView Adapter to populate goals and habits data in app
-public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapter.ViewHolder> {
+public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter{
     Cursor dataCursor;
     Context context;
 
@@ -28,10 +34,43 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     // OnClickListener for items in the recyclerView
     final private ListItemClickListener mOnClickListener;
 
+    // OnDragListener used for reordering goal/habit list via drag/drop
+    final private OnStartDragListener mDragStartListener;
+
+    // TODO Update cursor position when an item is moved.
+    // Determine what to do when an item is moved in the goal/habits recycleView
+    @Override
+    public Boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                //Collections.swap(mItems, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                //Collections.swap(mItems, i, i - 1);
+            }
+        }
+        // Notify the adapter that the item has moved
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+
+    }
+
+    // Used as a placeholder for now.  Swipe functionality is currently disabled but if it is enabled
+    // in the future, this method can be used to determine what to do when a swipe occurs
+    @Override
+    public void onItemDismiss(int position) {
+        //mItems.remove(position);
+        notifyItemRemoved(position);
+
+    }
+
     // ListItemClickListener with onListItemClick callback for goalsHabitsFeatureActivity to know which list item was clicked
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
+
+
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView goalName;
@@ -39,6 +78,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         public TextView goalDetails;
         public TextView streakLengthView;
         public ImageView goalHabitIcon;
+
         public ViewHolder(View view) {
 
             // Get references to all TextViews,ImageViews within view that need to be populated with data
@@ -50,6 +90,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             streakLengthView = (TextView) view.findViewById(R.id.streak_length);
             goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);
             view.setOnClickListener(this);
+
 
         }
 
@@ -63,7 +104,9 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         }
     }
 
-    public GoalRecyclerAdapter(Activity mContext, Cursor cursor, ListItemClickListener listener) {
+    public GoalRecyclerAdapter(Activity mContext, Cursor cursor, ListItemClickListener listener, OnStartDragListener dragStartListener) {
+
+        mDragStartListener = dragStartListener;
         dataCursor = cursor;
         context = mContext;
         mOnClickListener = listener;
@@ -91,7 +134,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
     // Set cursor goal/habit data on viewHolder
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
 
         dataCursor.moveToPosition(position);
@@ -151,6 +194,18 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         GradientDrawable magnitudeCircle = (GradientDrawable) holder.streakLengthView.getBackground();
         // Set the color on the magnitude circle
         magnitudeCircle.setColor(streakColor);
+
+        // Set an onTouchListener on the view, and when the view is touched, begin drag/drop
+        holder.goalName.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getActionMasked() ==
+                        MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });
 
     }
 

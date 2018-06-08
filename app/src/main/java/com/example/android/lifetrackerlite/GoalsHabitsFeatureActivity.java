@@ -2,37 +2,31 @@ package com.example.android.lifetrackerlite;
 
 import android.app.LoaderManager;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.data.LTDbHelper;
-import com.example.android.lifetrackerlite.GoalEditorActivity;
+import com.example.android.lifetrackerlite.helper.GoalItemTouchHelperCallback;
+import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
+import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 
-import java.util.List;
-
-public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener{
+public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener{
 
     private static final int GOALSHABITS_LOADER = 0;
 
     private RecyclerView mRecyclerView;
     private GoalRecyclerAdapter mAdapter;
+    private ItemTouchHelper mItemtouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +67,13 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mRecyclerView = findViewById(R.id.recycler_view_goals_habits);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(GoalsHabitsFeatureActivity.this));
-        mAdapter = new GoalRecyclerAdapter(this, null, this);
+        mAdapter = new GoalRecyclerAdapter(this, null, this, this);
         mRecyclerView.setAdapter(mAdapter);
+
+        ItemTouchHelper.Callback callback =
+                new GoalItemTouchHelperCallback(mAdapter);
+        mItemtouchHelper = new ItemTouchHelper(callback);
+        mItemtouchHelper.attachToRecyclerView(mRecyclerView);
 
         //Initialize loader for goals data
         getLoaderManager().initLoader(GOALSHABITS_LOADER, null, this);
@@ -130,5 +129,13 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
 
+    }
+
+    // Start dragging the viewHolder when the startDrag callback is received from the GoalRecyclerAdapter
+    // The drag is initiated when the view is touched
+    //TODO indicate where the view  should be touched for drag to start
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemtouchHelper.startDrag(viewHolder);
     }
 }

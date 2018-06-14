@@ -5,14 +5,20 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_weight="0.5">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
+        android:layout_centerInParent="true"
         android:src="@drawable/goal_icon"
         android:id="@+id/goal_habit_icon"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -71,5 +77,21 @@
             tools:text="Streak" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/drag_reorder"
+        android:layout_centerInParent="true"
+        android:paddingRight="16dp"
+        android:id="@+id/drag_drop_button"
+        />
+    </RelativeLayout>
+
+
 
 </LinearLayout>

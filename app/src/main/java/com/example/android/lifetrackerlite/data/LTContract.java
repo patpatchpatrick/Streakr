@@ -39,6 +39,7 @@ public final class LTContract {
         public static final String TABLE_NAME = "goalsHabits";
 
         public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_GOAL_ORDER = "goalOrder";
         public static final String COLUMN_GOAL_NAME = "goalName";
         public static final String COLUMN_GOAL_OR_HABIT = "goalOrHabit";
         public static final String COLUMN_GOAL_TYPE = "goalType";

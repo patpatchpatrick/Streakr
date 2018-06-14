@@ -1,12 +1,15 @@
 package com.example.android.lifetrackerlite;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,15 +24,19 @@ import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 
 //RecyclerView Adapter to populate goals and habits data in app
-public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter{
+public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter {
     Cursor dataCursor;
     Context context;
 
     private static final String TAG = GoalRecyclerAdapter.class.getSimpleName();
+
+    private ArrayList<Integer> mGoalOrder;
 
     // OnClickListener for items in the recyclerView
     final private ListItemClickListener mOnClickListener;
@@ -43,11 +50,11 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     public Boolean onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                //Collections.swap(mItems, i, i + 1);
+                Collections.swap(mGoalOrder, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                //Collections.swap(mItems, i, i - 1);
+                Collections.swap(mGoalOrder, i, i - 1);
             }
         }
         // Notify the adapter that the item has moved
@@ -65,11 +72,26 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
     }
 
+    @Override
+    public void onItemDropped() {
+
+        //TODO Update database order when an item is moved....  make sure to update provider class to fix "Notify Change"  in updateGoal method
+        String selection = GoalsHabitsEntry.COLUMN_GOAL_ORDER + "=?";
+        String[] selectionArgs;
+        for (int i = 0; i < mGoalOrder.size(); i++) {
+            selectionArgs = new String[]{String.valueOf(mGoalOrder.get(i))};
+            ContentValues values = new ContentValues();
+            values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, i);
+            int rowsUpdated = context.getContentResolver().update(GoalsHabitsEntry.CONTENT_URI, values, selection, selectionArgs);
+            Log.d("Row Updated " + mGoalOrder.get(i), "New Order " + i + rowsUpdated);
+        }
+        context.getContentResolver().notifyChange(GoalsHabitsEntry.CONTENT_URI, null);
+    }
+
     // ListItemClickListener with onListItemClick callback for goalsHabitsFeatureActivity to know which list item was clicked
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
-
 
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -78,6 +100,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         public TextView goalDetails;
         public TextView streakLengthView;
         public ImageView goalHabitIcon;
+        public ImageView dragDropButton;
 
         public ViewHolder(View view) {
 
@@ -89,6 +112,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             goalDetails = (TextView) view.findViewById(R.id.goal_details);
             streakLengthView = (TextView) view.findViewById(R.id.streak_length);
             goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);
+            dragDropButton = (ImageView) view.findViewById(R.id.drag_drop_button);
             view.setOnClickListener(this);
 
 
@@ -110,6 +134,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         dataCursor = cursor;
         context = mContext;
         mOnClickListener = listener;
+
+
     }
 
     @Override
@@ -121,13 +147,23 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
     // Swap cursor with loader data if data changes
     public Cursor swapCursor(Cursor cursor) {
+
         if (dataCursor == cursor) {
             return null;
         }
+
         Cursor oldCursor = dataCursor;
         this.dataCursor = cursor;
         if (cursor != null) {
             this.notifyDataSetChanged();
+
+            // Set GoalOrder ArrayList to determine order of goals/habits in cursor
+            // mGoalOrder ArrayList is used to keep track of order when order is changed via drag/drop
+            // in the OnItemMoved method in the GoalRecyclerAdapter
+            mGoalOrder = new ArrayList<Integer>();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                mGoalOrder.add(i);
+            }
         }
         return oldCursor;
     }
@@ -196,7 +232,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         magnitudeCircle.setColor(streakColor);
 
         // Set an onTouchListener on the view, and when the view is touched, begin drag/drop
-        holder.goalName.setOnTouchListener(new View.OnTouchListener() {
+        holder.dragDropButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getActionMasked() ==

@@ -53,6 +53,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean mLoadingNote = false;
 
     private int mGoalType;
+    private int mNumberOfGoals;
     private int mGoalOrHabit;
     private int mDateType;
     private static final int GOAL_START_DATE = 0;
@@ -106,7 +107,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mCurrentGoalUri = intent.getData();
 
         //Check if you are editing a goal or a habit. if neither then set the default value to NEITHER
-        mGoalOrHabit = intent.getIntExtra("GoalorHabit", GoalsHabitsEntry.NEITHER);
+        mGoalOrHabit = intent.getIntExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.NEITHER);
+
+        //Determine the number of goals in cursor received from GoalsHabitsFeatureActivity
+        //Use this number to determine what the goal order of new goal should be
+        mNumberOfGoals = intent.getIntExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, -2);
 
         //Find views to read user input from
         mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
@@ -312,6 +317,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
         ContentValues values = new ContentValues();
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberOfGoals);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);

@@ -62,6 +62,7 @@
     <string name="fail_date_after_start_date">Fail Date must be after Start Date</string>
     <string name="all_fields_populated">All Fields Must Be Populated</string>
     <string name="date_fields_populated">Date Fields Must Be Populated</string>
+    <string name="please_wait_data_load">Please Wait for Data to Load</string>
 
 
 

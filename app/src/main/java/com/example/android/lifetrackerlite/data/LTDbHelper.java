@@ -25,6 +25,7 @@ public class LTDbHelper extends SQLiteOpenHelper {
         // Create a String that contains the SQL statement to create the goals table
         String SQL_CREATE_GOALS_HABITS_TABLE =  "CREATE TABLE " + GoalsHabitsEntry.TABLE_NAME + " ("
                 + GoalsHabitsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GoalsHabitsEntry.COLUMN_GOAL_ORDER + " INTEGER NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_NAME + " TEXT NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT + " INTEGER NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_TYPE + " INTEGER NOT NULL DEFAULT 0, "

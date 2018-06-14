@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.helper.GoalItemTouchHelperCallback;
@@ -27,6 +28,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private RecyclerView mRecyclerView;
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
+    private Integer mNumberGoals = -2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,19 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
                 //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+
+                // If number of goals  is not fully loaded (i.e. is still the default of -2), return
+                // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
+                //  This data is used to determine goal order (used for drag and drop functionality)
+                if (mNumberGoals == -2) {
+                    Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
+                            Toast.LENGTH_SHORT);
+                    return;
+                }
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
+
                 //Send over an extra int to indicate editing a goal
-                intent.putExtra("GoalorHabit", GoalsHabitsEntry.GOAL);
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
                 startActivity(intent);
 
             }
@@ -56,8 +69,19 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
                 //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
+
+                // If number of goals  is not fully loaded (i.e. is still the default of -2), return
+                // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
+                //  This data is used to determine goal order (used for drag and drop functionality)
+                if (mNumberGoals == -2) {
+                    Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
+                            Toast.LENGTH_SHORT);
+                    return;
+                }
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
+
                 //Send over an extra int to indicate editing a habit
-                intent.putExtra("GoalorHabit", GoalsHabitsEntry.HABIT);
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.HABIT);
                 startActivity(intent);
 
             }
@@ -88,6 +112,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         String[] projection = {
                 GoalsHabitsEntry._ID,
+                GoalsHabitsEntry.COLUMN_GOAL_ORDER,
                 GoalsHabitsEntry.COLUMN_GOAL_NAME,
                 GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT,
                 GoalsHabitsEntry.COLUMN_GOAL_TYPE,
@@ -95,13 +120,14 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
                 GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
 
-        return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, null, null, null);
+        return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, null, null, GoalsHabitsEntry.COLUMN_GOAL_ORDER);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         mAdapter.swapCursor(cursor);
+        mNumberGoals = cursor.getCount();
 
     }
 
@@ -138,4 +164,5 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemtouchHelper.startDrag(viewHolder);
     }
+
 }

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.android.lifetrackerlite.GoalEditorActivity;
+import com.example.android.lifetrackerlite.GoalRecyclerAdapter;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 
@@ -310,7 +311,7 @@ public class LTProvider extends ContentProvider {
         // If 1 or more rows were updated, then notify all listeners that the data at the
         // given URI has changed
         if (rowsUpdated != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+           // getContext().getContentResolver().notifyChange(uri, null);
         }
 
         // Return the number of rows updated

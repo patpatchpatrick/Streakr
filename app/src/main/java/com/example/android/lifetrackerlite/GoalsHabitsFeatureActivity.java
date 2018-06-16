@@ -23,6 +23,8 @@ import com.example.android.lifetrackerlite.helper.GoalItemTouchHelperCallback;
 import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 
+import java.util.HashMap;
+
 public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener{
 
     private static final String TAG = GoalsHabitsFeatureActivity.class.getSimpleName();
@@ -145,14 +147,16 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     // When a goal/habit item is clicked, open up that goal/habit in "edit mode"
     @Override
-    public void onListItemClick(int clickedItemIndex) {
+    public void onListItemClick(int clickedGoalID) {
 
         // New intent to open GoalEditorActivity class for goal clicked
         Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
 
         // Set the URI on the intent of the goal clicked to be the id of the clicked item
         // Add 1 to the clickedItemIndex so that URI ID matches correct goal
-        Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedItemIndex + 1);
+        Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedGoalID );
+
+        Log.d(TAG, "Clicked Goal ID" + clickedGoalID);
 
         //Set the data on the intent to be the current URI
         intent.setData(currentGoalUri);
@@ -170,4 +174,10 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mItemtouchHelper.startDrag(viewHolder);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
+
+    }
 }

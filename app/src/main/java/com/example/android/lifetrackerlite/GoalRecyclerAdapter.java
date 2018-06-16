@@ -27,12 +27,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 
 //RecyclerView Adapter to populate goals and habits data in app
 public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter {
     Cursor dataCursor;
     Context context;
+    private HashMap<Integer, Integer> cursorOrder;
+
 
     private static final String TAG = GoalRecyclerAdapter.class.getSimpleName();
 
@@ -43,8 +46,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
     // OnDragListener used for reordering goal/habit list via drag/drop
     final private OnStartDragListener mDragStartListener;
-
-    // TODO Update cursor position when an item is moved.
+    
     // Determine what to do when an item is moved in the goal/habits recycleView
     @Override
     public Boolean onItemMove(int fromPosition, int toPosition) {
@@ -75,15 +77,20 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     @Override
     public void onItemDropped() {
 
-        //TODO Update database order when an item is moved....  make sure to update provider class to fix "Notify Change"  in updateGoal method
-        String selection = GoalsHabitsEntry.COLUMN_GOAL_ORDER + "=?";
+        //TODO  make sure to update provider class to fix "Notify Change"  in updateGoal method
+        String selection = GoalsHabitsEntry._ID + "=?";
         String[] selectionArgs;
+        int columnID;
         for (int i = 0; i < mGoalOrder.size(); i++) {
-            selectionArgs = new String[]{String.valueOf(mGoalOrder.get(i))};
+            selectionArgs = new String[]{String.valueOf(cursorOrder.get(mGoalOrder.get(i)))};
             ContentValues values = new ContentValues();
             values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, i);
             int rowsUpdated = context.getContentResolver().update(GoalsHabitsEntry.CONTENT_URI, values, selection, selectionArgs);
-            Log.d("Row Updated " + mGoalOrder.get(i), "New Order " + i + rowsUpdated);
+            Log.d("ID Updated "  , "" + cursorOrder.get(mGoalOrder.get(i)));
+            Log.d("Row Updated ", "" + mGoalOrder.get(i));
+            Log.d("New Order ", "" + i);
+            Log.d("Number of Rows Updated ", "" + rowsUpdated);
+
         }
         context.getContentResolver().notifyChange(GoalsHabitsEntry.CONTENT_URI, null);
     }
@@ -160,10 +167,24 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             // Set GoalOrder ArrayList to determine order of goals/habits in cursor
             // mGoalOrder ArrayList is used to keep track of order when order is changed via drag/drop
             // in the OnItemMoved method in the GoalRecyclerAdapter
+
             mGoalOrder = new ArrayList<Integer>();
             for (int i = 0; i < cursor.getCount(); i++) {
                 mGoalOrder.add(i);
             }
+            cursor.moveToFirst();
+            cursorOrder = new HashMap<Integer, Integer>();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                cursorOrder.put(cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_ORDER)), cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID)));
+                Log.d(TAG, "ORDER " + cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_ORDER)));
+                Log.d(TAG, "ID " + cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID)));
+            }
+            //for (Integer key : cursorOrder.keySet()) {
+            //  Log.d(TAG, "Cursor Count " + cursor.getCount());
+            //Log.d(TAG, "key: " + key + " value: " + cursorOrder.get(key));
+            //}
+
         }
         return oldCursor;
     }
@@ -172,8 +193,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-
         dataCursor.moveToPosition(position);
+
 
         //Set goal name string
         String goalNameText = dataCursor.getString(dataCursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));

@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 
 public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener{
+
+    private static final String TAG = GoalsHabitsFeatureActivity.class.getSimpleName();
 
     private static final int GOALSHABITS_LOADER = 0;
 
@@ -128,6 +132,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         mAdapter.swapCursor(cursor);
         mNumberGoals = cursor.getCount();
+        Log.d(TAG, "" + mNumberGoals);
 
     }
 

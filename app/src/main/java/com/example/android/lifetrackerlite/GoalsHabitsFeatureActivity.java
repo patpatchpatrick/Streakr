@@ -153,13 +153,22 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
 
         // Set the URI on the intent of the goal clicked to be the id of the clicked item
-        // Add 1 to the clickedItemIndex so that URI ID matches correct goal
         Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedGoalID );
 
         Log.d(TAG, "Clicked Goal ID" + clickedGoalID);
 
         //Set the data on the intent to be the current URI
         intent.setData(currentGoalUri);
+
+        // If number of goals  is not fully loaded (i.e. is still the default of -2), return
+        // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
+        //  This data is used to determine goal order (used for drag and drop functionality)
+        if (mNumberGoals == -2) {
+            Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
+                    Toast.LENGTH_SHORT);
+            return;
+        }
+        intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
 
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);

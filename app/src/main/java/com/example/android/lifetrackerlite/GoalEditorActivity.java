@@ -46,6 +46,8 @@ import java.util.Date;
 
 public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String TAG = GoalEditorActivity.class.getSimpleName();
+
     private Uri mCurrentGoalUri;
     private int mCurrentGoalID;
     private static final int GOAL_EDIT_LOADER = 1;
@@ -518,7 +520,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         streakProjection,
                         selection,
                         selectionArgs,
-                        null);
+                        StreaksEntry.COLUMN_STREAK_FAIL_DATE + " DESC");
         }
 
         //TODO  Figure out what to return in default scenario
@@ -796,6 +798,38 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
+                        //Update Goal Order for other goals whose goal order are affected by deleted goal
+
+                        //Query current goal info
+                        String[] goalProjection = {
+                                GoalsHabitsEntry._ID,
+                                GoalsHabitsEntry.COLUMN_GOAL_ORDER};
+                        Cursor deletedGoalDetails = getContentResolver().query(mCurrentGoalUri, goalProjection, null, null, null);
+                        //Get the deleted goal order
+                        Integer currentGoalOrder = -1;
+                        if (deletedGoalDetails.getCount() >= 1) {
+                            while (deletedGoalDetails.moveToNext()) {
+                                currentGoalOrder = deletedGoalDetails.getInt(deletedGoalDetails.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_ORDER));
+                            }
+                        }
+
+
+                        //Update goal order for goals whose order is greater than the order of the deleted goal
+                        //For each goal whose goal order is greater than the deleted goal's order, subtract one
+                        //from the goal's order to account for deleted goal and update the database
+                        String selection = GoalsHabitsEntry.COLUMN_GOAL_ORDER + "=?";
+                        String[] selectionArgs;
+                        for (int firstGoalToUpdate = currentGoalOrder + 1; firstGoalToUpdate <= mNumberOfGoals; firstGoalToUpdate++) {
+                            selectionArgs = new String[]{String.valueOf(firstGoalToUpdate)};
+                            ContentValues values = new ContentValues();
+                            values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, firstGoalToUpdate - 1);
+                            int rowsUpdated = getContentResolver().update(GoalsHabitsEntry.CONTENT_URI, values, selection, selectionArgs);
+
+                        }
+                        getContentResolver().notifyChange(GoalsHabitsEntry.CONTENT_URI, null);
+
+                        //Delete the goal
                         int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
                         Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.goal_deleted), Toast.LENGTH_SHORT).show();
                         clearStartAndEndDates();

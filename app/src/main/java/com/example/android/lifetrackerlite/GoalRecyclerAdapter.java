@@ -131,7 +131,10 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         @Override
         public void onClick(View view) {
 
-            // Pass back click position via callback
+            // Pass goal ID of clicked item via callback
+            // This goal ID will be used in URI passed to editor activity via GoasHabitsFeatureActivity intent
+            // The goal ID is obtained below from the mCursorOrder hashmap which is created when a new cursor is swapped in
+            // The mCursorOrder hashmap maps the cursor IDs with the order of the goals
             int clickedPosition = getAdapterPosition();
             int clickedGoalID = mCursorOrder.get(clickedPosition);
             mOnClickListener.onListItemClick(clickedGoalID);

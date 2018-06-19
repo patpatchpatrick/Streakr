@@ -90,7 +90,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private Spinner mGoalTypeSpinner;
     private Button mPickStartDate;
     private Button mPickEndDate;
-    private Button mAddGoal;
+    private Button mAddOrSaveGoal;
     private Button mDeleteGoal;
     private Button mNotesButton;
     private Button mFailResetStreak;
@@ -98,6 +98,21 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private PopupWindow mNotesPopupWindow;
     private LinearLayout mNotesLinearLayout;
+
+    //Keys for onSavedInstanceState
+    private static final String LIFECYCLE_START_YEAR_KEY = "start year";
+    private static final String LIFECYCLE_START_MONTH_KEY = "start month";
+    private static final String LIFECYCLE_START_DAY_KEY = "start day";
+    private static final String LIFECYCLE_END_YEAR_KEY = "end year";
+    private static final String LIFECYCLE_END_MONTH_KEY = "end month";
+    private static final String LIFECYCLE_END_DAY_KEY = "end day";
+    private static final String LIFECYCLE_GOAL_OR_HABIT = "goal or habit";
+    private static final String LIFECYCLE_STREAK_DATA = "streak data";
+    private static final String LIFECYCLE_STREAK_DATA_LENGTH = "streak data length";
+    private static final String LIFECYCLE_CURRENT_GOAL_ID = "current goal id";
+    private static final String LIFECYCLE_NUMBER_OF_GOALS = "number of goals";
+    private static final String LIFECYCLE_CURRENT_URI = "current uri";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +146,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mHistoricalStreaksHeader = (TextView) findViewById(R.id.historical_streaks_header);
         mPickStartDate = (Button) findViewById(R.id.goal_start_date_button);
         mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
-        mAddGoal = (Button) findViewById(R.id.add_goal_editor);
+        mAddOrSaveGoal = (Button) findViewById(R.id.add_goal_editor);
         mDeleteGoal = (Button) findViewById(R.id.delete_goal_editor);
         mNotesButton = (Button) findViewById(R.id.notes_button);
         mFailResetStreak = (Button) findViewById(R.id.fail_reset_streak);
@@ -149,6 +164,62 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mEndDateSet = false;
         mFailDateSet = false;
 
+        Log.d(TAG, "LOAD ON CREATE");
+
+        if (savedInstanceState != null) {
+
+            Log.d(TAG, "LOAD ON CREATE SAVED INSTANCE");
+
+            //If there is a savedInstanceState from the app being unexpectedly terminated, reload the data
+
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NAME)) {
+                mGoalNameTextView.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)) {
+                mGoalTypeSpinner.setSelection(savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) {
+                mGoalStartDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) {
+                mGoalEndDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NOTES)) {
+                mCurrentGoalNotes = savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NOTES);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_START_YEAR_KEY)) {
+                mStartYear = savedInstanceState.getInt(LIFECYCLE_START_YEAR_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_START_MONTH_KEY)) {
+                mStartMonth = savedInstanceState.getInt(LIFECYCLE_START_MONTH_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_START_DAY_KEY)) {
+                mStartDay = savedInstanceState.getInt(LIFECYCLE_START_DAY_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_END_YEAR_KEY)) {
+                mEndYear = savedInstanceState.getInt(LIFECYCLE_END_YEAR_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_END_MONTH_KEY)) {
+                mEndMonth = savedInstanceState.getInt(LIFECYCLE_END_MONTH_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_END_DAY_KEY)) {
+                mEndDay = savedInstanceState.getInt(LIFECYCLE_END_DAY_KEY);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_GOAL_OR_HABIT)) {
+                mGoalOrHabit = savedInstanceState.getInt(LIFECYCLE_GOAL_OR_HABIT);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_GOAL_ID)) {
+                mCurrentGoalID = savedInstanceState.getInt(LIFECYCLE_CURRENT_GOAL_ID);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_NUMBER_OF_GOALS)) {
+                mNumberOfGoals = savedInstanceState.getInt(LIFECYCLE_NUMBER_OF_GOALS);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_URI)) {
+                mCurrentGoalUri = Uri.parse(savedInstanceState.getString(LIFECYCLE_CURRENT_URI));
+            }
+
+        }
+
         if (mCurrentGoalUri == null) {
             //If editing a goal, set strings within editor activity to goal strings
             if (mGoalOrHabit == GoalsHabitsEntry.GOAL) {
@@ -162,35 +233,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
 
         } else {
-            //Set up workspace and strings for Edit Goal mode
-            setEditGoalWorkspace();
-            getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
-        }
 
-        if (savedInstanceState != null) {
-
-            //If there is a savedInstanceState from the app being unexpectedly terminated, reload the data
-
-            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NAME)){
-                mGoalNameTextView.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
-                Log.d("Goal Name: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+            if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                //Set up workspace and strings for Edit Habit mode
+                setEditHabitWorkspace();
+                getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
+            } else {
+                //Set up workspace and strings for Edit Goal mode
+                setEditGoalWorkspace();
+                getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
             }
-            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)){
-                mGoalTypeSpinner.setSelection(savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
-                Log.d("Goal Type: ", "" + savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
-            }
-            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)){
-                mGoalStartDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
-                Log.d("Start Date: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
-            }
-            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)){
-                mGoalEndDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE));
-                Log.d("End Date: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE));
-            }
-            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NOTES)){
-                mCurrentGoalNotes = savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NOTES);
-            }
-
         }
 
 
@@ -215,7 +267,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
-        mAddGoal.setOnClickListener(new View.OnClickListener() {
+        mAddOrSaveGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Boolean goalUpdatedorInserted = false;
@@ -371,6 +423,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String nameString = mNameEditText.getText().toString().trim();
 
         //Ensure fields are properly defined before updating a goal
+
+        Log.d("NameString is Empty: ", "" + nameString.isEmpty());
+        Log.d("NameString is null: ", "" + (nameString == null));
+        Log.d("undefinedStartDate: ", "" + undefinedStartDate());
+        Log.d("undefinedEndDate: ", "" + undefinedEndDate());
+        Log.d("mGoalOrHabit Neither: ", "" + (mGoalOrHabit == GoalsHabitsEntry.NEITHER));
+
         if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
             Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
@@ -459,7 +518,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Add Goal mode
         setTitle(R.string.add_goal_activity_title);
         mDeleteGoal.setVisibility(View.GONE);
-        mAddGoal.setText(R.string.add_goal_button);
+        mAddOrSaveGoal.setText(R.string.add_goal_button);
         mGoalNameTextView.setText(R.string.goal_name);
         mGoalTypeTextView.setText(R.string.goal_type);
         mFailResetStreak.setVisibility(View.GONE);
@@ -473,7 +532,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Add Habit mode
         setTitle(R.string.add_habit_activity_title);
         mDeleteGoal.setVisibility(View.GONE);
-        mAddGoal.setText(R.string.add_habit_button);
+        mAddOrSaveGoal.setText(R.string.add_habit_button);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
         mFailResetStreak.setVisibility(View.GONE);
@@ -486,7 +545,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Edit Goal mode
         setTitle(getString(R.string.edit_goal_activity_title));
         mDeleteGoal.setVisibility(View.VISIBLE);
-        mAddGoal.setText(R.string.save_goal_button);
+        mAddOrSaveGoal.setText(R.string.save_goal_button);
         mDeleteGoal.setText(R.string.delete_goal_button);
         mFailResetStreak.setVisibility(View.VISIBLE);
         mGoalCompleted.setVisibility(View.VISIBLE);
@@ -497,7 +556,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Edit Habit mode
         setTitle(getString(R.string.edit_habit_activity_title));
         mDeleteGoal.setVisibility(View.VISIBLE);
-        mAddGoal.setText(R.string.save_habit_button);
+        mAddOrSaveGoal.setText(R.string.save_habit_button);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
         mDeleteGoal.setText(R.string.delete_habit_button);
@@ -542,6 +601,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry.COLUMN_STREAK_NOTES};
 
                 String selection = StreaksEntry.COLUMN_PARENT_ID + "=?";
+                Log.d("Current St Goal ID: ", "" + mCurrentGoalID);
                 String[] selectionArgs = new String[]{String.valueOf(mCurrentGoalID)};
 
                 return new CursorLoader(this,
@@ -569,6 +629,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                         //Load the current goal _ID, and once you have that info you can begin loading the Streak data for that goal
                         mCurrentGoalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
+
+                        Log.d("Current Goal loader ID:", "" + mCurrentGoalID);
 
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
@@ -627,6 +689,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     //Load Streak Data after goal has been loaded so that you have the goal ID to load streak data for
                     getLoaderManager().initLoader(STREAK_LOADER, null, this);
 
+                    //If Streak TextView is empty after app is unexpectedly terminated, then the STREAK LOADER must be restarted
+                    if (mStreakDataTextView.getText().toString().isEmpty()) {
+                        this.getLoaderManager().restartLoader(STREAK_LOADER, null, this);
+                    }
+
                     break;
                 case STREAK_LOADER:
 
@@ -635,6 +702,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     while (cursor.moveToNext()) {
 
                         String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
+
+                        Log.d("Streak Notes: ",  streakNotes);
 
                         //Convert unix start date to string and add to details
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE)) * 1000;
@@ -1059,11 +1128,27 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         int goalType = mGoalTypeSpinner.getSelectedItemPosition();
         String startDateString = mGoalStartDateDisplay.getText().toString();
         String endDateString = mGoalEndDateDisplay.getText().toString();
+        String streakDataString = mStreakDataTextView.getText().toString();
+        String streakDataLengthString = mStreakDataLengthTextView.getText().toString();
+        String currentUri = mCurrentGoalUri.toString();
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
-        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE,  goalType);
+        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES, mCurrentGoalNotes);
+        outState.putInt(LIFECYCLE_START_YEAR_KEY, mStartYear);
+        outState.putInt(LIFECYCLE_START_MONTH_KEY, mStartMonth);
+        outState.putInt(LIFECYCLE_START_DAY_KEY, mStartDay);
+        outState.putInt(LIFECYCLE_END_YEAR_KEY, mEndYear);
+        outState.putInt(LIFECYCLE_END_MONTH_KEY, mEndMonth);
+        outState.putInt(LIFECYCLE_END_DAY_KEY, mEndDay);
+        outState.putInt(LIFECYCLE_GOAL_OR_HABIT, mGoalOrHabit);
+        outState.putString(LIFECYCLE_STREAK_DATA, streakDataString);
+        outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
+        outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
+        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
+        outState.putString(LIFECYCLE_CURRENT_URI,  currentUri);
 
     }
 
@@ -1078,11 +1163,27 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         int goalType = mGoalTypeSpinner.getSelectedItemPosition();
         String startDateString = mGoalStartDateDisplay.getText().toString();
         String endDateString = mGoalEndDateDisplay.getText().toString();
+        String streakDataString = mStreakDataTextView.getText().toString();
+        String streakDataLengthString = mStreakDataLengthTextView.getText().toString();
+        String currentUri = mCurrentGoalUri.toString();
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
-        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE,  goalType);
+        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
-        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES,  mCurrentGoalNotes);
-    }
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES, mCurrentGoalNotes);
+        outState.putInt(LIFECYCLE_START_YEAR_KEY, mStartYear);
+        outState.putInt(LIFECYCLE_START_MONTH_KEY, mStartMonth);
+        outState.putInt(LIFECYCLE_START_DAY_KEY, mStartDay);
+        outState.putInt(LIFECYCLE_END_YEAR_KEY, mEndYear);
+        outState.putInt(LIFECYCLE_END_MONTH_KEY, mEndMonth);
+        outState.putInt(LIFECYCLE_END_DAY_KEY, mEndDay);
+        outState.putInt(LIFECYCLE_GOAL_OR_HABIT, mGoalOrHabit);
+        outState.putString(LIFECYCLE_STREAK_DATA, streakDataString);
+        outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
+        outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
+        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
+        outState.putString(LIFECYCLE_CURRENT_URI,  currentUri);
+        }
+
 }

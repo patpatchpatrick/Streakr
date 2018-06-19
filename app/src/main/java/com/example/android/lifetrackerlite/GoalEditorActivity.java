@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -165,6 +166,33 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             setEditGoalWorkspace();
             getLoaderManager().initLoader(GOAL_EDIT_LOADER, null, this);
         }
+
+        if (savedInstanceState != null) {
+
+            //If there is a savedInstanceState from the app being unexpectedly terminated, reload the data
+
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NAME)){
+                mGoalNameTextView.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+                Log.d("Goal Name: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)){
+                mGoalTypeSpinner.setSelection(savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+                Log.d("Goal Type: ", "" + savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)){
+                mGoalStartDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
+                Log.d("Start Date: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)){
+                mGoalEndDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE));
+                Log.d("End Date: ", savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE));
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_NOTES)){
+                mCurrentGoalNotes = savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NOTES);
+            }
+
+        }
+
 
         mPickStartDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -421,9 +449,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mLoadingNote = true;
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
-        // Clear old goal notes value and make toast that note has been updated
-        mCurrentGoalNotes = "";
         Toast.makeText(this, this.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
+
+        // Notify the content resolver that the Goal URI data has changed
+        getContentResolver().notifyChange(mCurrentGoalUri, null);
     }
 
     private void setAddGoalWorkspace() {
@@ -1018,4 +1047,42 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         return false;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+
+        // Save data if the app is ever terminated unexpectedly so that data can be reloaded when app
+        // is restarted
+
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        String goalName = mGoalNameTextView.getText().toString();
+        int goalType = mGoalTypeSpinner.getSelectedItemPosition();
+        String startDateString = mGoalStartDateDisplay.getText().toString();
+        String endDateString = mGoalEndDateDisplay.getText().toString();
+
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
+        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE,  goalType);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save data if the app is ever terminated unexpectedly so that data can be reloaded when app
+        // is restarted
+
+        String goalName = mGoalNameTextView.getText().toString();
+        int goalType = mGoalTypeSpinner.getSelectedItemPosition();
+        String startDateString = mGoalStartDateDisplay.getText().toString();
+        String endDateString = mGoalEndDateDisplay.getText().toString();
+
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
+        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE,  goalType);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES,  mCurrentGoalNotes);
+    }
 }

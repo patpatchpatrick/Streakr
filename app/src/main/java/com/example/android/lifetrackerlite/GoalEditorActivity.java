@@ -164,11 +164,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mEndDateSet = false;
         mFailDateSet = false;
 
-        Log.d(TAG, "LOAD ON CREATE");
 
         if (savedInstanceState != null) {
 
-            Log.d(TAG, "LOAD ON CREATE SAVED INSTANCE");
 
             //If there is a savedInstanceState from the app being unexpectedly terminated, reload the data
 
@@ -423,13 +421,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String nameString = mNameEditText.getText().toString().trim();
 
         //Ensure fields are properly defined before updating a goal
-
-        Log.d("NameString is Empty: ", "" + nameString.isEmpty());
-        Log.d("NameString is null: ", "" + (nameString == null));
-        Log.d("undefinedStartDate: ", "" + undefinedStartDate());
-        Log.d("undefinedEndDate: ", "" + undefinedEndDate());
-        Log.d("mGoalOrHabit Neither: ", "" + (mGoalOrHabit == GoalsHabitsEntry.NEITHER));
-
         if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
             Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
@@ -601,7 +592,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry.COLUMN_STREAK_NOTES};
 
                 String selection = StreaksEntry.COLUMN_PARENT_ID + "=?";
-                Log.d("Current St Goal ID: ", "" + mCurrentGoalID);
                 String[] selectionArgs = new String[]{String.valueOf(mCurrentGoalID)};
 
                 return new CursorLoader(this,
@@ -629,8 +619,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                         //Load the current goal _ID, and once you have that info you can begin loading the Streak data for that goal
                         mCurrentGoalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
-
-                        Log.d("Current Goal loader ID:", "" + mCurrentGoalID);
 
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
@@ -702,8 +690,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     while (cursor.moveToNext()) {
 
                         String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
-
-                        Log.d("Streak Notes: ",  streakNotes);
 
                         //Convert unix start date to string and add to details
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE)) * 1000;
@@ -1130,7 +1116,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String endDateString = mGoalEndDateDisplay.getText().toString();
         String streakDataString = mStreakDataTextView.getText().toString();
         String streakDataLengthString = mStreakDataLengthTextView.getText().toString();
-        String currentUri = mCurrentGoalUri.toString();
+        if (mCurrentGoalUri != null) {
+            String currentUri = mCurrentGoalUri.toString();
+            outState.putString(LIFECYCLE_CURRENT_URI, currentUri);
+        }
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
         outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
@@ -1148,7 +1137,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
-        outState.putString(LIFECYCLE_CURRENT_URI,  currentUri);
 
     }
 
@@ -1165,7 +1153,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         String endDateString = mGoalEndDateDisplay.getText().toString();
         String streakDataString = mStreakDataTextView.getText().toString();
         String streakDataLengthString = mStreakDataLengthTextView.getText().toString();
-        String currentUri = mCurrentGoalUri.toString();
+        if (mCurrentGoalUri != null) {
+            String currentUri = mCurrentGoalUri.toString();
+            outState.putString(LIFECYCLE_CURRENT_URI, currentUri);
+        }
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
         outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
@@ -1183,7 +1174,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
-        outState.putString(LIFECYCLE_CURRENT_URI,  currentUri);
-        }
+
+    }
 
 }

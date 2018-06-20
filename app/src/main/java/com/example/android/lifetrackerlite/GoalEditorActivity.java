@@ -779,6 +779,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                 //Clear streak data upon reset.
                 mStreakDataTextView.setText("");
+                mStreakDataLengthTextView.setText("");
                 break;
 
         }

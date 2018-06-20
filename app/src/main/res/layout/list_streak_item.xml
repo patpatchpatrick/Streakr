@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/streak_list_start_date"
+            android:layout_width="0dp"
+            android:layout_weight="0.45"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="8dp"
+            tools:text="Start Date" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
+            android:text=" ---> "/>
+
+        <TextView
+            android:id="@+id/streak_list_fail_date"
+            android:layout_width="0dp"
+            android:layout_weight="0.45"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            tools:text="Fail Date" />
+
+        <TextView
+            android:id="@+id/streak_list_streak_length"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            tools:text="Streak Length" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:paddingLeft="16dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/note"
+                android:id="@+id/streak_list_note_icon"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

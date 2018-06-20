@@ -73,26 +73,15 @@
         android:textStyle="bold"
   />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/streak_data_streak_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            tools:text="Streak Data" />
-
-        <TextView
-            android:id="@+id/streak_data_length_streak_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            tools:text="Streak Length" />
+        android:id="@+id/recycler_view_streak_details"></android.support.v7.widget.RecyclerView>
+    </ScrollView>
 
 
-    </LinearLayout>
 
 </LinearLayout>

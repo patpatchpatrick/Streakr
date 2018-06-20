@@ -35,6 +35,8 @@
     <!-- Color for a streak length with magnitude 100% + -->
     <color name="streakLength100">#C03823</color>
 
+    <!-- Color for a streak history details -->
+    <color name="streakDetails">#4A7BA7</color>
 
 
 

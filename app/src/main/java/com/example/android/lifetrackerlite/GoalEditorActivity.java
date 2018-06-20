@@ -50,7 +50,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final String TAG = GoalEditorActivity.class.getSimpleName();
 
     private Uri mCurrentGoalUri;
-    private int mCurrentGoalID;
+    private int mCurrentGoalID = -1;
     private static final int GOAL_EDIT_LOADER = 1;
     private static final int STREAK_LOADER = 2;
     private boolean mLoadingNote = false;
@@ -86,6 +86,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private TextView mStreakDataTextView;
     private TextView mStreakDataLengthTextView;
     private TextView mHistoricalStreaksHeader;
+    private TextView mViewStreakDetails;
     private EditText mNameEditText;
     private Spinner mGoalTypeSpinner;
     private Button mPickStartDate;
@@ -144,6 +145,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalEndDateDisplay = (TextView) findViewById(R.id.goal_end_date_display);
         mFailDateDisplay = (TextView) findViewById(R.id.failure_date_display);
         mHistoricalStreaksHeader = (TextView) findViewById(R.id.historical_streaks_header);
+        mViewStreakDetails = (TextView) findViewById(R.id.view_streak_details);
         mPickStartDate = (Button) findViewById(R.id.goal_start_date_button);
         mPickEndDate = (Button) findViewById(R.id.goal_end_date_button);
         mAddOrSaveGoal = (Button) findViewById(R.id.add_goal_editor);
@@ -339,6 +341,25 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 mNotesPopupWindow.setFocusable(true);
                 mNotesPopupWindow.showAtLocation(mNotesLinearLayout, Gravity.CENTER, 0, 0);
 
+            }
+        });
+
+        mViewStreakDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GoalEditorActivity.this, StreakDetailsActivity.class);
+
+                // If the currentGoalID is not yet set by the loader, display a toast that data is loading and do not start intent
+                if (mCurrentGoalID == -1) {
+                    Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.please_wait_data_load),
+                            Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                //Send over the currentGoalID so that the streak details activity can load streak details for that goal
+                intent.putExtra(GoalsHabitsEntry._ID,  mCurrentGoalID);
+
+                startActivity(intent);
             }
         });
 
@@ -719,7 +740,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         //Set goal details string
 
                         streakDetailString += "" + startDateString + " ---> ";
-                        streakDetailString += "" + failDateString + streakNotes + "\n";
+                        streakDetailString += "" + failDateString + "\n";
 
 
                     }

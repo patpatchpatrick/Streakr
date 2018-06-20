@@ -28,6 +28,7 @@
     <string name="add_habit_button">Add Habit</string>
     <string name="delete_habit_button">Delete Habit</string>
     <string name="historical_streaks">Historical Streaks</string>
+    <string name="view_streak_details"><u>View Streak History Details</u></string>
     <string name="failure_date">Failure Date</string>
 
 
@@ -64,7 +65,11 @@
     <string name="date_fields_populated">Date Fields Must Be Populated</string>
     <string name="please_wait_data_load">Please Wait for Data to Load</string>
 
-
+    <!-- Streak Details Strings [CHAR LIMIT=TBD] -->
+    <string name="streak_details">Streak Details</string>
+    <string name="average_streak_length">Average Streak Length</string>
+    <string name="longest_streak_length">Longest Streak Length</string>
+    <string name="historical_streaks_details">Historical Streaks:</string>
 
 
 </resources>

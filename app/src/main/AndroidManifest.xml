@@ -22,11 +22,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GoalEditorActivity"
-            android:label="Add a Goal"></activity>
+            android:label="Add a Goal" />
+
         <provider
-            android:authorities="com.example.android.lifetrackerlite"
             android:name=".data.LTProvider"
-            android:exported="false"></provider>
+            android:authorities="com.example.android.lifetrackerlite"
+            android:exported="false" />
+
+        <activity android:name=".StreakDetailsActivity"></activity>
     </application>
 
 </manifest>

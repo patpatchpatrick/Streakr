@@ -70,6 +70,7 @@
     <string name="average_streak_length">Average Streak Length</string>
     <string name="longest_streak_length">Longest Streak Length</string>
     <string name="historical_streaks_details">Historical Streaks:</string>
+    <string name="streak_trend">Streak Trend</string>
 
 
 </resources>

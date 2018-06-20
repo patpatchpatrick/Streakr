@@ -63,6 +63,21 @@
     </LinearLayout>
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/streak_trend"
+        android:textStyle="bold"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"/>
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/streak_graph" />
+
+
+
+    <TextView
 
         android:id="@+id/historical_streaks_header_streak_details"
         android:layout_width="wrap_content"

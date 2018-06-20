@@ -13,10 +13,16 @@ import android.widget.TextView;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class StreakDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -29,6 +35,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     private StreakDataRecyclerAdapter mAdapter;
     private TextView mLongestStreakLengthView;
     private TextView mAverageStreakLengthView;
+    private GraphView mStreakGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
         mLongestStreakLengthView = (TextView) findViewById(R.id.longest_streak_length_textview);
         mAverageStreakLengthView = (TextView) findViewById(R.id.average_streak_length_textview);
+        mStreakGraph = (GraphView) findViewById(R.id.streak_graph);
 
 
         //Get the intent and the current goal ID from the intent to begin loading streak data for that goal
@@ -53,7 +61,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         mRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(STREAK_LOADER, null, this);
-
 
     }
 
@@ -95,6 +102,8 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                 long averageStreakLength = 0;
                 long averageStreakCount = 0;
                 long totalStreakDays = 0;
+                ArrayList<Long> streakLengthData = new ArrayList<Long>();
+
                 while (cursor.moveToNext()) {
 
                     String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
@@ -126,11 +135,28 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                         maxStreakLength = streakLengthDays;
                     }
 
+                    //Collect the total streak lengths in an ArrayList to use for streak graph trendline
+                    streakLengthData.add(streakLengthDays);
+
                     //Gather data for average streak length calculation
                     totalStreakDays += streakLengthDays;
                     averageStreakCount++;
 
+
                 }
+
+                // Reverse the streak length data so the trendline goes in proper direction
+                // Add datapoints to streaks trendline to display trending streak data over time
+                // X axis represents the streak attempt #
+                // Y axis represents the streak length
+                LineGraphSeries<DataPoint> streakDataSeries = new LineGraphSeries<>();
+                Collections.reverse(streakLengthData);
+                int i = 0;
+                for(Long streakLength : streakLengthData) {
+                    streakDataSeries.appendData(new DataPoint(i, streakLength), false, 100);
+                    i++;
+                }
+                mStreakGraph.addSeries(streakDataSeries);
 
                 //TODO fix calculation to show decimal to one digit
                 //Calculate average streak length

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryLight"
     tools:context=".GoalEditorActivity">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="@string/goal_name"
-            android:textStyle="bold" />
+            style="@style/BasicHeaderText"/>
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -38,12 +39,12 @@
 
         <TextView
             android:id="@+id/goal_type_textview"
+            style="@style/BasicHeaderText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
-            android:text="@string/goal_type"
-            android:textStyle="bold" />
+            android:text="@string/goal_type" />
 
         <Spinner
             android:id="@+id/spinner_goal_type"
@@ -68,25 +69,26 @@
 
             <TextView
                 android:id="@+id/goal_start_date"
+                style="@style/BasicHeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="@string/goal_start_date"
-                android:textStyle="bold" />
+                android:text="@string/goal_start_date" />
 
             <TextView
                 android:id="@+id/goal_start_date_display"
+                style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:textColor="@color/colorDate"
                 tools:text="@string/goal_start_date" />
         </LinearLayout>
 
         <Button
             android:id="@+id/goal_start_date_button"
+            style="@style/BasicHeaderText"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -108,25 +110,26 @@
 
             <TextView
                 android:id="@+id/goal_end_date"
+                style="@style/BasicHeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="@string/goal_end_date"
-                android:textStyle="bold" />
+                android:text="@string/goal_end_date" />
 
             <TextView
                 android:id="@+id/goal_end_date_display"
+                style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:textColor="@color/colorDate"
                 tools:text="@string/goal_end_date" />
         </LinearLayout>
 
         <Button
             android:id="@+id/goal_end_date_button"
+            style="@style/BasicHeaderText"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -144,18 +147,21 @@
 
         <Button
             android:id="@+id/notes_button"
+            style="@style/BasicHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notes_button" />
 
         <Button
             android:id="@+id/delete_goal_editor"
+            style="@style/BasicHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete Goal" />
 
         <Button
             android:id="@+id/add_goal_editor"
+            style="@style/BasicHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Goal" />
@@ -173,12 +179,14 @@
 
         <Button
             android:id="@+id/fail_reset_streak"
+            style="@style/BasicHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fail/Reset Streak" />
 
         <Button
             android:id="@+id/goal_completed"
+            style="@style/BasicHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Goal Completed" />
@@ -194,11 +202,11 @@
     <TextView
 
         android:id="@+id/historical_streaks_header"
+        style="@style/BasicHeaderText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:text="@string/historical_streaks"
-        android:textStyle="bold"
         android:layout_weight="1"/>
 
         <TextView
@@ -220,6 +228,7 @@
 
         <TextView
             android:id="@+id/streak_data"
+            style="@style/SecondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
@@ -227,6 +236,7 @@
 
         <TextView
             android:id="@+id/streak_data_length"
+            style="@style/SecondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"

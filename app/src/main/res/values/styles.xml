@@ -17,4 +17,22 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="BasicHeaderText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="SecondaryText">
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
+
+    <style name="BasicHeaderTextLight">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextAndIcons</item>
+    </style>
+
+    <style name="SecondaryTextLight">
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+    </style>
+
 </resources>

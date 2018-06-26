@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorDate">#FF4081</color>
+    <color name="colorPrimary">#607D8B</color>
+    <color name="colorPrimaryDark">#455A64</color>
+    <color name="colorPrimaryLight">#CFD8DC</color>
+    <color name="colorAccent">#CDDC39</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDate">#757575</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorTextAndIcons">#FFFFFF</color>
+
+
 
     <!-- Color for a streak length with magnitude 0 to 10% -->
     <color name="streakLength10">#4A7BA7</color>

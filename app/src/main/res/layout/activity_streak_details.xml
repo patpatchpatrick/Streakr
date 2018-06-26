@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
     tools:context=".StreakDetailsActivity">
 
     <LinearLayout
@@ -16,15 +17,16 @@
 
         <TextView
             android:id="@+id/longest_streak_length_header_textview"
+            style="@style/BasicHeaderTextLight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
-            android:text="@string/longest_streak_length"
-            android:textStyle="bold" />
+            android:text="@string/longest_streak_length" />
 
         <TextView
             android:id="@+id/longest_streak_length_textview"
+            style="@style/SecondaryTextLight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -44,15 +46,16 @@
 
     <TextView
         android:id="@+id/average_streak_length_header_textview"
+        style="@style/BasicHeaderTextLight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
-        android:text="@string/average_streak_length"
-        android:textStyle="bold" />
+        android:text="@string/average_streak_length" />
 
     <TextView
         android:id="@+id/average_streak_length_textview"
+        style="@style/SecondaryTextLight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -65,8 +68,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/BasicHeaderTextLight"
         android:text="@string/streak_trend"
-        android:textStyle="bold"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"/>
 
@@ -80,12 +83,12 @@
     <TextView
 
         android:id="@+id/historical_streaks_header_streak_details"
+        style="@style/BasicHeaderTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:text="@string/historical_streaks_details"
-        android:textStyle="bold"
   />
 
     <ScrollView

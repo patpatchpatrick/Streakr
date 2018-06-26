@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/goals_primary_linearlayout"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@drawable/list_goalshabits_item_selector"
+    android:orientation="vertical">
+
+<LinearLayout
+    android:id="@+id/goals_primary_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -29,7 +36,7 @@
 
         <TextView
             android:id="@+id/goal_name"
-            android:textStyle="bold"
+            style="@style/BasicHeaderText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -39,6 +46,7 @@
 
         <TextView
             android:id="@+id/goal_type"
+            style="@style/SecondaryText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -47,6 +55,7 @@
 
         <TextView
             android:id="@+id/goal_details"
+            style="@style/SecondaryText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -94,5 +103,12 @@
     </RelativeLayout>
 
 
+
+</LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider" />
 
 </LinearLayout>

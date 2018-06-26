@@ -5,6 +5,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -152,10 +155,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                 LineGraphSeries<DataPoint> streakDataSeries = new LineGraphSeries<>();
                 Collections.reverse(streakLengthData);
                 int i = 0;
-                for(Long streakLength : streakLengthData) {
+                for (Long streakLength : streakLengthData) {
                     streakDataSeries.appendData(new DataPoint(i, streakLength), false, 100);
                     i++;
                 }
+                streakDataSeries.setColor(ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent));
                 mStreakGraph.addSeries(streakDataSeries);
 
                 //TODO fix calculation to show decimal to one digit
@@ -164,6 +168,13 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
                 mLongestStreakLengthView.setText(Long.toString(maxStreakLength) + " days");
                 mAverageStreakLengthView.setText(Long.toString(averageStreakLength) + " days");
+                mStreakGraph.setBackgroundColor(ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark));
+                int axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
+                GridLabelRenderer gridLabelRenderer = mStreakGraph.getGridLabelRenderer();
+                gridLabelRenderer.setGridColor(axisColor);
+                gridLabelRenderer.setHorizontalLabelsColor(axisColor);
+                gridLabelRenderer.setVerticalLabelsColor(axisColor);
+
 
                 break;
 

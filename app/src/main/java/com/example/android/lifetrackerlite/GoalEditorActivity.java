@@ -58,6 +58,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private int mGoalType;
     private int mNumberOfGoals;
+    private int mNumberOfStreaks;
     private int mGoalOrHabit;
     private int mDateType;
     private static final int GOAL_START_DATE = 0;
@@ -358,7 +359,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 }
 
                 //Send over the currentGoalID so that the streak details activity can load streak details for that goal
-                intent.putExtra(GoalsHabitsEntry._ID,  mCurrentGoalID);
+                intent.putExtra(GoalsHabitsEntry._ID, mCurrentGoalID);
 
                 startActivity(intent);
             }
@@ -538,6 +539,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalCompleted.setVisibility(View.GONE);
         mHistoricalStreaksHeader.setVisibility(View.GONE);
         mNotesButton.setVisibility(View.GONE);
+        mViewStreakDetails.setVisibility(View.INVISIBLE);
 
     }
 
@@ -552,6 +554,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mGoalCompleted.setVisibility(View.GONE);
         mHistoricalStreaksHeader.setVisibility(View.GONE);
         mNotesButton.setVisibility(View.GONE);
+        mViewStreakDetails.setVisibility(View.INVISIBLE);
     }
 
     private void setEditGoalWorkspace() {
@@ -635,6 +638,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Load data for Goal and Streak loaders
 
         if (cursor.getCount() >= 1 && !mLoadingNote) {
+            //If the cursor has data and you are not loading a note,  then the GOAL or STREAK LOADER will
+            //be loaded below
             switch (loader.getId()) {
                 case GOAL_EDIT_LOADER:
                     while (cursor.moveToNext()) {
@@ -709,7 +714,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                     String streakDetailString = "";
                     String streakLengthString = "";
+                    mNumberOfStreaks = 0;
                     while (cursor.moveToNext()) {
+
+                        mNumberOfStreaks++;
 
                         String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
 
@@ -747,8 +755,15 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     }
                     mStreakDataTextView.setText(streakDetailString);
                     mStreakDataLengthTextView.setText(streakLengthString);
+                    mViewStreakDetails.setVisibility(View.VISIBLE);
                     break;
             }
+        } else if (!mLoadingNote) {
+
+            //This condition will be hit if the cursor being loaded has a count of < 1 (i.e. no streak data)
+            //Views will be customized and set accordingly to account for no streak data
+            mViewStreakDetails.setVisibility(View.INVISIBLE);
+            mStreakDataTextView.setText("No Historical Streak Data");
         } else {
 
             // Will hit this criteria if only loading notes for a particular goal.  When loading notes for a particular
@@ -822,7 +837,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void showResetStreakDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.PopUpMenuTheme)).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_message));
 

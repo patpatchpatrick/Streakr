@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/PopUpMenuTheme"
     android:orientation="vertical">
 
     <TextView
@@ -20,7 +21,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/failure_date_display"
         tools:text="@string/failure_date"
-        android:textColor="@color/colorDate"
         android:paddingLeft="32dp"
 
         />

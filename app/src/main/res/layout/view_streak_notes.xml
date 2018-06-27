@@ -13,7 +13,8 @@
         android:backgroundTint="@color/colorTextAndIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Type here..."/>
+        android:hint="Type here..."
+        android:textColorHint="@color/colorTextAndIcons"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

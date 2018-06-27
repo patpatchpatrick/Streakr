@@ -23,11 +23,13 @@
             android:text="@string/goal_name"
             style="@style/BasicHeaderText"/>
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/name_edit_text"
+            android:textCursorDrawable="@null"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/colorSecondaryText"
             android:hint="@string/goal_name_hint" />
     </LinearLayout>
 
@@ -49,6 +51,7 @@
         <Spinner
             android:id="@+id/spinner_goal_type"
             android:layout_width="0dp"
+            android:popupTheme="@style/PopUpMenuTheme"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:paddingRight="16dp"

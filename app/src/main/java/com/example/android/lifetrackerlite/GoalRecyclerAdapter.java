@@ -22,6 +22,7 @@ import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
+import com.example.android.lifetrackerlite.helper.PercentView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,6 +111,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         public TextView streakLengthView;
         public ImageView goalHabitIcon;
         public ImageView dragDropButton;
+        public PercentView percentView;
 
         public ViewHolder(View view) {
 
@@ -122,6 +124,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             streakLengthView = (TextView) view.findViewById(R.id.streak_length);
             goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);
             dragDropButton = (ImageView) view.findViewById(R.id.drag_drop_button);
+            percentView = (PercentView) view.findViewById(R.id.percent_view);
             view.setOnClickListener(this);
 
 
@@ -249,12 +252,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
         holder.streakLengthView.setText(streakDetailsString);
 
-        //Set color of streak circle based on streak percent completion
-        int streakColor = ContextCompat.getColor(context, getStreakColor(streakCompletionPercent));
-        // Fetch the background from the TextView, which is a GradientDrawable.
-        GradientDrawable magnitudeCircle = (GradientDrawable) holder.streakLengthView.getBackground();
-        // Set the color on the magnitude circle
-        magnitudeCircle.setColor(streakColor);
+        //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
+        holder.percentView.setPercentage(streakCompletionPercent);
 
         // Set an onTouchListener on the view, and when the view is touched, begin drag/drop
         holder.dragDropButton.setOnTouchListener(new View.OnTouchListener() {
@@ -276,32 +275,6 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
 
-    public int getStreakColor(int streakCompletionPercent) {
-        int streakColor;
-        if (streakCompletionPercent >= 0 && streakCompletionPercent < 10) {
-            streakColor = R.color.streakLength10;
-        } else if (streakCompletionPercent >= 10 && streakCompletionPercent < 20) {
-            streakColor = R.color.streakLength20;
-        } else if (streakCompletionPercent >= 20 && streakCompletionPercent < 30) {
-            streakColor = R.color.streakLength30;
-        } else if (streakCompletionPercent >= 30 && streakCompletionPercent < 40) {
-            streakColor = R.color.streakLength40;
-        } else if (streakCompletionPercent >= 40 && streakCompletionPercent < 50) {
-            streakColor = R.color.streakLength50;
-        } else if (streakCompletionPercent >= 50 && streakCompletionPercent < 60) {
-            streakColor = R.color.streakLength60;
-        } else if (streakCompletionPercent >= 60 && streakCompletionPercent < 70) {
-            streakColor = R.color.streakLength70;
-        } else if (streakCompletionPercent >= 70 && streakCompletionPercent < 80) {
-            streakColor = R.color.streakLength80;
-        } else if (streakCompletionPercent >= 80 && streakCompletionPercent < 90) {
-            streakColor = R.color.streakLength90;
-        } else {
-            streakColor = R.color.streakLength100;
-        }
-
-        return streakColor;
-    }
 
 
 }

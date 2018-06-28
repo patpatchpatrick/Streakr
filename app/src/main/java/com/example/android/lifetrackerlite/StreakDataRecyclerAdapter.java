@@ -21,6 +21,9 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
     Cursor dataCursor;
     Context context;
 
+    // OnClickListener for items in the recyclerView
+    final private StreakListItemClickListener mStreakOnClickListener;
+
     @Override
     public StreakDataRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View streakView = LayoutInflater.from(parent.getContext())
@@ -28,10 +31,11 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         return new StreakDataRecyclerAdapter.ViewHolder(streakView);
     }
 
-    public StreakDataRecyclerAdapter(Activity mContext, Cursor cursor) {
+    public StreakDataRecyclerAdapter(Activity mContext, Cursor cursor, StreakListItemClickListener listener) {
 
         dataCursor = cursor;
         context = mContext;
+        mStreakOnClickListener = listener;
 
 
     }
@@ -87,9 +91,12 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
 
+    // ListItemClickListener with onListItemClick callback for goalsHabitsFeatureActivity to know which list item was clicked
+    public interface StreakListItemClickListener {
+        void onStreakListItemClick(int clickedStreakID);
+    }
 
-
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView streakStartDate;
         public TextView streakFailDate;
@@ -104,6 +111,15 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
             streakFailDate = (TextView) view.findViewById(R.id.streak_list_fail_date);
             streakLength = (TextView) view.findViewById(R.id.streak_list_streak_length);
             noteIcon = (Button) view.findViewById(R.id.streak_list_note_icon);
+            noteIcon.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            int clickedPosition = getAdapterPosition();
+            mStreakOnClickListener.onStreakListItemClick(clickedPosition);
 
         }
     }

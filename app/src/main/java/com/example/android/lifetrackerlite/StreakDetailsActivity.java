@@ -11,7 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
@@ -27,18 +37,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class StreakDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StreakDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, StreakDataRecyclerAdapter.StreakListItemClickListener {
 
     private static final String TAG = StreakDetailsActivity.class.getSimpleName();
     private static final int STREAK_LOADER = 2;
 
     private int mCurrentGoalID = -1;
+    private String mStreakNotes;
 
     private RecyclerView mRecyclerView;
     private StreakDataRecyclerAdapter mAdapter;
     private TextView mLongestStreakLengthView;
     private TextView mAverageStreakLengthView;
     private GraphView mStreakGraph;
+    private PopupWindow mNotesPopupWindow;
+    private ScrollView mStreaksScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         mLongestStreakLengthView = (TextView) findViewById(R.id.longest_streak_length_textview);
         mAverageStreakLengthView = (TextView) findViewById(R.id.average_streak_length_textview);
         mStreakGraph = (GraphView) findViewById(R.id.streak_graph);
+        mStreaksScrollView = (ScrollView) findViewById(R.id.streaks_scroll_view);
 
 
         //Get the intent and the current goal ID from the intent to begin loading streak data for that goal
@@ -60,7 +74,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         mRecyclerView = findViewById(R.id.recycler_view_streak_details);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(StreakDetailsActivity.this));
-        mAdapter = new StreakDataRecyclerAdapter(this, null);
+        mAdapter = new StreakDataRecyclerAdapter(this, null, this);
         mRecyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(STREAK_LOADER, null, this);
@@ -109,7 +123,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
                 while (cursor.moveToNext()) {
 
-                    String streakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
+                    mStreakNotes = cursor.getString(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_NOTES));
 
                     //Convert unix start date to string and add to details
                     long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(StreaksEntry.COLUMN_STREAK_START_DATE)) * 1000;
@@ -192,4 +206,47 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         }
 
     }
+
+    @Override
+    public void onStreakListItemClick(int clickedStreakID) {
+        Toast.makeText(StreakDetailsActivity.this, "" + clickedStreakID,
+                Toast.LENGTH_SHORT);
+        Log.d(TAG, "" + clickedStreakID);
+
+        //Inflate new popup window to edit notes related to goal/streak
+        LayoutInflater inflater = getLayoutInflater();
+        final View notesView = inflater.inflate(R.layout.view_streak_notes, null);
+        mNotesPopupWindow = new PopupWindow(
+                notesView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        Button closeButton = (Button) notesView.findViewById(R.id.notes_close_button);
+        EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
+
+        //Set note editText to contain current note string data
+        notesEditText.setText(mStreakNotes, TextView.BufferType.EDITABLE);
+
+        // Set a click listener for the popup window close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
+
+                // Update the goal note with user note editText value
+                //updateNote(notesEditText);
+
+                // Dismiss the popup window
+                mNotesPopupWindow.dismiss();
+            }
+        });
+
+        mNotesPopupWindow.setFocusable(true);
+        mNotesPopupWindow.showAtLocation(mStreaksScrollView, Gravity.CENTER, 0, 0);
+
+    }
+
+
 }

@@ -15,10 +15,9 @@
             android:id="@+id/streak_list_start_date"
             style="@style/SecondaryTextLight"
             android:layout_width="0dp"
-            android:layout_weight="0.45"
+            android:layout_weight="0.35"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
-            android:paddingRight="8dp"
             tools:text="Start Date" />
 
         <TextView
@@ -32,9 +31,9 @@
             android:id="@+id/streak_list_fail_date"
             style="@style/SecondaryTextLight"
             android:layout_width="0dp"
-            android:layout_weight="0.45"
+            android:layout_weight="0.35"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingLeft="16dp"
             tools:text="Fail Date" />
 
         <TextView
@@ -49,13 +48,14 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25">
-            <ImageView
-                android:layout_width="wrap_content"
+            android:layout_weight="0.125"
+            android:layout_marginRight="16dp">
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:paddingLeft="16dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/note"
+                android:background="@drawable/ic_streak_blank_note"
                 android:id="@+id/streak_list_note_icon"/>
         </RelativeLayout>
 

@@ -3,10 +3,12 @@ package com.example.android.lifetrackerlite;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,6 +72,12 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         //Set streak length string
         holder.streakLength.setText(Long.toString(streakLengthDays) + " days" + "\n");
 
+        if (streakNotes.trim().isEmpty()) {
+            holder.noteIcon.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_streak_blank_note));
+        } else {
+            holder.noteIcon.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_streak_notesvg));
+        }
+
 
     }
 
@@ -86,7 +94,7 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         public TextView streakStartDate;
         public TextView streakFailDate;
         public TextView streakLength;
-        public ImageView noteIcon;
+        public Button noteIcon;
 
 
         public ViewHolder(View view) {
@@ -95,7 +103,7 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
             streakStartDate = (TextView) view.findViewById(R.id.streak_list_start_date);
             streakFailDate = (TextView) view.findViewById(R.id.streak_list_fail_date);
             streakLength = (TextView) view.findViewById(R.id.streak_list_streak_length);
-            noteIcon = (ImageView) view.findViewById(R.id.streak_list_note_icon);
+            noteIcon = (Button) view.findViewById(R.id.streak_list_note_icon);
 
         }
     }

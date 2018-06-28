@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -701,6 +702,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                     }
 
+                    //Set the notes icon based on whether or not the note has text in it
+                    setGoalNoteIcon();
                     //Load Streak Data after goal has been loaded so that you have the goal ID to load streak data for
                     getLoaderManager().initLoader(STREAK_LOADER, null, this);
 
@@ -771,6 +774,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             while (cursor.moveToNext()) {
                 mCurrentGoalNotes = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NOTES));
             }
+
+            //Set the notes icon based on whether or not the note has text in it
+            setGoalNoteIcon();
             mLoadingNote = false;
         }
 
@@ -1213,6 +1219,15 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
 
+    }
+
+    private void setGoalNoteIcon() {
+        //Set the notes icon based on whether or not the note has text in it
+        if (mCurrentGoalNotes.trim().isEmpty()) {
+            mNotesButton.setBackgroundDrawable(ContextCompat.getDrawable(GoalEditorActivity.this, R.drawable.ic_blank_note));
+        } else {
+            mNotesButton.setBackgroundDrawable(ContextCompat.getDrawable(GoalEditorActivity.this, R.drawable.ic_notesvg));
+        }
     }
 
 }

@@ -250,6 +250,10 @@ public class LTProvider extends ContentProvider {
                 selection = GoalsHabitsEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateGoal(uri, contentValues, selection, selectionArgs);
+            case STREAKS_ID:
+                selection = StreaksEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateStreak(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
@@ -312,6 +316,28 @@ public class LTProvider extends ContentProvider {
         // given URI has changed
         if (rowsUpdated != 0) {
            // getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
+    }
+
+    private int updateStreak(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        // Otherwise, get writeable database to update the data
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = database.update(StreaksEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
 
         // Return the number of rows updated

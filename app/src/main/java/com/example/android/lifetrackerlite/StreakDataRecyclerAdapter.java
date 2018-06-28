@@ -15,11 +15,13 @@ import android.widget.TextView;
 import com.example.android.lifetrackerlite.data.LTContract;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRecyclerAdapter.ViewHolder> {
 
     Cursor dataCursor;
     Context context;
+    HashMap<Integer, Integer> mStreakPositionAndID;
 
     // OnClickListener for items in the recyclerView
     final private StreakListItemClickListener mStreakOnClickListener;
@@ -36,6 +38,7 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         dataCursor = cursor;
         context = mContext;
         mStreakOnClickListener = listener;
+        mStreakPositionAndID = new HashMap<>();
 
 
     }
@@ -44,6 +47,10 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         dataCursor.moveToPosition(position);
+
+        //Get the streak ID and add to HashMap mapping the position and the streak ID
+        int streakID = dataCursor.getInt(dataCursor.getColumnIndexOrThrow(LTContract.StreaksEntry._ID));
+        mStreakPositionAndID.put(position, streakID);
 
         String streakNotes = dataCursor.getString(dataCursor.getColumnIndexOrThrow(LTContract.StreaksEntry.COLUMN_STREAK_NOTES));
 
@@ -78,9 +85,12 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
 
         if (streakNotes.trim().isEmpty()) {
             holder.noteIcon.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_streak_blank_note));
+            holder.noteIcon.setTag("");
         } else {
             holder.noteIcon.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.ic_streak_notesvg));
+            holder.noteIcon.setTag(streakNotes);
         }
+
 
 
     }
@@ -91,9 +101,9 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
 
-    // ListItemClickListener with onListItemClick callback for goalsHabitsFeatureActivity to know which list item was clicked
+    // ListItemClickListener with onListItemClick callback for streakDetailsActivity to know which list item was clicked
     public interface StreakListItemClickListener {
-        void onStreakListItemClick(int clickedStreakID);
+        void onStreakListItemClick(int clickedStreakPosition, int clickedStreakID, String note);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -119,7 +129,9 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         public void onClick(View view) {
 
             int clickedPosition = getAdapterPosition();
-            mStreakOnClickListener.onStreakListItemClick(clickedPosition);
+            int streakID = mStreakPositionAndID.get(clickedPosition);
+            String note = (String) noteIcon.getTag();
+            mStreakOnClickListener.onStreakListItemClick(clickedPosition, streakID, note);
 
         }
     }
@@ -134,6 +146,8 @@ public class StreakDataRecyclerAdapter extends RecyclerView.Adapter<StreakDataRe
         this.dataCursor = cursor;
 
         if (cursor != null) {
+            //Clear the position and ID hashmap so a new one can be created in BindView
+            mStreakPositionAndID.clear();
             this.notifyDataSetChanged();
 
         }

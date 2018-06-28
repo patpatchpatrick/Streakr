@@ -1,16 +1,21 @@
 package com.example.android.lifetrackerlite;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +49,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     private int mCurrentGoalID = -1;
     private String mStreakNotes;
+    private Boolean mNoteChanged;
 
     private RecyclerView mRecyclerView;
     private StreakDataRecyclerAdapter mAdapter;
@@ -208,9 +214,8 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     }
 
     @Override
-    public void onStreakListItemClick(int clickedStreakID) {
-        Toast.makeText(StreakDetailsActivity.this, "" + clickedStreakID,
-                Toast.LENGTH_SHORT);
+    public void onStreakListItemClick(final int clickedStreakPosition, final int clickedStreakID, final String note) {
+
         Log.d(TAG, "" + clickedStreakID);
 
         //Inflate new popup window to edit notes related to goal/streak
@@ -223,10 +228,27 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         );
 
         Button closeButton = (Button) notesView.findViewById(R.id.notes_close_button);
-        EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
+        final EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
 
         //Set note editText to contain current note string data
-        notesEditText.setText(mStreakNotes, TextView.BufferType.EDITABLE);
+        notesEditText.setText(note, TextView.BufferType.EDITABLE);
+        mNoteChanged = false;
+
+        notesEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mNoteChanged = true;
+            }
+        });
+
 
         // Set a click listener for the popup window close button
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -236,7 +258,9 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                 EditText notesEditText = (EditText) notesView.findViewById(R.id.notes_edit_text);
 
                 // Update the goal note with user note editText value
-                //updateNote(notesEditText);
+                if (mNoteChanged = true) {
+                    updateNote(notesEditText.getText().toString(), clickedStreakID);
+                }
 
                 // Dismiss the popup window
                 mNotesPopupWindow.dismiss();
@@ -245,6 +269,20 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
         mNotesPopupWindow.setFocusable(true);
         mNotesPopupWindow.showAtLocation(mStreaksScrollView, Gravity.CENTER, 0, 0);
+
+    }
+
+    private void updateNote(String noteUpdate, int streakID) {
+
+        // Update streak database table to contain updated note
+        ContentValues values = new ContentValues();
+        values.put(StreaksEntry.COLUMN_STREAK_NOTES, noteUpdate);
+
+        mNoteChanged = false;
+        Uri currentStreakUri = ContentUris.withAppendedId(StreaksEntry.CONTENT_URI, streakID );
+        int rowsUpdated = getContentResolver().update(currentStreakUri, values, null, null);
+
+        Toast.makeText(this, this.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
 
     }
 

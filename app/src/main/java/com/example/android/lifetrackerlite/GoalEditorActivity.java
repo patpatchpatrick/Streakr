@@ -533,7 +533,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Add Goal mode
         setTitle(R.string.add_goal_activity_title);
         mDeleteGoal.setVisibility(View.GONE);
-        mAddOrSaveGoal.setText(R.string.add_goal_button);
         mGoalNameTextView.setText(R.string.goal_name);
         mGoalTypeTextView.setText(R.string.goal_type);
         mFailResetStreak.setVisibility(View.GONE);
@@ -548,7 +547,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Add Habit mode
         setTitle(R.string.add_habit_activity_title);
         mDeleteGoal.setVisibility(View.GONE);
-        mAddOrSaveGoal.setText(R.string.add_habit_button);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
         mFailResetStreak.setVisibility(View.GONE);
@@ -562,8 +560,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Edit Goal mode
         setTitle(getString(R.string.edit_goal_activity_title));
         mDeleteGoal.setVisibility(View.VISIBLE);
-        mAddOrSaveGoal.setText(R.string.save_goal_button);
-        mDeleteGoal.setText(R.string.delete_goal_button);
         mFailResetStreak.setVisibility(View.VISIBLE);
         mGoalCompleted.setVisibility(View.VISIBLE);
         mNotesButton.setVisibility(View.VISIBLE);
@@ -573,10 +569,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Set up workspace and strings for Edit Habit mode
         setTitle(getString(R.string.edit_habit_activity_title));
         mDeleteGoal.setVisibility(View.VISIBLE);
-        mAddOrSaveGoal.setText(R.string.save_habit_button);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
-        mDeleteGoal.setText(R.string.delete_habit_button);
         mHistoricalStreaksHeader.setVisibility(View.VISIBLE);
     }
 
@@ -909,7 +903,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         // Dialog to confirm if user wants to delete goal
 
-        AlertDialog alertDialog = new AlertDialog.Builder(GoalEditorActivity.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.PopUpMenuTheme)).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_message));
 

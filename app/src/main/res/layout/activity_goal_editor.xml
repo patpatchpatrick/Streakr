@@ -61,13 +61,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -76,7 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_weight="1"
                 android:text="@string/goal_start_date" />
 
             <TextView
@@ -92,23 +96,23 @@
         <Button
             android:id="@+id/goal_start_date_button"
             style="@style/BasicHeaderText"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="16dp"
             android:paddingRight="16dp"
-            android:text="@string/goal_start_date_button" />
+            android:background="@drawable/ic_calendar" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -133,11 +137,12 @@
         <Button
             android:id="@+id/goal_end_date_button"
             style="@style/BasicHeaderText"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="16dp"
             android:paddingRight="16dp"
-            android:text="@string/goal_end_date_button" />
+            android:background="@drawable/ic_calendar" />
+    </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -151,32 +156,30 @@
         <Button
             android:id="@+id/notes_button"
             style="@style/BasicHeaderText"
-            android:layout_width="0dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_weight="0.6"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="32dp"
             android:background="@drawable/ic_blank_note" />
 
         <Button
             android:id="@+id/delete_goal_editor"
             style="@style/BasicHeaderText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:text="Delete Goal" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/ic_trash"
+            />
 
         <Button
             android:id="@+id/add_goal_editor"
             style="@style/BasicHeaderText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:layout_marginLeft="16dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginRight="16dp"
-            android:text="Add Goal" />
+            android:background="@drawable/ic_save" />
 
 
     </LinearLayout>
@@ -192,16 +195,18 @@
         <Button
             android:id="@+id/fail_reset_streak"
             style="@style/BasicHeaderText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fail/Reset Streak" />
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/ic_fail" />
 
         <Button
             android:id="@+id/goal_completed"
             style="@style/BasicHeaderText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Goal Completed" />
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="32dp"
+            android:background="@drawable/ic_checkmark" />
 
 
     </LinearLayout>

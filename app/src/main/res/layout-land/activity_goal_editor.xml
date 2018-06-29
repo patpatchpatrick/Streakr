@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryLight"
+    tools:context=".GoalEditorActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <LinearLayout
+    android:layout_width="0dp"
+        android:layout_weight="1"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/goal_name_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="@string/goal_name"
+                style="@style/BasicHeaderText"/>
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/name_edit_text"
+                android:textCursorDrawable="@null"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorSecondaryText"
+                android:hint="@string/goal_name_hint" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/goal_type_textview"
+                style="@style/BasicHeaderText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="@string/goal_type" />
+            <Spinner
+                android:id="@+id/spinner_goal_type"
+                android:layout_width="0dp"
+                android:popupTheme="@style/PopUpMenuTheme"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:paddingRight="16dp"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/goal_start_date"
+                        style="@style/BasicHeaderText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/goal_start_date" />
+
+                    <TextView
+                        android:id="@+id/goal_start_date_display"
+                        style="@style/SecondaryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        tools:text="@string/goal_start_date" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/goal_start_date_button"
+                    style="@style/BasicHeaderText"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:background="@drawable/ic_calendar" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/goal_end_date"
+                        style="@style/BasicHeaderText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/goal_end_date" />
+
+                    <TextView
+                        android:id="@+id/goal_end_date_display"
+                        style="@style/SecondaryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_weight="1"
+                        tools:text="@string/goal_end_date" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/goal_end_date_button"
+                    style="@style/BasicHeaderText"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:background="@drawable/ic_calendar" />
+            </LinearLayout>
+        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/notes_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/notes_button"
+            style="@style/BasicHeaderText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/ic_blank_note" />
+
+        <Button
+            android:id="@+id/delete_goal_editor"
+            style="@style/BasicHeaderText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/ic_trash"
+            />
+
+        <Button
+            android:id="@+id/add_goal_editor"
+            style="@style/BasicHeaderText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/ic_save" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
+        <Button
+            android:id="@+id/fail_reset_streak"
+            style="@style/BasicHeaderText"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/ic_fail" />
+
+        <Button
+            android:id="@+id/goal_completed"
+            style="@style/BasicHeaderText"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="32dp"
+            android:background="@drawable/ic_checkmark" />
+
+
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <TextView
+
+        android:id="@+id/historical_streaks_header"
+        style="@style/BasicHeaderText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:text="@string/historical_streaks"
+        android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/view_streak_details"
+            android:textStyle="bold"
+            android:paddingLeft="16dp"
+            android:id="@+id/view_streak_details"
+            android:layout_weight="1"
+            android:textColor="@color/streakDetails"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/streak_data"
+            style="@style/SecondaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            tools:text="Streak Data" />
+
+        <TextView
+            android:id="@+id/streak_data_length"
+            style="@style/SecondaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            tools:text="Streak Length" />
+
+
+    </LinearLayout>
+</LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -286,5 +286,9 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getContentResolver().notifyChange(StreaksEntry.CONTENT_URI, null);
+    }
 }

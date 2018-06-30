@@ -72,6 +72,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean mEndDateSet;
     private boolean mFailDateSet;
     private boolean mGoalHasChanged = false;
+    private boolean mNewGoal = false;
     private int mEndYear;
     private int mEndMonth;
     private int mEndDay;
@@ -116,6 +117,17 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final String LIFECYCLE_CURRENT_GOAL_ID = "current goal id";
     private static final String LIFECYCLE_NUMBER_OF_GOALS = "number of goals";
     private static final String LIFECYCLE_CURRENT_URI = "current uri";
+
+    //Keys for bundle
+    private static final String START_YEAR = "start year";
+    private static final String START_MONTH = "start month";
+    private static final String START_DAY = "start day";
+    private static final String END_YEAR = "end year";
+    private static final String END_MONTH = "end month";
+    private static final String END_DAY = "end day";
+    private static final String DATE_TYPE = "date type";
+    private static final String START_DATE_SET = "start date set";
+    private static final String END_DATE_SET = "end date set";
 
 
     @Override
@@ -227,12 +239,18 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             //If editing a goal, set strings within editor activity to goal strings
             if (mGoalOrHabit == GoalsHabitsEntry.GOAL) {
                 //Set up workspace and strings for Add Goal mode
+                //mNewGoal boolean is used in datepicker so that it knows to populate date with today's date by default
+                mNewGoal = true;
                 setAddGoalWorkspace();
+
             }
             //If editing a habit, set strings within editor activity to habit strings
             if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
                 //Set up workspace and strings for Add Habit mode
+                //mNewGoal boolean is used in datepicker so that it knows to populate date with today's date by default
+                mNewGoal = true;
                 setAddHabitWorkspace();
+
             }
 
         } else {
@@ -255,6 +273,16 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 //to let the system know to set dates for StartDate variable
                 mDateType = GOAL_START_DATE;
                 DialogFragment newFragment = new DatePickerFragment();
+                Bundle bundle = new Bundle();
+                if (mStartDateSet) {
+                    bundle.putInt(START_YEAR, mStartYear);
+                    bundle.putInt(START_MONTH, mStartMonth);
+                    bundle.putInt(START_DAY, mStartDay);
+                }
+                bundle.putInt(DATE_TYPE, mDateType);
+                bundle.putBoolean(START_DATE_SET, mStartDateSet);
+                bundle.putBoolean(END_DATE_SET, mEndDateSet);
+                newFragment.setArguments(bundle);
                 newFragment.show(getFragmentManager(), "datePicker");
             }
         });
@@ -264,8 +292,20 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             public void onClick(View view) {
                 //If selecting an end date, set the mStartorEndDate variable to be GOAL END DATE
                 //to let the system know to set dates for EndDate variable
+
+                //Add bundle of data to the datepicker fragment so that it can set the date by default
                 mDateType = GOAL_END_DATE;
                 DialogFragment newFragment = new DatePickerFragment();
+                Bundle bundle = new Bundle();
+                if (mEndDateSet) {
+                    bundle.putInt(END_YEAR, mEndYear);
+                    bundle.putInt(END_MONTH, mEndMonth);
+                    bundle.putInt(END_DAY, mEndDay);
+                }
+                bundle.putInt(DATE_TYPE, mDateType);
+                bundle.putBoolean(START_DATE_SET, mStartDateSet);
+                bundle.putBoolean(END_DATE_SET, mEndDateSet);
+                newFragment.setArguments(bundle);
                 newFragment.show(getFragmentManager(), "datePicker");
             }
         });
@@ -893,6 +933,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     public void onClick(DialogInterface dialog, int which) {
                         mDateType = GOAL_FAIL_DATE;
                         DialogFragment newFragment = new DatePickerFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(DATE_TYPE, mDateType);
+                        bundle.putBoolean(START_DATE_SET, mStartDateSet);
+                        bundle.putBoolean(END_DATE_SET, mEndDateSet);
+                        newFragment.setArguments(bundle);
                         newFragment.show(getFragmentManager(), "datePicker");
                     }
                 });
@@ -1073,18 +1118,40 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     }
 
+
     public static class DatePickerFragment extends DialogFragment {
 
-        //TODO Find a way to default in the start or end date if they are already selected for a goal you are editing
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            int year;
+            int month;
+            int day;
+
+            int dateType = getArguments().getInt(DATE_TYPE);
+            boolean startDateSet = getArguments().getBoolean(START_DATE_SET);
+            boolean endDateSet = getArguments().getBoolean(END_DATE_SET);
+
+            //Set the default date in the datepicker depending on which datepicker was opened.
+            //The information on the type of datepicker that was initialized is passed in the bundle.
+            //Depending on the type of datepicker (dateType), the default year, month and day are set.
+            if (dateType == GOAL_START_DATE && startDateSet) {
+                year = getArguments().getInt(START_YEAR);
+                month = getArguments().getInt(START_MONTH);
+                day = getArguments().getInt(START_DAY);
+            } else if (dateType == GOAL_END_DATE && endDateSet) {
+                year = getArguments().getInt(END_YEAR);
+                month = getArguments().getInt(END_MONTH);
+                day = getArguments().getInt(END_DAY);
+            } else {
+                // Use the current date as the default date in the picker
+                final Calendar c = Calendar.getInstance();
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+            }
+
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), R.style.PopUpMenuTheme, (GoalEditorActivity) getActivity(), year, month, day);

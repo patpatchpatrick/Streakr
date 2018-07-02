@@ -80,6 +80,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private int mFailMonth;
     private int mFailDay;
     private String mCurrentGoalNotes = "";
+    private long mStreakLengthDays = -1;
 
     //Views for DatePicker used for Goal Start Date
     private TextView mGoalNameTextView;
@@ -117,6 +118,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final String LIFECYCLE_CURRENT_GOAL_ID = "current goal id";
     private static final String LIFECYCLE_NUMBER_OF_GOALS = "number of goals";
     private static final String LIFECYCLE_CURRENT_URI = "current uri";
+    public static final String LIFECYCLE_STREAK_LENGTH = "streak length";
 
     //Keys for bundle
     private static final String START_YEAR = "start year";
@@ -130,10 +132,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final String END_DATE_SET = "end date set";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
+
+        //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
+        getWindow().setBackgroundDrawable(null);
 
         //Get the intent that created activity to determine if activity should be in "insert mode"
         //for inserting a new goal or "edit mode" for editing an existing goal.
@@ -231,6 +237,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
             if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_URI)) {
                 mCurrentGoalUri = Uri.parse(savedInstanceState.getString(LIFECYCLE_CURRENT_URI));
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_STREAK_LENGTH)) {
+                mStreakLengthDays = savedInstanceState.getLong(LIFECYCLE_STREAK_LENGTH);
             }
 
         }
@@ -401,6 +410,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                 //Send over the currentGoalID so that the streak details activity can load streak details for that goal
                 intent.putExtra(GoalsHabitsEntry._ID, mCurrentGoalID);
+                intent.putExtra(LIFECYCLE_STREAK_LENGTH, mStreakLengthDays);
 
                 startActivity(intent);
             }
@@ -689,6 +699,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                         long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
+
+                        //Get data for streak length (info is passed in to streak details activity via intent
+                        //so that current streak length can be added to graphView of streak length over time
+                        long currentTimeMillis = System.currentTimeMillis();
+                        long streakLengthMillis = currentTimeMillis - startDateMillis;
+                        mStreakLengthDays = streakLengthMillis / (1000 * 60 * 60 * 24);
 
 
                         mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
@@ -1279,6 +1295,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
+        outState.putLong(LIFECYCLE_STREAK_LENGTH, mStreakLengthDays);
 
     }
 

@@ -46,6 +46,9 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
 
+        //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
+        getWindow().setBackgroundDrawable(null);
+
         // Add new goal button
         FloatingActionButton addGoalButton = findViewById(R.id.add_goal);
         addGoalButton.setOnClickListener(new View.OnClickListener() {

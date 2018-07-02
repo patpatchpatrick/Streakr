@@ -48,6 +48,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     private static final int STREAK_LOADER = 2;
 
     private int mCurrentGoalID = -1;
+    private long mCurrentStreakLengthDays = -1;
     private String mStreakNotes;
     private Boolean mNoteChanged;
 
@@ -59,11 +60,19 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     private PopupWindow mNotesPopupWindow;
     private ScrollView mStreaksScrollView;
 
+    //Strings for onSavedInstance State
+    private static final String LIFECYCLE_CURRENT_GOAL_ID = "current goal";
+    private static final String LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS = "streak length days";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streak_details);
         setTitle(R.string.streak_details);
+
+        //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
+        getWindow().setBackgroundDrawable(null);
 
         mLongestStreakLengthView = (TextView) findViewById(R.id.longest_streak_length_textview);
         mAverageStreakLengthView = (TextView) findViewById(R.id.average_streak_length_textview);
@@ -74,7 +83,20 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         //Get the intent and the current goal ID from the intent to begin loading streak data for that goal
         Intent intent = getIntent();
         mCurrentGoalID = intent.getIntExtra(GoalsHabitsEntry._ID, -1);
+        mCurrentStreakLengthDays = intent.getLongExtra(GoalEditorActivity.LIFECYCLE_STREAK_LENGTH, -1);
 
+        if (savedInstanceState != null) {
+
+
+            //If there is a savedInstanceState from the app being unexpectedly terminated, reload the data
+
+            if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_GOAL_ID)) {
+                mCurrentGoalID = savedInstanceState.getInt(LIFECYCLE_CURRENT_GOAL_ID);
+            }
+            if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS)) {
+                mCurrentStreakLengthDays = savedInstanceState.getLong(LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS);
+            }
+        }
 
         // Find recyclerView for goal/habit list and set linearLayoutManager and recyclerAdapter on recyclerView
         mRecyclerView = findViewById(R.id.recycler_view_streak_details);
@@ -179,6 +201,10 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                     streakDataSeries.appendData(new DataPoint(i, streakLength), false, 100);
                     i++;
                 }
+                //Add the current streak length as the last data point as long as the value is defined
+                if (mCurrentStreakLengthDays != -1) {
+                    streakDataSeries.appendData(new DataPoint(i, mCurrentStreakLengthDays), false, 100);
+                }
                 streakDataSeries.setColor(ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent));
                 mStreakGraph.addSeries(streakDataSeries);
 
@@ -279,7 +305,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         values.put(StreaksEntry.COLUMN_STREAK_NOTES, noteUpdate);
 
         mNoteChanged = false;
-        Uri currentStreakUri = ContentUris.withAppendedId(StreaksEntry.CONTENT_URI, streakID );
+        Uri currentStreakUri = ContentUris.withAppendedId(StreaksEntry.CONTENT_URI, streakID);
         int rowsUpdated = getContentResolver().update(currentStreakUri, values, null, null);
 
         Toast.makeText(this, this.getResources().getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
@@ -290,5 +316,13 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     protected void onResume() {
         super.onResume();
         getContentResolver().notifyChange(StreaksEntry.CONTENT_URI, null);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
+        outState.putLong(LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS, mCurrentStreakLengthDays);
     }
 }

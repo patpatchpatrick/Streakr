@@ -9,4 +9,18 @@
         <item>@string/goal_type_read</item>
     </string-array>
 
+    <!-- Settings arrays -->
+
+    <!-- Theme selection settings arrays -->
+    <array name="settings_theme_labels">
+        <item>@string/settings_theme_label_default</item>
+        <item>@string/settings_theme_label_pink</item>
+    </array>
+
+    <array name="settings_theme_values">
+        <item>@string/settings_theme_value_default</item>
+        <item>@string/settings_theme_value_pink</item>
+    </array>
+
+
 </resources>

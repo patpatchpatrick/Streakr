@@ -12,10 +12,11 @@
         <activity
             android:name=".GoalsHabitsFeatureActivity"
             android:label="GoalsHabitsFeatureActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:label="Main Activity">
+            android:label="Main Activity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +32,11 @@
             android:authorities="com.example.android.lifetrackerlite"
             android:exported="false" />
 
-        <activity android:name=".StreakDetailsActivity"></activity>
+        <activity android:name=".StreakDetailsActivity" />
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
     </application>
 
 </manifest>

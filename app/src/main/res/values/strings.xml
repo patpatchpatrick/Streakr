@@ -4,6 +4,8 @@
     <!-- Labels for different app features [CHAR LIMIT=TBD] -->
     <string name="feature_goals_habits">Goals/Habits</string>
     <string name="feature_reminders">Reminders</string>
+    <string name="feature_settings">Settings</string>
+    <string name="primary_settings">Settings</string>
     <string name="title_activity_goals_habits_feature">GoalsHabitsFeatureActivity</string>
 
     <!-- Goal editor activity strings [CHAR LIMIT=TBD] -->
@@ -71,6 +73,14 @@
     <string name="longest_streak_length">Longest Streak Length</string>
     <string name="historical_streaks_details">Historical Streaks:</string>
     <string name="streak_trend">Streak Trend</string>
+
+    <!-- Settings Keys, Labels and Values [CHAR LIMIT=TBD] -->
+    <string name="settings_theme_key">theme key</string>
+    <string name="settings_theme_title">Select Theme</string>
+    <string name="settings_theme_label_default">Default</string>
+    <string name="settings_theme_value_default">default theme</string>
+    <string name="settings_theme_label_pink">Pink</string>
+    <string name="settings_theme_value_pink">pink theme</string>
 
 
 </resources>

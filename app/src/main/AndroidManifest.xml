@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".GoalsHabitsFeatureActivity"
-            android:label="GoalsHabitsFeatureActivity"
+            android:label="Goals and Habits"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"

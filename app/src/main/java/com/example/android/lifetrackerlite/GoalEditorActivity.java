@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.PersistableBundle;
@@ -44,6 +45,7 @@ import android.widget.Toast;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
+import com.example.android.lifetrackerlite.helper.ThemeHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -137,7 +139,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Set up theme from user-selected shared preference theme before activity is created
-        setUpTheme();
+        setTheme(ThemeHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
 
@@ -896,7 +898,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void showResetStreakDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.PopUpMenuTheme)).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme())).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_message));
 
@@ -967,7 +969,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         // Dialog to confirm if user wants to delete goal
 
-        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.PopUpMenuTheme)).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme())).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_message));
 
@@ -1062,7 +1064,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.PopUpMenuTheme));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme()));
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
@@ -1173,7 +1175,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), R.style.PopUpMenuTheme, (GoalEditorActivity) getActivity(), year, month, day);
+            return new DatePickerDialog(getActivity(), ThemeHelper.getPopUpTheme(), (GoalEditorActivity) getActivity(), year, month, day);
         }
 
 
@@ -1311,17 +1313,5 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
-    private void setUpTheme() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //Set the app theme based on the theme selected in settings/preferences
-        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
-        if (theme.equals(getString(R.string.settings_theme_value_default))) {
-            setTheme(R.style.AppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
-            setTheme(R.style.PinkAppTheme);
-        } else {
-            setTheme(R.style.AppTheme);
-        }
 
-    }
 }

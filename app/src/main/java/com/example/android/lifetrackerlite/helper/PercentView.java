@@ -57,8 +57,18 @@ public class PercentView extends View {
     public void setPercentage(float percentage) {
 
         //Set the percentage on the view to fill up the pie chart appropriately
-
         this.percentage = percentage / 100;
         invalidate();
+    }
+
+    public void setColor(int theme){
+        //Set the color of the percent View based on whatever theme the user selected
+        if (theme == R.style.PinkAppTheme) {
+            paint.setColor(getContext().getResources().getColor(R.color.colorAccentPink));
+            bgpaint.setColor(getContext().getResources().getColor(R.color.colorTextAndIconsPink));
+        } else {
+            paint.setColor(getContext().getResources().getColor(R.color.colorAccent));
+            bgpaint.setColor(getContext().getResources().getColor(R.color.colorTextAndIcons));
+        }
     }
 }

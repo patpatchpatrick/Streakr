@@ -6,12 +6,19 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorTextAndIcons">@color/colorTextAndIcons</item>
         <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector</item>
-        <item name="preferenceTheme">@style/PopUpMenuTheme</item>
+        <item name="preferenceTheme">@style/DefaultPopUpMenuTheme</item>
         <item name="basicHeaderText">@style/DefaultThemeBasicHeaderText</item>
+        <item name="basicHeaderTextLight">@style/DefaultThemeBasicHeaderTextLight</item>
         <item name="secondaryText">@style/DefaultThemeSecondaryText</item>
+        <item name="secondaryTextLight">@style/DefaultThemeSecondaryTextLight</item>
         <item name="popUpMenuTheme">@style/DefaultPopUpMenuTheme</item>
         <item name="backgroundTheme">@style/DefaultBackgroundTheme</item>
+        <item name="backgroundThemeDark">@style/DefaultBackgroundThemeDark</item>
+        <item name="iconPrimaryColor">@color/colorPrimaryText</item>
+        <item name="iconPrimaryColorLight">@color/colorPrimaryLight</item>
+        <item name="iconSecondaryColor">@color/colorAccent</item>
     </style>
 
     <!-- Pink application theme. -->
@@ -20,34 +27,31 @@
         <item name="colorPrimary">@color/colorPrimaryPink</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
+        <item name="colorTextAndIcons">@color/colorTextAndIconsPink</item>
         <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector_pink</item>
-        <item name="preferenceTheme">@style/PopUpMenuTheme</item>
+        <item name="preferenceTheme">@style/PinkPopUpMenuTheme</item>
         <item name="basicHeaderText">@style/PinkThemeBasicHeaderText</item>
+        <item name="basicHeaderTextLight">@style/PinkThemeBasicHeaderTextLight</item>
         <item name="secondaryText">@style/PinkThemeSecondaryText</item>
+        <item name="secondaryTextLight">@style/PinkThemeSecondaryTextLight</item>
         <item name="popUpMenuTheme">@style/PinkPopUpMenuTheme</item>
         <item name="backgroundTheme">@style/PinkBackgroundTheme</item>
+        <item name="backgroundThemeDark">@style/PinkBackgroundThemeDark</item>
+        <item name="iconPrimaryColor">@color/colorPrimaryTextPink</item>
+        <item name="iconPrimaryColorLight">@color/colorPrimaryLightPink</item>
+        <item name="iconSecondaryColor">@color/colorAccentPink</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <!-- Styles that correspond to each theme -->
 
     <!-- BasicHeaderText style as well as overrides for the different themes available -->
     <style name="BasicHeaderText">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
-
     <style name="DefaultThemeBasicHeaderText" parent="@style/BasicHeaderText">
         <item name="android:textColor" >@color/colorPrimaryText</item>
     </style>
-
     <style name="PinkThemeBasicHeaderText" parent="@style/BasicHeaderText">
     <item name="android:textColor" >@color/colorPrimaryTextPink</item>
     </style>
@@ -56,40 +60,54 @@
     <style name="SecondaryText">
         <item name="android:textColor">@color/colorSecondaryText</item>
     </style>
-
     <style name="DefaultThemeSecondaryText" parent="@style/SecondaryText">
         <item name="android:textColor" >@color/colorSecondaryText</item>
         <item name="android:backgroundTint">@color/colorSecondaryText</item>
     </style>
-
     <style name="PinkThemeSecondaryText" parent="@style/SecondaryText">
         <item name="android:textColor" >@color/colorSecondaryTextPink</item>
         <item name="android:backgroundTint">@color/colorSecondaryTextPink</item>
     </style>
 
-
-
-
+    <!-- BasicHeaderTextLight style as well as overrides for the different themes available -->
     <style name="BasicHeaderTextLight">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorTextAndIcons</item>
     </style>
+    <style name="DefaultThemeBasicHeaderTextLight">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextAndIcons</item>
+    </style>
+    <style name="PinkThemeBasicHeaderTextLight">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextAndIconsPink</item>
+    </style>
 
+    <!-- SecondaryTextLight style as well as overrides for the different themes available -->
     <style name="SecondaryTextLight">
         <item name="android:textColor">@color/colorPrimaryLight</item>
+    </style>
+    <style name="DefaultThemeSecondaryTextLight">
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+    </style>
+    <style name="PinkThemeSecondaryTextLight">
+        <item name="android:textColor">@color/colorPrimaryLightPink</item>
     </style>
 
     <!-- Override and set popUpMenuTheme depending on user selected Theme. -->
     <style name="PopUpMenuTheme" parent ="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorTextAndIcons</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="DefaultPopUpMenuTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorTextAndIcons</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="PinkPopUpMenuTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@color/colorPrimaryDarkPink</item>
+        <item name="android:textColor">@color/colorTextAndIconsPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
     </style>
 
@@ -103,5 +121,31 @@
     <style name="PinkBackgroundTheme" parent="BackgroundTheme">
         <item name="android:background">@color/colorPrimaryLightPink</item>
     </style>
+
+    <!-- Override and set dark background style depending on user selected Theme. -->
+    <style name="BackgroundThemeDark">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+    <style name="DefaultBackgroundThemeDark">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+    <style name="PinkBackgroundThemeDark">
+        <item name="android:background">@color/colorPrimaryDarkPink</item>
+    </style>
+
+
+
+
+
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

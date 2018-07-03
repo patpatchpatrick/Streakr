@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.android.lifetrackerlite.helper.ThemeSetter;
+import com.example.android.lifetrackerlite.helper.ThemeHelper;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -77,10 +77,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
         if (theme.equals(getString(R.string.settings_theme_value_default))){
             setTheme(R.style.AppTheme);
+            ThemeHelper.setTheme(R.style.AppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
             setTheme(R.style.PinkAppTheme);
+            ThemeHelper.setTheme(R.style.PinkAppTheme);
         } else {
             setTheme(R.style.AppTheme);
+            ThemeHelper.setTheme(R.style.AppTheme);
         }
 
     }
@@ -91,7 +94,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
+
+
+  /*  @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.primary_settings, menu);
@@ -107,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
+
+
 
 }

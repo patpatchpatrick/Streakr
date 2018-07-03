@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/streak_list_start_date"
-            style="@style/SecondaryTextLight"
+            style="?secondaryTextLight"
             android:layout_width="0dp"
             android:layout_weight="0.35"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             tools:text="Start Date" />
 
         <TextView
-            style="@style/SecondaryTextLight"
+            style="?secondaryTextLight"
             android:layout_width="0dp"
             android:layout_weight="0.1"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/streak_list_fail_date"
-            style="@style/SecondaryTextLight"
+            style="?secondaryTextLight"
             android:layout_width="0dp"
             android:layout_weight="0.35"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 
         <TextView
             android:id="@+id/streak_list_streak_length"
-            style="@style/SecondaryTextLight"
+            style="?secondaryTextLight"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="wrap_content"

@@ -6,9 +6,11 @@ import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
+import com.example.android.lifetrackerlite.helper.ThemeHelper;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
@@ -67,6 +70,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(ThemeHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streak_details);
         setTitle(R.string.streak_details);
@@ -205,8 +209,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                 if (mCurrentStreakLengthDays != -1) {
                     streakDataSeries.appendData(new DataPoint(i, mCurrentStreakLengthDays), false, 100);
                 }
-                streakDataSeries.setColor(ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent));
-                mStreakGraph.addSeries(streakDataSeries);
 
                 //TODO fix calculation to show decimal to one digit
                 //Calculate average streak length
@@ -214,12 +216,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
                 mLongestStreakLengthView.setText(Long.toString(maxStreakLength) + " days");
                 mAverageStreakLengthView.setText(Long.toString(averageStreakLength) + " days");
-                mStreakGraph.setBackgroundColor(ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark));
-                int axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
-                GridLabelRenderer gridLabelRenderer = mStreakGraph.getGridLabelRenderer();
-                gridLabelRenderer.setGridColor(axisColor);
-                gridLabelRenderer.setHorizontalLabelsColor(axisColor);
-                gridLabelRenderer.setVerticalLabelsColor(axisColor);
+                setGraphColors(mStreakGraph, streakDataSeries);
 
 
                 break;
@@ -324,5 +321,34 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putLong(LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS, mCurrentStreakLengthDays);
+    }
+
+
+    private void setGraphColors(GraphView graphView, LineGraphSeries<DataPoint> series) {
+
+        //Set graph background colors, axis colors and series colors based on user selected theme
+
+        int backgroundColor;
+        int axisColor;
+        int seriesColor;
+        int theme = ThemeHelper.getTheme();
+
+        if (theme == R.style.PinkAppTheme) {
+            backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkPink);
+            axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsPink);
+            seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentPink);
+        } else {
+            backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark);
+            axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
+            seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent);
+        }
+
+        series.setColor(seriesColor);
+        graphView.addSeries(series);
+        graphView.setBackgroundColor(backgroundColor);
+        GridLabelRenderer gridLabelRenderer = graphView.getGridLabelRenderer();
+        gridLabelRenderer.setGridColor(axisColor);
+        gridLabelRenderer.setHorizontalLabelsColor(axisColor);
+        gridLabelRenderer.setVerticalLabelsColor(axisColor);
     }
 }

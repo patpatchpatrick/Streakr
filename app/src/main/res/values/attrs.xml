@@ -4,10 +4,17 @@
     <!-- Reference attributes to override styles based on whatever theme is selected by user -->
     <declare-styleable name="HeaderText">
         <attr name="basicHeaderText" format="reference"> </attr>
+        <attr name="basicHeaderTextLight" format="reference"> </attr>
         <attr name="secondaryText" format="reference"> </attr>
+        <attr name="secondaryTextLight" format="reference"> </attr>
         <attr name="popUpMenuTheme" format="reference"> </attr>
         <attr name="backgroundTheme" format="reference"> </attr>
+        <attr name="backgroundThemeDark" format="reference"> </attr>
         <attr name="goalListBackgroundSelector" format="reference"> </attr>
+        <attr name="iconPrimaryColor" format="reference"></attr>
+        <attr name="iconPrimaryColorLight" format="reference"></attr>
+        <attr name="iconSecondaryColor" format="reference"></attr>
+        <attr name="colorTextAndIcons" format="reference"></attr>
     </declare-styleable>
 
 

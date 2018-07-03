@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/goal_name"
-            style="@style/BasicHeaderText"
+            style="?basicHeaderText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -46,7 +46,7 @@
 
         <TextView
             android:id="@+id/goal_type"
-            style="@style/SecondaryText"
+            style="?secondaryText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -55,7 +55,7 @@
 
         <TextView
             android:id="@+id/goal_details"
-            style="@style/SecondaryText"
+            style="?secondaryText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
@@ -87,7 +87,8 @@
             android:layout_centerInParent="true"
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp"
-            android:textColor="@color/colorPrimaryText"
+            android:textStyle="normal"
+            style="?basicHeaderText"
             android:gravity="center"
             tools:text="Streak" />
 

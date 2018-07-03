@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/colorPrimaryDark"
+    style="?backgroundThemeDark"
     tools:context=".StreakDetailsActivity">
 
     <LinearLayout
@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/longest_streak_length_header_textview"
-            style="@style/BasicHeaderTextLight"
+            style="?basicHeaderTextLight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/longest_streak_length_textview"
-            style="@style/SecondaryTextLight"
+            style="?secondaryTextLight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/average_streak_length_header_textview"
-        style="@style/BasicHeaderTextLight"
+        style="?basicHeaderTextLight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -61,7 +61,7 @@
 
     <TextView
         android:id="@+id/average_streak_length_textview"
-        style="@style/SecondaryTextLight"
+        style="?secondaryTextLight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -74,7 +74,7 @@
         <TextView
 
             android:id="@+id/historical_streaks_header_streak_details"
-            style="@style/BasicHeaderTextLight"
+            style="?basicHeaderTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
@@ -103,7 +103,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/BasicHeaderTextLight"
+        style="?basicHeaderTextLight"
         android:text="@string/streak_trend"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"/>

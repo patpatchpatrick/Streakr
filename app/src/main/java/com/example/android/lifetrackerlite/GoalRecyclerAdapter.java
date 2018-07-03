@@ -23,6 +23,7 @@ import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
 import com.example.android.lifetrackerlite.helper.PercentView;
+import com.example.android.lifetrackerlite.helper.ThemeHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -153,6 +154,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         mOnClickListener = listener;
 
 
+
     }
 
     @Override
@@ -256,6 +258,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
         //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
         holder.percentView.setPercentage(streakCompletionPercent);
+        //Set the color of the percentView  based on whatever user-selected theme is being used
+        holder.percentView.setColor(ThemeHelper.getTheme());
 
         // Set an onTouchListener on the view, and when the view is touched, begin drag/drop
         holder.dragDropButton.setOnTouchListener(new View.OnTouchListener() {

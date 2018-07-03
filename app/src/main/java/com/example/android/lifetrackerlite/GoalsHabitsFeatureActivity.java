@@ -27,6 +27,7 @@ import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.helper.GoalItemTouchHelperCallback;
 import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
 import com.example.android.lifetrackerlite.helper.OnStartDragListener;
+import com.example.android.lifetrackerlite.helper.ThemeHelper;
 
 import java.util.HashMap;
 
@@ -45,7 +46,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setUpTheme();
+        setTheme(ThemeHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
 
@@ -200,17 +201,4 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
     }
 
-    private void setUpTheme() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //Set the app theme based on the theme selected in settings/preferences
-        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
-        if (theme.equals(getString(R.string.settings_theme_value_default))) {
-            setTheme(R.style.AppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
-            setTheme(R.style.PinkAppTheme);
-        } else {
-            setTheme(R.style.AppTheme);
-        }
-
-    }
 }

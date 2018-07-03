@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    style="?backgroundThemeDark">
     <RelativeLayout
         android:layout_width="256dp"
         android:layout_height="256dp">
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/notes_edit_text"
         android:textCursorDrawable="@null"
-        android:textColor="@color/colorTextAndIcons"
-        android:backgroundTint="@color/colorTextAndIcons"
+        android:textColor="?colorTextAndIcons"
+        android:backgroundTint="?colorTextAndIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Type here..."
-        android:textColorHint="@color/colorTextAndIcons"/>
+        android:textColorHint="?colorTextAndIcons"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Close"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/colorAccent"
+        android:background="?colorPrimaryDark"
+        android:textColor="?colorAccent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:id="@+id/notes_close_button"/>

@@ -5,11 +5,13 @@ import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,7 @@ import java.util.HashMap;
 
 import static android.support.v7.widget.DividerItemDecoration.HORIZONTAL;
 
-public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener{
+public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener {
 
     private static final String TAG = GoalsHabitsFeatureActivity.class.getSimpleName();
 
@@ -43,6 +45,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setUpTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
 
@@ -66,7 +69,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                             Toast.LENGTH_SHORT);
                     return;
                 }
-                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
                 //Send over an extra int to indicate editing a goal
                 intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
@@ -92,7 +95,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                             Toast.LENGTH_SHORT);
                     return;
                 }
-                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
+                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
                 //Send over an extra int to indicate editing a habit
                 intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.HABIT);
@@ -161,7 +164,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
 
         // Set the URI on the intent of the goal clicked to be the id of the clicked item
-        Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedGoalID );
+        Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedGoalID);
 
         Log.d(TAG, "Clicked Goal ID" + clickedGoalID);
 
@@ -176,7 +179,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                     Toast.LENGTH_SHORT);
             return;
         }
-        intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER,  mNumberGoals);
+        intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
@@ -195,6 +198,19 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     protected void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
+    }
+
+    private void setUpTheme() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Set the app theme based on the theme selected in settings/preferences
+        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
+        if (theme.equals(getString(R.string.settings_theme_value_default))) {
+            setTheme(R.style.AppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
+            setTheme(R.style.PinkAppTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
 
     }
 }

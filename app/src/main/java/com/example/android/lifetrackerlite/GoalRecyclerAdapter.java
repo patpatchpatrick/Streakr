@@ -201,6 +201,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
+
         dataCursor.moveToPosition(position);
 
 

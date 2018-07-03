@@ -1,10 +1,14 @@
 package com.example.android.lifetrackerlite;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,18 +16,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.android.lifetrackerlite.helper.ThemeSetter;
+
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private TextView settingsTextViewTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Set up the preferences/theme for the app
+        setUpSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        settingsTextViewTest = (TextView) findViewById(R.id.settings_textview_test);
-
-        setUpSharedPreferences();
 
         //Open Goals/Habits Activity if Goals/Habits view is clicked
         LinearLayout goalsFeatureView = (LinearLayout) findViewById(R.id.goals_feature);
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     }
 
+
     private void setUpSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setTheme(sharedPreferences);
@@ -58,7 +62,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.settings_theme_key))){
+            //TODO only recreate the app  if the theme preference is changed
+            //If the app theme is changed, the theme must be first set by the app and then the app
+            //must be created for the new theme to be applied immediately
             setTheme(sharedPreferences);
+            MainActivity.this.recreate();
         }
 
     }
@@ -66,7 +74,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setTheme(SharedPreferences sharedPreferences) {
 
         //Set the app theme based on the theme selected in settings/preferences
-        settingsTextViewTest.setText(sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
+        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
+        if (theme.equals(getString(R.string.settings_theme_value_default))){
+            setTheme(R.style.AppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
+            setTheme(R.style.PinkAppTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
 
     }
 

@@ -13,9 +13,11 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -132,9 +134,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final String END_DATE_SET = "end date set";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Set up theme from user-selected shared preference theme before activity is created
+        setUpTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
 
@@ -1308,4 +1311,17 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
     }
 
+    private void setUpTheme() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Set the app theme based on the theme selected in settings/preferences
+        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
+        if (theme.equals(getString(R.string.settings_theme_value_default))) {
+            setTheme(R.style.AppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
+            setTheme(R.style.PinkAppTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
+    }
 }

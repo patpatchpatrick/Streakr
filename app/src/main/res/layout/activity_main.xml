@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="?backgroundTheme"
     android:orientation="vertical"
     >
 
@@ -21,6 +22,7 @@
             android:text="@string/feature_goals_habits"
             android:gravity="center"
             android:padding="16dp"
+            style="?basicHeaderText"
             />
 
         <ImageView
@@ -44,6 +46,7 @@
         android:text="@string/feature_reminders"
         android:gravity="center"
         android:padding="16dp"
+        style="?basicHeaderText"
         />
 
     <ImageView
@@ -68,6 +71,7 @@
             android:text="@string/feature_settings"
             android:gravity="center"
             android:padding="16dp"
+            style="?basicHeaderText"
             />
 
         <ImageView
@@ -77,11 +81,7 @@
             />
 
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings Test"
-        android:id="@+id/settings_textview_test"/>
+
 
 
 

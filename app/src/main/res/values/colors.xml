@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Default theme colors -->
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorPrimaryLight">#CFD8DC</color>
@@ -10,37 +11,17 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorTextAndIcons">#FFFFFF</color>
 
+    <!-- Pink theme colors -->
+    <color name="colorPrimaryPink">#673AB7</color>
+    <color name="colorPrimaryDarkPink">#512DA8</color>
+    <color name="colorPrimaryLightPink">#D1C4E9</color>
+    <color name="colorAccentPink">#FF4081</color>
+    <color name="colorDividerPink">#BDBDBD</color>
+    <color name="colorDatePink">#757575</color>
+    <color name="colorPrimaryTextPink">#212121</color>
+    <color name="colorSecondaryTextPink">#757575</color>
+    <color name="colorTextAndIconsPink">#FFFFFF</color>
 
-
-    <!-- Color for a streak length with magnitude 0 to 10% -->
-    <color name="streakLength10">#4A7BA7</color>
-
-    <!-- Color for a streak length with magnitude 10 to 20% -->
-    <color name="streakLength20">#04B4B3</color>
-
-    <!-- Color for a streak length with magnitude 20 to 30% -->
-    <color name="streakLength30">#10CAC9</color>
-
-    <!-- Color for a streak length with magnitude 30 to 40% -->
-    <color name="streakLength40">#F5A623</color>
-
-    <!-- Color for a streak length with magnitude 40 to 50% -->
-    <color name="streakLength50">#FF7D50</color>
-
-    <!-- Color for a streak length with magnitude 50 to 60% -->
-    <color name="streakLength60">#FC6644</color>
-
-    <!-- Color for a streak length with magnitude 60 to 70% -->
-    <color name="streakLength70">#E75F40</color>
-
-    <!-- Color for a streak length with magnitude 70 to 80% -->
-    <color name="streakLength80">#E13A20</color>
-
-    <!-- Color for a streak length with magnitude 80 to 90% -->
-    <color name="streakLength90">#D93218</color>
-
-    <!-- Color for a streak length with magnitude 100% + -->
-    <color name="streakLength100">#C03823</color>
 
     <!-- Color for a streak history details -->
     <color name="streakDetails">#4A7BA7</color>

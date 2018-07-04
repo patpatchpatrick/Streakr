@@ -218,10 +218,10 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         //Determine if goal or habit and set the icon accordingly
         int goalOrHabit = dataCursor.getInt(dataCursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
         if (goalOrHabit == GoalsHabitsEntry.GOAL) {
-            holder.goalHabitIcon.setImageResource(R.drawable.goal_icon);
+            holder.goalHabitIcon.setImageResource(R.drawable.ic_goal);
         }
         if (goalOrHabit == GoalsHabitsEntry.HABIT) {
-            holder.goalHabitIcon.setImageResource(R.drawable.habit_icon);
+            holder.goalHabitIcon.setImageResource(R.drawable.ic_habit);
         }
 
         //Get data for goal details string

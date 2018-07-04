@@ -26,9 +26,9 @@
             />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/goal_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_goal"
             />
 
     </LinearLayout>
@@ -50,9 +50,9 @@
         />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/reminder_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/ic_reminder"
         />
 
 </LinearLayout>
@@ -75,9 +75,9 @@
             />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/settings_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_settings"
             />
 
     </LinearLayout>

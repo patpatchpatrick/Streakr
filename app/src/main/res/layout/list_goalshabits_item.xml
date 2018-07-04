@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?goalListBackgroundSelector"
     android:orientation="vertical">
 
@@ -24,7 +25,7 @@
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/goal_icon"
+        app:srcCompat="@drawable/ic_goal"
         android:id="@+id/goal_habit_icon"/>
     </RelativeLayout>
 
@@ -102,7 +103,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/drag_reorder"
+        app:srcCompat="@drawable/ic_drag_reorder"
         android:layout_centerInParent="true"
         android:paddingRight="16dp"
         android:id="@+id/drag_drop_button"

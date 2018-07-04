@@ -2,87 +2,121 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?backgroundTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="?backgroundTheme"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/goals_feature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?goalListBackgroundSelector"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:id="@+id/goals_feature">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/feature_goals_habits"
-            android:gravity="center"
-            android:padding="16dp"
-            style="?basicHeaderText"
-            />
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp">
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/ic_goal"
-            />
+            android:background="@drawable/ic_goal" />
+
+        <TextView
+            style="?basicHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/feature_goals_habits" />
+
 
     </LinearLayout>
-
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/feature_reminders"
-        android:gravity="center"
-        android:padding="16dp"
-        style="?basicHeaderText"
-        />
-
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/ic_reminder"
-        />
-
-</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?goalListBackgroundSelector"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:id="@+id/settings">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/feature_settings"
-            android:gravity="center"
-            android:padding="16dp"
-            style="?basicHeaderText"
-            />
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp">
 
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/ic_settings"
-            />
+            android:background="@drawable/ic_reminder" />
+
+        <TextView
+            style="?basicHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/feature_reminders" />
+
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:background="?goalListBackgroundSelector">
 
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_settings" />
+
+        <TextView
+            style="?basicHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/feature_settings" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
+
+        </com.google.android.gms.common.SignInButton>
+
+        <Button
+            android:id="@+id/google_sign_out_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"/>
+
+        <Button
+            android:id="@+id/google_revoke_access_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Revoke Access"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In Status"/>
+
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

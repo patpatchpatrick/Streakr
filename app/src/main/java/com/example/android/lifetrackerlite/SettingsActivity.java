@@ -14,6 +14,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         setUpSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getWindow().setBackgroundDrawable(null);
     }
 
     @Override

@@ -13,12 +13,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.lifetrackerlite.helper.ThemeHelper;
+import com.google.android.gms.common.SignInButton;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private SignInButton mSignInButton;
+    private Button mSignOutButton;
+    private Button mRevokeButton;
 
 
     @Override
@@ -27,6 +33,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setUpSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setBackgroundDrawable(null);
+
+        mSignInButton = (SignInButton) findViewById(R.id.google_sign_in_button);
+        mSignOutButton = (Button) findViewById(R.id.google_sign_out_button);
+        mRevokeButton = (Button) findViewById(R.id.google_revoke_access_button);
+
 
         //Open Goals/Habits Activity if Goals/Habits view is clicked
         LinearLayout goalsFeatureView = (LinearLayout) findViewById(R.id.goals_feature);

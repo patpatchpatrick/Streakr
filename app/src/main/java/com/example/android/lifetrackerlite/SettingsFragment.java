@@ -47,6 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Preference change listeners should be registered when the activity is created
+
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
     }

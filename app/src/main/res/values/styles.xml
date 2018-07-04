@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorTextAndIcons">@color/colorTextAndIcons</item>
         <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector</item>
-        <item name="preferenceTheme">@style/DefaultPopUpMenuTheme</item>
+        <item name="preferenceTheme">@style/DefaultPreferenceTheme</item>
         <item name="basicHeaderText">@style/DefaultThemeBasicHeaderText</item>
         <item name="basicHeaderTextLight">@style/DefaultThemeBasicHeaderTextLight</item>
         <item name="secondaryText">@style/DefaultThemeSecondaryText</item>
@@ -29,7 +29,7 @@
         <item name="colorAccent">@color/colorAccentPink</item>
         <item name="colorTextAndIcons">@color/colorTextAndIconsPink</item>
         <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector_pink</item>
-        <item name="preferenceTheme">@style/PinkPopUpMenuTheme</item>
+        <item name="preferenceTheme">@style/PinkPreferenceTheme</item>
         <item name="basicHeaderText">@style/PinkThemeBasicHeaderText</item>
         <item name="basicHeaderTextLight">@style/PinkThemeBasicHeaderTextLight</item>
         <item name="secondaryText">@style/PinkThemeSecondaryText</item>
@@ -133,7 +133,17 @@
         <item name="android:background">@color/colorPrimaryDarkPink</item>
     </style>
 
-
+    <!-- Override and set preference themes depending on user selected Theme. -->
+    <style name="DefaultPreferenceTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@drawable/list_goalshabits_item_selector</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="PinkPreferenceTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@drawable/list_goalshabits_item_selector_pink</item>
+        <item name="android:textColor">@color/colorPrimaryTextPink</item>
+        <item name="colorAccent">@color/colorAccentPink</item>
+    </style>
 
 
 

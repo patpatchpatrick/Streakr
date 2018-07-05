@@ -922,6 +922,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
             String failDateString = "";
             failDateString += failSdf.format(failDateMillis);
+            Log.d(TAG,  "fdate: " + failDateString);
             TextView failDateDisplay = (TextView) dialogView.findViewById(R.id.failure_date_display);
             failDateDisplay.setText(failDateString);
         }
@@ -1222,7 +1223,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private boolean undefinedFailDate() {
         //Check if date is properly defined
-        if (mFailYear == 0 || mFailMonth == 0 || mFailDay == 0) {
+        //Don't include fail month in check because it's possible for fail month to be 0 (January)
+        if (mFailYear == 0 ||  mFailDay == 0) {
             return true;
         }
         return false;

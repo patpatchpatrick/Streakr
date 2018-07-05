@@ -328,6 +328,7 @@ public class LTProvider extends ContentProvider {
             return 0;
         }
 
+
         // Otherwise, get writeable database to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 

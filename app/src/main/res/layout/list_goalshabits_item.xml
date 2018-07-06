@@ -92,6 +92,13 @@
             style="?basicHeaderText"
             android:gravity="center"
             tools:text="Streak" />
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/goal_complete_imageview"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_goal"/>
 
 
     </RelativeLayout>

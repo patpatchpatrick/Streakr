@@ -421,6 +421,64 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
+        mGoalCompleted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //If goal complete button is pushed, create new dialog to prompt user if they are sure they would
+                //like to complete the goal/habit
+
+                //Dialog click listener to update the goal to be "complete" if user indicates they are sure
+                //that they want to complete the goal/habit
+                //Completed goals display on the goals list with a star icon
+                DialogInterface.OnClickListener goalCompleteClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        completeGoal();
+                        finish();
+                    }
+                };
+
+                showGoalCompleteDialog(goalCompleteClickListener);
+
+            }
+        });
+
+    }
+
+    private void showGoalCompleteDialog(DialogInterface.OnClickListener goalCompleteClickListener) {
+
+        //Dialog box to prompt user if they are sure they would like to complete the goal/habit
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme()));
+        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+            builder.setMessage(R.string.complete_habit);
+        } else {
+            builder.setMessage(R.string.complete_goal);
+        }
+        builder.setPositiveButton(R.string.yes, goalCompleteClickListener);
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    private void completeGoal(){
+
+        ContentValues values = new ContentValues();
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_YES);
+
+        int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
+
+        clearStartAndEndDates();
 
     }
 
@@ -922,7 +980,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
             String failDateString = "";
             failDateString += failSdf.format(failDateMillis);
-            Log.d(TAG,  "fdate: " + failDateString);
+            Log.d(TAG, "fdate: " + failDateString);
             TextView failDateDisplay = (TextView) dialogView.findViewById(R.id.failure_date_display);
             failDateDisplay.setText(failDateString);
         }
@@ -1224,7 +1282,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean undefinedFailDate() {
         //Check if date is properly defined
         //Don't include fail month in check because it's possible for fail month to be 0 (January)
-        if (mFailYear == 0 ||  mFailDay == 0) {
+        if (mFailYear == 0 || mFailDay == 0) {
             return true;
         }
         return false;

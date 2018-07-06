@@ -112,6 +112,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         public TextView streakLengthView;
         public ImageView goalHabitIcon;
         public ImageView dragDropButton;
+        public ImageView goalCompleteImageView;
         public PercentView percentView;
 
         public ViewHolder(View view) {
@@ -125,6 +126,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             streakLengthView = (TextView) view.findViewById(R.id.streak_length);
             goalHabitIcon = (ImageView) view.findViewById(R.id.goal_habit_icon);
             dragDropButton = (ImageView) view.findViewById(R.id.drag_drop_button);
+            goalCompleteImageView = (ImageView) view.findViewById(R.id.goal_complete_imageview);
             percentView = (PercentView) view.findViewById(R.id.percent_view);
             view.setOnClickListener(this);
 
@@ -152,7 +154,6 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         dataCursor = cursor;
         context = mContext;
         mOnClickListener = listener;
-
 
 
     }
@@ -206,6 +207,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
         dataCursor.moveToPosition(position);
 
+        //Determine if goal has been completed
+        int goalCompleted = dataCursor.getInt(dataCursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED));
 
         //Set goal name string
         String goalNameText = dataCursor.getString(dataCursor.getColumnIndexOrThrow(LTContract.GoalsHabitsEntry.COLUMN_GOAL_NAME));
@@ -254,12 +257,31 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         String streakDetailsString = "";
         streakDetailsString += Long.toString(streakLengthDays) + " days" + "\n";
         streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
-        holder.streakLengthView.setText(streakDetailsString);
 
-        //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
-        holder.percentView.setPercentage(streakCompletionPercent);
-        //Set the color of the percentView  based on whatever user-selected theme is being used
-        holder.percentView.setColor(ThemeHelper.getTheme());
+        if (goalCompleted == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
+            //If the goal is completed, show the comppleted goal star icon and show a full percentView
+            // pie chart (100 percent)
+
+            holder.percentView.setPercentage(100);
+            holder.goalCompleteImageView.setVisibility(View.VISIBLE);
+            holder.percentView.setColor(ThemeHelper.getTheme());
+            holder.streakLengthView.setVisibility(View.INVISIBLE);
+
+        } else {
+
+            //If the goal is not complete, set the appropriate percentage on the percentView and the
+            //appropriate streak length in the streak length view
+
+            holder.goalCompleteImageView.setVisibility(View.INVISIBLE);
+            holder.streakLengthView.setVisibility(View.VISIBLE);
+
+            holder.streakLengthView.setText(streakDetailsString);
+
+            //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
+            holder.percentView.setPercentage(streakCompletionPercent);
+            //Set the color of the percentView  based on whatever user-selected theme is being used
+            holder.percentView.setColor(ThemeHelper.getTheme());
+        }
 
         // Set an onTouchListener on the view, and when the view is touched, begin drag/drop
         holder.dragDropButton.setOnTouchListener(new View.OnTouchListener() {
@@ -280,7 +302,6 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     public int getItemCount() {
         return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
-
 
 
 }

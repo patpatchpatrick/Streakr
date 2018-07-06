@@ -350,5 +350,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         gridLabelRenderer.setGridColor(axisColor);
         gridLabelRenderer.setHorizontalLabelsColor(axisColor);
         gridLabelRenderer.setVerticalLabelsColor(axisColor);
+
     }
 }

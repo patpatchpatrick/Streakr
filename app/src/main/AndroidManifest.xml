@@ -12,16 +12,18 @@
         <activity
             android:name=".GoalsHabitsFeatureActivity"
             android:label="Goals and Habits"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MainActivity"
-            android:label="Main Activity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="Main Activity"
+            android:launchMode="singleTop">
         </activity>
         <activity
             android:name=".GoalEditorActivity"

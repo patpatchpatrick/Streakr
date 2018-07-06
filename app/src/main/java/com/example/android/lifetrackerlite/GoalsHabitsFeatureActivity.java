@@ -20,6 +20,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,7 +36,7 @@ import java.util.HashMap;
 
 import static android.support.v7.widget.DividerItemDecoration.HORIZONTAL;
 
-public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener {
+public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = GoalsHabitsFeatureActivity.class.getSimpleName();
 
@@ -43,10 +46,12 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
     private Integer mNumberGoals = -2;
+    private FloatingActionButton mSettingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeHelper.getTheme());
+        //Set up the preferences/theme for the app
+        setUpSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
 
@@ -102,6 +107,15 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.HABIT);
                 startActivity(intent);
 
+            }
+        });
+
+        mSettingsButton = findViewById(R.id.settings_button);
+        mSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent startSettingsActivity = new Intent(GoalsHabitsFeatureActivity.this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
             }
         });
 
@@ -200,5 +214,48 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         super.onResume();
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
     }
+
+
+    private void setUpSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setTheme(sharedPreferences);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.settings_theme_key))){
+            //TODO only recreate the app  if the theme preference is changed
+            //If the app theme is changed, the theme must be first set by the app and then the app
+            //must be created for the new theme to be applied immediately
+            setTheme(sharedPreferences);
+            GoalsHabitsFeatureActivity.this.recreate();
+        }
+
+    }
+
+    private void setTheme(SharedPreferences sharedPreferences) {
+
+        //Set the app theme based on the theme selected in settings/preferences
+        String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
+        if (theme.equals(getString(R.string.settings_theme_value_default))){
+            setTheme(R.style.AppTheme);
+            ThemeHelper.setTheme(R.style.AppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
+            setTheme(R.style.PinkAppTheme);
+            ThemeHelper.setTheme(R.style.PinkAppTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+            ThemeHelper.setTheme(R.style.AppTheme);
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
 
 }

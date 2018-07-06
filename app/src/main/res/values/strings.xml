@@ -55,6 +55,11 @@
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
 
+    <string name="complete_goal">Complete Goal?</string>
+    <string name="complete_habit">Complete Habit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <!-- Toast Messages [CHAR LIMIT=TBD] -->
     <string name="streak_reset">Streak Reset</string>
     <string name="goal_inserted">Goal Inserted</string>

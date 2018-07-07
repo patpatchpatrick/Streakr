@@ -98,7 +98,7 @@
             android:layout_centerInParent="true"
             android:id="@+id/goal_complete_imageview"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_goal"/>
+            app:srcCompat="@drawable/ic_star"/>
 
 
     </RelativeLayout>

@@ -1,25 +1,18 @@
 package com.example.android.lifetrackerlite;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.PersistableBundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,21 +28,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.lifetrackerlite.data.LTContract;
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
 import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
 import com.example.android.lifetrackerlite.helper.ThemeHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class GoalEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -66,6 +56,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private int mNumberOfStreaks;
     private int mGoalOrHabit;
     private int mDateType;
+    private int mGoalComplete;
     private static final int GOAL_START_DATE = 0;
     private static final int GOAL_END_DATE = 1;
     private static final int GOAL_FAIL_DATE = 2;
@@ -245,6 +236,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
             if (savedInstanceState.containsKey(LIFECYCLE_STREAK_LENGTH)) {
                 mStreakLengthDays = savedInstanceState.getLong(LIFECYCLE_STREAK_LENGTH);
+            }
+            if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED)) {
+                mGoalComplete = savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED);
+                if (mGoalComplete == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
+                    mGoalCompleted.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.ic_restart));
+                }
             }
 
         }
@@ -434,8 +431,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 DialogInterface.OnClickListener goalCompleteClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        completeGoal();
-                        finish();
+                        if (completeOrRestartGoal()) {
+                            finish();
+                        }
                     }
                 };
 
@@ -444,6 +442,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             }
         });
 
+
     }
 
     private void showGoalCompleteDialog(DialogInterface.OnClickListener goalCompleteClickListener) {
@@ -451,7 +450,15 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Dialog box to prompt user if they are sure they would like to complete the goal/habit
 
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme()));
-        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+        //If the goal is complete, restart the goal and set dialogue text accordingly
+        //If the goal is not complete, complete the goal and set the dialogue text accordingly
+        if (mGoalComplete == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
+            if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                builder.setMessage(R.string.restart_habit);
+            } else {
+                builder.setMessage(R.string.restart_goal);
+            }
+        } else if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
             builder.setMessage(R.string.complete_habit);
         } else {
             builder.setMessage(R.string.complete_goal);
@@ -471,14 +478,52 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     }
 
-    private void completeGoal(){
+    private boolean completeOrRestartGoal() {
 
+        if (!doAllFieldsContainData()) {
+            return false;
+        }
+
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
+
+        long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
+        long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_YES);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
+
+        // Determine if goal is already complete.  If goal is already complete, then restart the goal
+        // and set goal  complete = no.  If goal is not complete, set goal complete = yes.
+        if (mGoalComplete == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
+            values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
+        } else {
+            values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_YES);
+        }
+
 
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
         clearStartAndEndDates();
+
+        return true;
+
+    }
+
+    private boolean doAllFieldsContainData() {
+
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
+
+        //Ensure fields are properly defined before inserting or completing a goal
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
+            Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
 
     }
 
@@ -520,14 +565,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     public boolean insertGoal() {
 
-        //Get values from editor entry views
-        String nameString = mNameEditText.getText().toString().trim();
-
-        //Ensure fields are properly defined before inserting a new goal
-        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
-            Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
+        if (!doAllFieldsContainData()) {
             return false;
         }
+
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
@@ -554,14 +597,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     private boolean updateGoal() {
 
-        //Get values from editor entry views
-        String nameString = mNameEditText.getText().toString().trim();
-
-        //Ensure fields are properly defined before updating a goal
-        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
-            Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
+        if (!doAllFieldsContainData()) {
             return false;
         }
+
+        //Get values from editor entry views
+        String nameString = mNameEditText.getText().toString().trim();
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
@@ -762,6 +803,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                         long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
+                        mGoalComplete = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED));
+                        if (mGoalComplete == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
+                            mGoalCompleted.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.ic_restart));
+                        }
 
                         //Get data for streak length (info is passed in to streak details activity via intent
                         //so that current streak length can be added to graphView of streak length over time
@@ -1361,6 +1406,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
         outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
         outState.putLong(LIFECYCLE_STREAK_LENGTH, mStreakLengthDays);
+        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, mGoalComplete);
 
     }
 

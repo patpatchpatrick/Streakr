@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycler_view_goals_habits"></android.support.v7.widget.RecyclerView>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/recycler_empty_view"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_goal"
+        android:visibility="invisible"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

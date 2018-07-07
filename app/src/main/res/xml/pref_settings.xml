@@ -12,4 +12,9 @@
 
     </ListPreference>
 
+    <CheckBoxPreference
+        android:defaultValue="@bool/pref_show_goals_default"
+        android:key="@string/pref_show_completed_goals_key"
+        android:title="@string/pref_show_completed_goals_title" />
+
 </PreferenceScreen>

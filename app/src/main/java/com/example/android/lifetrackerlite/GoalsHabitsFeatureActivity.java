@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
@@ -43,10 +45,12 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private static final int GOALSHABITS_LOADER = 0;
 
     private RecyclerView mRecyclerView;
+    private ImageView mEmptyView;
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
     private Integer mNumberGoals = -2;
     private FloatingActionButton mSettingsButton;
+    private boolean mShowCompletedGoals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
+
+        mEmptyView = (ImageView) findViewById(R.id.recycler_empty_view);
 
         // Add new goal button
         FloatingActionButton addGoalButton = findViewById(R.id.add_goal);
@@ -152,7 +158,18 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
                 GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
 
-        return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, null, null, GoalsHabitsEntry.COLUMN_GOAL_ORDER);
+        if (mShowCompletedGoals == false){
+
+            //Query the table for only incomplete goals if the showCompleteGoals preference is set to false
+            String selection = GoalsHabitsEntry.COLUMN_GOAL_COMPLETED + "=?";
+            String[] selectionArgs = new String[]{String.valueOf(GoalsHabitsEntry.GOAL_COMPLETED_NO)};
+
+            return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, selection, selectionArgs, GoalsHabitsEntry.COLUMN_GOAL_ORDER);
+
+        } else {
+
+            return new CursorLoader(this, GoalsHabitsEntry.CONTENT_URI, projection, null, null, GoalsHabitsEntry.COLUMN_GOAL_ORDER);
+        }
     }
 
     @Override
@@ -161,6 +178,17 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mAdapter.swapCursor(cursor);
         mNumberGoals = cursor.getCount();
         Log.d(TAG, "" + mNumberGoals);
+
+        if (mAdapter.getItemCount() <=0)
+        {
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -219,6 +247,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private void setUpSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setTheme(sharedPreferences);
+        mShowCompletedGoals = sharedPreferences.getBoolean(getString(R.string.pref_show_completed_goals_key),
+                getResources().getBoolean(R.bool.pref_show_goals_default));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -230,6 +260,13 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             //must be created for the new theme to be applied immediately
             setTheme(sharedPreferences);
             GoalsHabitsFeatureActivity.this.recreate();
+            Log.d(TAG, "theme change");
+        } else if (key.equals(getString(R.string.pref_show_completed_goals_key))){
+            mShowCompletedGoals = sharedPreferences.getBoolean(key,
+                    getResources().getBoolean(R.bool.pref_show_goals_default));
+            getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
+            Log.d(TAG,  "ShowGoals: " + mShowCompletedGoals);
+
         }
 
     }

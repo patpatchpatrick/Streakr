@@ -59,6 +59,9 @@
     <string name="complete_habit">Complete Habit?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="restart_goal">Restart Goal?</string>
+    <string name="restart_habit">Restart Habit?</string>
+
 
     <!-- Toast Messages [CHAR LIMIT=TBD] -->
     <string name="streak_reset">Streak Reset</string>
@@ -86,6 +89,8 @@
     <string name="settings_theme_value_default">default theme</string>
     <string name="settings_theme_label_pink">Pink</string>
     <string name="settings_theme_value_pink">pink theme</string>
+    <string name="pref_show_completed_goals_key" translatable="false">show_completed_goals</string>
+    <string name="pref_show_completed_goals_title">Show Completed Goals</string>
 
 
 </resources>

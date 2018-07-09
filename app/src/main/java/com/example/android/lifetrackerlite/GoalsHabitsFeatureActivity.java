@@ -175,6 +175,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+        //Pass in the new cursor and whether or not completed goals should be shown
         mAdapter.swapCursor(cursor);
         mNumberGoals = cursor.getCount();
         Log.d(TAG, "" + mNumberGoals);

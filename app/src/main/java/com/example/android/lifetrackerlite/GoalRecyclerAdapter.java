@@ -52,7 +52,8 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     // OnDragListener used for reordering goal/habit list via drag/drop
     final private OnStartDragListener mDragStartListener;
 
-    // Determine what to do when an item is moved in the goal/habits recycleView
+    // When a list item is dragged to a different position, update the mGoalOrderList order of the goals
+    // to correspond to the position the goal was dragged to
     @Override
     public Boolean onItemMove(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
@@ -84,19 +85,22 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
         //TODO  make sure to update provider class to fix "Notify Change"  in updateGoal method
 
-        // When an item is dropped via drag/drop we need to update the values of the new orders of the goals.
-        //  The new goal order is contained in the mGoalOrder ArrayList.  The goal IDs and original orders are
-        // contained in the mCursorOrder HashMap.  Both the ArrayList and HashMap are used to determine which
-        // values the order of the goals should be updated to in the database.
+        // When an item is dropped via drag/drop we need to update the values of the orders of the goals.
+        // The new goal order is contained in the mGoalOrderList ArrayList.
+        // The values of the orders of the goals and the IDs of the goals are mapped in the mGoalOrderToIDMap HashMap.
+        // The goal order arraylist is used in conjuction with the hashmap to set the new goal orders when
+        // goals are moved around using drag and drop.
 
         String selection = GoalsHabitsEntry._ID + "=?";
         String[] selectionArgs;
-        Iterator<Integer> goalIterator = mGoalOrderToIDMap.values().iterator();
+        Iterator<Integer> goalIterator = mGoalOrderToIDMap.keySet().iterator();
         for (int i = 0; i < mGoalOrderList.size(); i++) {
-            Integer currentID = goalIterator.next();
+            Integer currentOrder = mGoalOrderList.get(i);
+            Integer currentID = mGoalOrderToIDMap.get(currentOrder);
+            Integer newOrder = goalIterator.next();
             selectionArgs = new String[]{String.valueOf(currentID)};
             ContentValues values = new ContentValues();
-            values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mGoalOrderList.get(i));
+            values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, newOrder);
             int rowsUpdated = context.getContentResolver().update(GoalsHabitsEntry.CONTENT_URI, values, selection, selectionArgs);
         }
 
@@ -133,25 +137,20 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             goalCompleteImageView = (ImageView) view.findViewById(R.id.goal_complete_imageview);
             percentView = (PercentView) view.findViewById(R.id.percent_view);
             view.setOnClickListener(this);
-
-
         }
-
 
         @Override
         public void onClick(View view) {
 
             // Pass goal ID of clicked item via callback
-            // This goal ID will be used in URI passed to editor activity via GoasHabitsFeatureActivity intent
-            // The goal ID is obtained below from the mCursorOrder hashmap which is created when a new cursor is swapped in
-            // The mCursorOrder hashmap maps the cursor IDs with the order of the goals
-
+            // This goal ID will be used in URI passed to editor activity via GoalsHabitsFeatureActivity intent
+            // The goal ID is obtained below from the mGoalOrderToID hashmap which is created when a
+            // new cursor is swapped in the RecyclerAdapter
 
             int clickedPosition = getAdapterPosition();
             int clickedGoalID;
 
             clickedGoalID = mGoalOrderToIDMap.get(mGoalOrderList.get(clickedPosition));
-
 
             mOnClickListener.onListItemClick(clickedGoalID);
         }
@@ -188,18 +187,20 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         if (cursor != null) {
             this.notifyDataSetChanged();
 
-            // Set GoalOrder ArrayList to determine order of goals/habits in cursor
-            // mGoalOrder ArrayList is used to keep track of order when order is changed via drag/drop
-            // in the OnItemMoved method in the GoalRecyclerAdapter
-            //Similarly mCompletedGoalOrder ArrayList is used to track order of completed goals depending
-            //on whether or not completed goals are being shown (determined via mShowCompletedGoals boolean)
-            //(mShowCompletedGoals boolean is set via preferences in GoalsHabitsFeatureActivity).
+            // When a new cursor is swapped in the recyclerAdapter, an arraylist(mGoalOrderList) and
+            // a LinkedHashMap(mGoalOrderToIDMap) are used in conjuction to keep track of the order
+            // of goals as they are moved around via drag/drop and the ID of the goals that corresponds to the order
 
-            // Set a HashMap that maps the Goal IDs with their current Goal Orders.  This HashMap will be used
-            // in conjunction with the Order ArrayList above to update the database to update the Goal Order
-            // when it is changed via drag/drop functionality.  The mCursorOrder HashMap contains the original Goal IDs and Goal Orders
-            // and the mGoalOrder ArrayList is used to keep track of new orders when goals are swapped via drag/drop
-            // mCompletedGoalOrder and mCompletedCursorOrder are used for the same purposes to keep track of completed goals
+            // The mGoalOrderList is a list of the current order of the goals.  This list order is
+            // modified whenever goals are moved around via drag/drop (onItemMoved method).
+
+            // The mGoalOrderToIDMap is a LinkedHashMap that maps the current order of the goals with
+            // the ID of the goals.  This list remains static.  Therefore, when goals are moved around
+            // using the mGoalOrderList as stated above,  the IDs of the goals that were moved can be determined
+            // using the mGoalOrderToIDMap and the goal orders can be updated in the database.
+
+            // The mGoalOrderList is changed in the OnItemMoved method that is called when list items are drag/dropped.
+            // The database is updated with the new goal orders in the onItemDropped method whenever a list item is dropped.
 
             mGoalOrderList = new ArrayList<Integer>();
             mGoalOrderToIDMap = new LinkedHashMap<Integer, Integer>();
@@ -207,8 +208,6 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
                 cursor.moveToPosition(i);
                 int goalOrder = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_ORDER));
                 int goalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
-                Log.d("Goal Order",  "" + goalOrder);
-                Log.d("Goal ID", ""+ goalID);
                 mGoalOrderList.add(goalOrder);
                 mGoalOrderToIDMap.put(goalOrder,  goalID);
             }

@@ -394,7 +394,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 });
 
                 mNotesPopupWindow.setFocusable(true);
-                mNotesPopupWindow.showAtLocation(mNotesLinearLayout, Gravity.CENTER, 0, 0);
+                mNotesPopupWindow.showAtLocation(mNotesButton, Gravity.CENTER, 0, 0);
 
             }
         });

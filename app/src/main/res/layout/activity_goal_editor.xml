@@ -88,11 +88,11 @@
         android:id="@+id/goal_start_date_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
-        app:layout_constraintStart_toEndOf="@+id/goal_start_date_display"
+        app:layout_constraintStart_toEndOf="@+id/goal_start_date"
         app:layout_constraintTop_toTopOf="@+id/goal_start_date" />
 
 

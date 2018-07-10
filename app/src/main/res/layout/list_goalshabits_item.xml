@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
@@ -7,123 +7,115 @@
     android:background="?goalListBackgroundSelector"
     android:orientation="vertical">
 
-<LinearLayout
-    android:id="@+id/goals_primary_linearlayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="76dp"
-        android:layout_weight="0.5">
     <ImageView
+        android:id="@+id/goal_habit_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="0dp"
+        android:paddingBottom="0dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_goal" />
+
+
+    <TextView
+        android:id="@+id/goal_name"
+        style="?basicHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@+id/goal_habit_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Test" />
+
+    <TextView
+        android:id="@+id/goal_type"
+        style="?secondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="@+id/goal_name"
+        app:layout_constraintTop_toBottomOf="@+id/goal_name"
+        tools:text="Test" />
+
+    <TextView
+        android:id="@+id/goal_details"
+        style="?secondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="@+id/goal_name"
+        app:layout_constraintTop_toBottomOf="@+id/goal_type"
+        tools:text="Test" />
+
+
+    <com.example.android.lifetrackerlite.helper.PercentView
+        android:id="@+id/percent_view"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_centerInParent="true"
-        app:srcCompat="@drawable/ic_goal"
-        android:id="@+id/goal_habit_icon"/>
-    </RelativeLayout>
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/drag_drop_button"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/goal_name"
-            style="?basicHeaderText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            tools:text="Test" />
-
-        <TextView
-            android:id="@+id/goal_type"
-            style="?secondaryText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            tools:text="Test" />
-
-        <TextView
-            android:id="@+id/goal_details"
-            style="?secondaryText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="2"
-            android:gravity="top"
-            tools:text="Test" />
-
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <!-- TODO find way to center textview in the parent linearlayout (may need to change
-         to a relative layout -->
-        <!-- TODO set text color in colors.xml file -->
-        <com.example.android.lifetrackerlite.helper.PercentView
-            android:id="@+id/percent_view"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerInParent="true"
-            />
-        <TextView
-            android:id="@+id/streak_length"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_centerInParent="true"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="16sp"
-            android:textStyle="normal"
-            style="?basicHeaderText"
-            android:gravity="center"
-            tools:text="Streak" />
+    <TextView
+        android:id="@+id/streak_length"
+        style="?basicHeaderText"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/percent_view"
+        app:layout_constraintEnd_toEndOf="@+id/percent_view"
+        app:layout_constraintStart_toStartOf="@+id/percent_view"
+        app:layout_constraintTop_toTopOf="@+id/percent_view"
+        tools:text="Streak" />
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_centerInParent="true"
             android:id="@+id/goal_complete_imageview"
+            app:layout_constraintBottom_toBottomOf="@+id/percent_view"
+            app:layout_constraintEnd_toEndOf="@+id/percent_view"
+            app:layout_constraintStart_toStartOf="@+id/percent_view"
+            app:layout_constraintTop_toTopOf="@+id/percent_view"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_star"/>
+            app:srcCompat="@drawable/ic_star" />
 
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.35">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_drag_reorder"
-        android:layout_centerInParent="true"
-        android:paddingRight="16dp"
         android:id="@+id/drag_drop_button"
-        />
-    </RelativeLayout>
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingRight="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_drag_reorder" />
 
-
-
-</LinearLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivider" />
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

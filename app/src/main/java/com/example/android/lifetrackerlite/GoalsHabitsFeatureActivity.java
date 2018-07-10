@@ -1,5 +1,6 @@
 package com.example.android.lifetrackerlite;
 
+import android.app.ActionBar;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.CursorLoader;
@@ -58,7 +59,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         setUpSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals_habits_feature);
-
+        getSupportActionBar().hide();
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
 
@@ -282,7 +283,11 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
             setTheme(R.style.PinkAppTheme);
             ThemeHelper.setTheme(R.style.PinkAppTheme);
-        } else {
+        } else if (theme.equals(getString(R.string.settings_theme_value_blue))){
+            setTheme(R.style.BlueAppTheme);
+            ThemeHelper.setTheme(R.style.BlueAppTheme);
+        }
+        else {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);
         }

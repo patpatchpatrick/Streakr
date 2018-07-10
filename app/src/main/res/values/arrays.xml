@@ -15,11 +15,13 @@
     <array name="settings_theme_labels">
         <item>@string/settings_theme_label_default</item>
         <item>@string/settings_theme_label_pink</item>
+        <item>@string/settings_theme_label_blue</item>
     </array>
 
     <array name="settings_theme_values">
         <item>@string/settings_theme_value_default</item>
         <item>@string/settings_theme_value_pink</item>
+        <item>@string/settings_theme_value_blue</item>
     </array>
 
 

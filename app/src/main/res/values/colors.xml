@@ -22,6 +22,17 @@
     <color name="colorSecondaryTextPink">#757575</color>
     <color name="colorTextAndIconsPink">#FFFFFF</color>
 
+    <!-- Blue theme colors -->
+    <color name="colorPrimaryBlue">#03A9F4</color>
+    <color name="colorPrimaryDarkBlue">#0288D1</color>
+    <color name="colorPrimaryLightBlue">#B3E5FC</color>
+    <color name="colorAccentBlue">#CDDC39</color>
+    <color name="colorDividerBlue">#BDBDBD</color>
+    <color name="colorDateBlue">#757575</color>
+    <color name="colorPrimaryTextBlue">#212121</color>
+    <color name="colorSecondaryTextBlue">#757575</color>
+    <color name="colorTextAndIconsBlue">#FFFFFF</color>
+
 
     <!-- Color for a streak history details -->
     <color name="streakDetails">#4A7BA7</color>

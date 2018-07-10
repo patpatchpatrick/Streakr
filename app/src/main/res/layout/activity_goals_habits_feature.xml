@@ -20,6 +20,7 @@
         android:visibility="invisible"/>
 
     <LinearLayout
+        android:id="@+id/goals_habits_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

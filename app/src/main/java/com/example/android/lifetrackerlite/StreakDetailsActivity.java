@@ -52,6 +52,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     private int mCurrentGoalID = -1;
     private long mCurrentStreakLengthDays = -1;
+    private long mAverageStreakCount;
     private String mStreakNotes;
     private Boolean mNoteChanged;
 
@@ -66,6 +67,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     //Strings for onSavedInstance State
     private static final String LIFECYCLE_CURRENT_GOAL_ID = "current goal";
     private static final String LIFECYCLE_CURRENT_STREAK_LENGTH_DAYS = "streak length days";
+    private static final String LIFECYCLE_AVERAGE_STREAK_COUNT = "average streak count";
 
 
     @Override
@@ -74,6 +76,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streak_details);
         setTitle(R.string.streak_details);
+        getSupportActionBar().hide();
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
@@ -191,6 +194,8 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                     totalStreakDays += streakLengthDays;
                     averageStreakCount++;
 
+                    Log.d(TAG, "loader check" + averageStreakCount);
+
 
                 }
 
@@ -212,7 +217,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
                 //TODO fix calculation to show decimal to one digit
                 //Calculate average streak length
-                averageStreakLength = totalStreakDays / averageStreakCount;
+                Log.d("Before Calc", "" + averageStreakCount);
+                if (averageStreakCount != 0) {
+                    averageStreakLength = totalStreakDays / averageStreakCount;
+                }
+
 
                 mLongestStreakLengthView.setText(Long.toString(maxStreakLength) + " days");
                 mAverageStreakLengthView.setText(Long.toString(averageStreakLength) + " days");
@@ -337,6 +346,10 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkPink);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsPink);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentPink);
+        } else if (theme == R.style.BlueAppTheme) {
+            backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkBlue);
+            axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsBlue);
+            seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentBlue);
         } else {
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
@@ -344,12 +357,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         }
 
         series.setColor(seriesColor);
-        graphView.addSeries(series);
         graphView.setBackgroundColor(backgroundColor);
         GridLabelRenderer gridLabelRenderer = graphView.getGridLabelRenderer();
         gridLabelRenderer.setGridColor(axisColor);
         gridLabelRenderer.setHorizontalLabelsColor(axisColor);
         gridLabelRenderer.setVerticalLabelsColor(axisColor);
-
+        graphView.addSeries(series);
     }
 }

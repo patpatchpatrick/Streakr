@@ -42,6 +42,27 @@
         <item name="iconSecondaryColor">@color/colorAccentPink</item>
     </style>
 
+    <!-- Pink application theme. -->
+    <style name="BlueAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
+        <item name="colorAccent">@color/colorAccentBlue</item>
+        <item name="colorTextAndIcons">@color/colorTextAndIconsBlue</item>
+        <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector_blue</item>
+        <item name="preferenceTheme">@style/BluePreferenceTheme</item>
+        <item name="basicHeaderText">@style/BlueThemeBasicHeaderText</item>
+        <item name="basicHeaderTextLight">@style/BlueThemeBasicHeaderTextLight</item>
+        <item name="secondaryText">@style/BlueThemeSecondaryText</item>
+        <item name="secondaryTextLight">@style/BlueThemeSecondaryTextLight</item>
+        <item name="popUpMenuTheme">@style/BluePopUpMenuTheme</item>
+        <item name="backgroundTheme">@style/BlueBackgroundTheme</item>
+        <item name="backgroundThemeDark">@style/BlueBackgroundThemeDark</item>
+        <item name="iconPrimaryColor">@color/colorPrimaryTextBlue</item>
+        <item name="iconPrimaryColorLight">@color/colorPrimaryLightBlue</item>
+        <item name="iconSecondaryColor">@color/colorAccentBlue</item>
+    </style>
+
     <!-- Styles that correspond to each theme -->
 
     <!-- BasicHeaderText style as well as overrides for the different themes available -->
@@ -55,6 +76,9 @@
     <style name="PinkThemeBasicHeaderText" parent="@style/BasicHeaderText">
     <item name="android:textColor" >@color/colorPrimaryTextPink</item>
     </style>
+    <style name="BlueThemeBasicHeaderText" parent="@style/BasicHeaderText">
+        <item name="android:textColor" >@color/colorPrimaryTextBlue</item>
+    </style>
 
     <!-- SecondaryText style as well as overrides for the different themes available -->
     <style name="SecondaryText">
@@ -67,6 +91,10 @@
     <style name="PinkThemeSecondaryText" parent="@style/SecondaryText">
         <item name="android:textColor" >@color/colorSecondaryTextPink</item>
         <item name="android:backgroundTint">@color/colorSecondaryTextPink</item>
+    </style>
+    <style name="BlueThemeSecondaryText" parent="@style/SecondaryText">
+        <item name="android:textColor" >@color/colorSecondaryTextBlue</item>
+        <item name="android:backgroundTint">@color/colorSecondaryTextBlue</item>
     </style>
 
     <!-- BasicHeaderTextLight style as well as overrides for the different themes available -->
@@ -82,6 +110,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorTextAndIconsPink</item>
     </style>
+    <style name="BlueThemeBasicHeaderTextLight">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextAndIconsBlue</item>
+    </style>
 
     <!-- SecondaryTextLight style as well as overrides for the different themes available -->
     <style name="SecondaryTextLight">
@@ -92,6 +124,9 @@
     </style>
     <style name="PinkThemeSecondaryTextLight">
         <item name="android:textColor">@color/colorPrimaryLightPink</item>
+    </style>
+    <style name="BlueThemeSecondaryTextLight">
+        <item name="android:textColor">@color/colorPrimaryLightBlue</item>
     </style>
 
     <!-- Override and set popUpMenuTheme depending on user selected Theme. -->
@@ -110,6 +145,11 @@
         <item name="android:textColor">@color/colorTextAndIconsPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
     </style>
+    <style name="BluePopUpMenuTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@color/colorPrimaryDarkBlue</item>
+        <item name="android:textColor">@color/colorTextAndIconsBlue</item>
+        <item name="colorAccent">@color/colorAccentBlue</item>
+    </style>
 
     <!-- Override and set background style depending on user selected Theme. -->
     <style name="BackgroundTheme">
@@ -120,6 +160,9 @@
     </style>
     <style name="PinkBackgroundTheme" parent="BackgroundTheme">
         <item name="android:background">@color/colorPrimaryLightPink</item>
+    </style>
+    <style name="BlueBackgroundTheme" parent="BackgroundTheme">
+        <item name="android:background">@color/colorPrimaryLightBlue</item>
     </style>
 
     <!-- Override and set dark background style depending on user selected Theme. -->
@@ -132,6 +175,9 @@
     <style name="PinkBackgroundThemeDark">
         <item name="android:background">@color/colorPrimaryDarkPink</item>
     </style>
+    <style name="BlueBackgroundThemeDark">
+        <item name="android:background">@color/colorPrimaryDarkBlue</item>
+    </style>
 
     <!-- Override and set preference themes depending on user selected Theme. -->
     <style name="DefaultPreferenceTheme" parent ="PopUpMenuTheme">
@@ -143,6 +189,11 @@
         <item name="android:background">@drawable/list_goalshabits_item_selector_pink</item>
         <item name="android:textColor">@color/colorPrimaryTextPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
+    </style>
+    <style name="BluePreferenceTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@drawable/list_goalshabits_item_selector_blue</item>
+        <item name="android:textColor">@color/colorPrimaryTextBlue</item>
+        <item name="colorAccent">@color/colorAccentBlue</item>
     </style>
 
 

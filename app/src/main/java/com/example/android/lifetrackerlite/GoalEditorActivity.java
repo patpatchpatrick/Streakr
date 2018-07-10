@@ -133,6 +133,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         setTheme(ThemeHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
+        getSupportActionBar().hide();
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);

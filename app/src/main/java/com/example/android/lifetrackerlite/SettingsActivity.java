@@ -19,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.settings_theme_key))){
+        if (key.equals(getString(R.string.settings_theme_key))) {
             //TODO only recreate the app  if the theme preference is changed
             //If the app theme is changed, the theme must be first set by the app and then the app
             //must be created for the new theme to be applied immediately
@@ -32,12 +32,15 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
         //Set the app theme based on the theme selected in settings/preferences
         String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
-        if (theme.equals(getString(R.string.settings_theme_value_default))){
+        if (theme.equals(getString(R.string.settings_theme_value_default))) {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
             setTheme(R.style.PinkAppTheme);
             ThemeHelper.setTheme(R.style.PinkAppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_blue))) {
+            setTheme(R.style.BlueAppTheme);
+            ThemeHelper.setTheme(R.style.BlueAppTheme);
         } else {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);

@@ -89,6 +89,8 @@
     <string name="settings_theme_value_default">default theme</string>
     <string name="settings_theme_label_pink">Pink</string>
     <string name="settings_theme_value_pink">pink theme</string>
+    <string name="settings_theme_label_blue">Blue</string>
+    <string name="settings_theme_value_blue">blue theme</string>
     <string name="pref_show_completed_goals_key" translatable="false">show_completed_goals</string>
     <string name="pref_show_completed_goals_title">Show Completed Goals</string>
 

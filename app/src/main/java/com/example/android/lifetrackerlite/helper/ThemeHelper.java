@@ -8,9 +8,10 @@ public final class ThemeHelper {
 
     private static int mTheme;
 
-    private ThemeHelper(){}
+    private ThemeHelper() {
+    }
 
-    public static void setTheme(int theme){
+    public static void setTheme(int theme) {
         mTheme = theme;
     }
 
@@ -24,6 +25,8 @@ public final class ThemeHelper {
 
         if (mTheme == R.style.PinkAppTheme) {
             return R.style.PinkPopUpMenuTheme;
+        } else if (mTheme == R.style.BlueAppTheme) {
+            return R.style.BluePopUpMenuTheme;
         } else {
             return R.style.DefaultPopUpMenuTheme;
         }

@@ -45,15 +45,12 @@
         app:layout_constraintStart_toStartOf="@+id/goal_name_textview"
         app:layout_constraintTop_toBottomOf="@+id/goal_name_textview" />
 
-    <Spinner
-        android:id="@+id/spinner_goal_type"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
-        android:paddingRight="16dp"
-        android:popupTheme="?popUpMenuTheme"
-        android:spinnerMode="dropdown"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/goal_type_edit_text"
+        style="?secondaryText"
+        android:hint="@string/goal_type_hint"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/name_edit_text"
         app:layout_constraintTop_toTopOf="@+id/goal_type_textview" />
 

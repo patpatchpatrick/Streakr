@@ -28,7 +28,7 @@ public class LTDbHelper extends SQLiteOpenHelper {
                 + GoalsHabitsEntry.COLUMN_GOAL_ORDER + " INTEGER NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_NAME + " TEXT NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT + " INTEGER NOT NULL, "
-                + GoalsHabitsEntry.COLUMN_GOAL_TYPE + " INTEGER NOT NULL DEFAULT 0, "
+                + GoalsHabitsEntry.COLUMN_GOAL_TYPE + " TEXT NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_START_DATE + " INTEGER NOT NULL, "
                 + GoalsHabitsEntry.COLUMN_GOAL_END_DATE + " INTEGER, "
                 + GoalsHabitsEntry.COLUMN_GOAL_NOTES  + " TEXT DEFAULT '', "

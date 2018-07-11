@@ -61,29 +61,6 @@ public final class LTContract {
         }
 
 
-        public static final int GOAL_TYPE_OTHER = 0;
-
-        public static final int HABIT_TYPE_OTHER = 1;
-        public static final int GOAL_TYPE_FITNESS = 2;
-        public static final int GOAL_TYPE_READ = 3;
-        public static final int HABIT_TYPE_NOFAP = 4;
-        public static final int HABIT_TYPE_DRUGS = 5;
-        private static final ArrayList<Integer> goalTypes = new ArrayList<Integer>() {{
-            add(GOAL_TYPE_OTHER);
-            add(HABIT_TYPE_OTHER);
-            add(GOAL_TYPE_FITNESS);
-            add(GOAL_TYPE_READ);
-            add(HABIT_TYPE_NOFAP);
-            add(HABIT_TYPE_DRUGS);
-        }};
-
-        public static final boolean isValidGoalType(int goalType) {
-            if (goalTypes.contains(goalType)) {
-                return true;
-            }
-            return false;
-        }
-
         public static final int GOAL_COMPLETED_NO = 0;
         public static final int GOAL_COMPLETED_YES = 1;
 
@@ -92,19 +69,6 @@ public final class LTContract {
                 return true;
             }
             return false;
-        }
-
-        public static final String getGoalTypeString(int goalType) {
-            switch (goalType){
-                case GOAL_TYPE_OTHER:
-                    return "Other";
-                case GOAL_TYPE_FITNESS:
-                    return "Fitness";
-                case GOAL_TYPE_READ:
-                    return "Read";
-                default:
-                    return "Unknown Goal";
-            }
         }
 
     }

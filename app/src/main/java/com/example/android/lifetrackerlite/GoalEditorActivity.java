@@ -16,21 +16,17 @@ import android.os.PersistableBundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +47,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final int STREAK_LOADER = 2;
     private boolean mLoadingNote = false;
 
-    private int mGoalType;
     private int mNumberOfGoals;
     private int mNumberOfStreaks;
     private int mGoalOrHabit;
@@ -88,7 +83,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private TextView mHistoricalStreaksHeader;
     private TextView mViewStreakDetails;
     private EditText mNameEditText;
-    private Spinner mGoalTypeSpinner;
+    private EditText mGoalTypeEditText;
     private Button mPickStartDate;
     private Button mPickEndDate;
     private Button mAddOrSaveGoal;
@@ -98,7 +93,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private Button mGoalCompleted;
 
     private PopupWindow mNotesPopupWindow;
-    private LinearLayout mNotesLinearLayout;
 
     //Keys for onSavedInstanceState
     private static final String LIFECYCLE_START_YEAR_KEY = "start year";
@@ -151,9 +145,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mNumberOfGoals = intent.getIntExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, -2);
 
         //Find views to read user input from
-        mGoalTypeSpinner = (Spinner) findViewById(R.id.spinner_goal_type);
-        setupSpinner();
-
+        mGoalTypeEditText = (EditText) findViewById(R.id.goal_type_edit_text);
         mGoalNameTextView = (TextView) findViewById(R.id.goal_name_textview);
         mGoalTypeTextView = (TextView) findViewById(R.id.goal_type_textview);
         mStreakDataTextView = (TextView) findViewById(R.id.streak_data);
@@ -171,13 +163,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         mNotesButton = (Button) findViewById(R.id.notes_button);
         mFailResetStreak = (Button) findViewById(R.id.fail_reset_streak);
         mGoalCompleted = (Button) findViewById(R.id.goal_completed);
-        mNotesLinearLayout = (LinearLayout) findViewById(R.id.notes_linear_layout);
 
         //Set onTouchListeners to all views that can be edited for discard changes dialog
         mNameEditText.setOnTouchListener(mTouchListener);
         mPickStartDate.setOnTouchListener(mTouchListener);
         mPickEndDate.setOnTouchListener(mTouchListener);
-        mGoalTypeSpinner.setOnTouchListener(mTouchListener);
+        mGoalTypeEditText.setOnTouchListener(mTouchListener);
 
         //Dates are not set when activity starts
         mStartDateSet = false;
@@ -194,7 +185,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 mGoalNameTextView.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_NAME));
             }
             if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)) {
-                mGoalTypeSpinner.setSelection(savedInstanceState.getInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
+                mGoalTypeEditText.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
             }
             if (savedInstanceState.containsKey(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) {
                 mGoalStartDateDisplay.setText(savedInstanceState.getString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE));
@@ -487,13 +478,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+        String goalTypeString = mGoalTypeEditText.getText().toString().trim();
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalTypeString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
 
@@ -528,42 +520,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
     }
 
-    private void setupSpinner() {
-        // Create adapter for spinner. The list options are from the String array it will use
-        // the spinner will use the default layout
-        ArrayAdapter goalTypeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_goal_types, android.R.layout.simple_spinner_item);
-
-        // Specify dropdown layout style - simple list view with 1 item per line
-        goalTypeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
-        // Apply the adapter to the spinner
-        mGoalTypeSpinner.setAdapter(goalTypeSpinnerAdapter);
-
-        // Set the integer mSelected to the constant values
-        mGoalTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.goal_type_other))) {
-                        mGoalType = GoalsHabitsEntry.GOAL_TYPE_OTHER; // Other
-                    } else if (selection.equals(getString(R.string.goal_type_fitness))) {
-                        mGoalType = GoalsHabitsEntry.GOAL_TYPE_FITNESS; // Fitness
-                    } else {
-                        mGoalType = GoalsHabitsEntry.GOAL_TYPE_READ; // Read
-                    }
-                }
-            }
-
-            // Because AdapterView is an abstract class, onNothingSelected must be defined
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mGoalType = GoalsHabitsEntry.GOAL_TYPE_OTHER; // Unknown
-            }
-        });
-    }
-
     public boolean insertGoal() {
 
         if (!doAllFieldsContainData()) {
@@ -572,6 +528,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+        String goalTypeString = mGoalTypeEditText.getText().toString().trim();
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
@@ -581,7 +538,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberOfGoals);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalTypeString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
@@ -604,13 +561,14 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+        String goalTypeString = mGoalTypeEditText.getText().toString().trim();
 
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
         ContentValues values = new ContentValues();
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, mGoalType);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalTypeString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDate);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, GoalsHabitsEntry.GOAL_COMPLETED_NO);
@@ -799,9 +757,9 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                         // Load the data from the cursor for the single goal you are editing
                         String goalName = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NAME));
+                        String goalType = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         mGoalOrHabit = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT));
                         mCurrentGoalNotes = cursor.getString(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_NOTES));
-                        int goalType = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
                         long startDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_START_DATE)) * 1000;
                         long endDateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_END_DATE)) * 1000;
                         mGoalComplete = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED));
@@ -817,19 +775,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
                         mNameEditText.setText(goalName, TextView.BufferType.EDITABLE);
-                        //TODO Determine goal type spinner position... Find a way to remove this code by auomatically determining spinner position
-                        int goalTypeSpinnerPosition = 0;
-                        switch (goalType) {
-                            case GoalsHabitsEntry.GOAL_TYPE_FITNESS:
-                                goalTypeSpinnerPosition = 1;
-                                break;
-                            case GoalsHabitsEntry.GOAL_TYPE_READ:
-                                goalTypeSpinnerPosition = 2;
-                                break;
-                            default:
-                                break;
-                        }
-                        mGoalTypeSpinner.setSelection(goalTypeSpinnerPosition);
+                        mGoalTypeEditText.setText(goalType, TextView.BufferType.EDITABLE);
 
                         //Set default goal start date
                         SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
@@ -951,7 +897,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             case GOAL_EDIT_LOADER:
                 // Clear Edit Views upon reset.
                 mNameEditText.setText("", TextView.BufferType.EDITABLE);
-                mGoalTypeSpinner.setAdapter(null);
+                mGoalTypeEditText.setText("", TextView.BufferType.EDITABLE);
                 mGoalStartDateDisplay.setText("");
                 mGoalEndDateDisplay.setText("");
                 break;
@@ -1343,7 +1289,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         super.onSaveInstanceState(outState, outPersistentState);
 
         String goalName = mGoalNameTextView.getText().toString();
-        int goalType = mGoalTypeSpinner.getSelectedItemPosition();
+        String goalType = mGoalTypeEditText.getText().toString();
         String startDateString = mGoalStartDateDisplay.getText().toString();
         String endDateString = mGoalEndDateDisplay.getText().toString();
         String streakDataString = mStreakDataTextView.getText().toString();
@@ -1354,7 +1300,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
-        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES, mCurrentGoalNotes);
@@ -1380,7 +1326,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         // is restarted
 
         String goalName = mGoalNameTextView.getText().toString();
-        int goalType = mGoalTypeSpinner.getSelectedItemPosition();
+        String goalType = mGoalTypeEditText.getText().toString();
         String startDateString = mGoalStartDateDisplay.getText().toString();
         String endDateString = mGoalEndDateDisplay.getText().toString();
         String streakDataString = mStreakDataTextView.getText().toString();
@@ -1391,7 +1337,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         }
 
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NAME, goalName);
-        outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
+        outState.putString(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalType);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_START_DATE, startDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_END_DATE, endDateString);
         outState.putString(GoalsHabitsEntry.COLUMN_GOAL_NOTES, mCurrentGoalNotes);

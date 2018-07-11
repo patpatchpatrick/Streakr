@@ -135,9 +135,9 @@ public class LTProvider extends ContentProvider {
         }
 
         // Check that the goal type is valid
-        Integer goalType = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
-        if (goalType == null || !GoalsHabitsEntry.isValidGoalType(goalType)) {
-            throw new IllegalArgumentException("Goal requires valid goal type");
+        String goalType = values.getAsString(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
+        if (goalType == null) {
+            throw new IllegalArgumentException("Goal requires a goal type");
         }
 
         // Check that the goal completed int is valid
@@ -286,9 +286,9 @@ public class LTProvider extends ContentProvider {
         // If the GoalsHabitsEntry.GoalType key is present,
         // check that the goal or habit value is valid.
         if (values.containsKey(GoalsHabitsEntry.COLUMN_GOAL_TYPE)) {
-            Integer goalType = values.getAsInteger(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
-            if (goalType == null || !GoalsHabitsEntry.isValidGoalType(goalType)) {
-                throw new IllegalArgumentException("Goal requires valid goal type");
+            String goalType = values.getAsString(GoalsHabitsEntry.COLUMN_GOAL_TYPE);
+            if (goalType == null ) {
+                throw new IllegalArgumentException("Goal requires a goal type");
             }
         }
 

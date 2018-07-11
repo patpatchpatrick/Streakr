@@ -231,7 +231,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
         holder.goalName.setText(goalNameText);
 
         //Set goal type string
-        String goalTypeText = GoalsHabitsEntry.getGoalTypeString(dataCursor.getInt(dataCursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE)));
+        String goalTypeText = dataCursor.getString(dataCursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_TYPE));
         holder.goalType.setText(goalTypeText);
 
         //Determine if goal or habit and set the icon accordingly

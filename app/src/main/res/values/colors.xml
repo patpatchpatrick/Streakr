@@ -33,6 +33,17 @@
     <color name="colorSecondaryTextBlue">#757575</color>
     <color name="colorTextAndIconsBlue">#FFFFFF</color>
 
+    <!-- Red theme colors -->
+    <color name="colorPrimaryRed">#F44336</color>
+    <color name="colorPrimaryDarkRed">#D32F2F</color>
+    <color name="colorPrimaryLightRed">#FFCDD2</color>
+    <color name="colorAccentRed">#536DFE</color>
+    <color name="colorDividerRed">#BDBDBD</color>
+    <color name="colorDateRed">#757575</color>
+    <color name="colorPrimaryTextRed">#212121</color>
+    <color name="colorSecondaryTextRed">#757575</color>
+    <color name="colorTextAndIconsRed">#FFFFFF</color>
+
 
     <!-- Color for a streak history details -->
     <color name="streakDetails">#4A7BA7</color>

@@ -25,13 +25,13 @@
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/name_edit_text"
         style="?secondaryText"
-        android:layout_width="150dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="32sp"
         android:hint="@string/goal_name_hint"
         android:textCursorDrawable="@null"
-        app:layout_constraintStart_toEndOf="@+id/delete_goal_editor"
+        app:layout_constraintStart_toEndOf="@+id/add_goal_editor"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -44,20 +44,19 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
         android:textSize="32sp"
+        android:textCursorDrawable="@null"
         android:text="@string/goal_type"
         app:layout_constraintStart_toStartOf="@+id/goal_name_textview"
         app:layout_constraintTop_toBottomOf="@+id/goal_name_textview" />
 
-    <Spinner
-        android:id="@+id/spinner_goal_type"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
-        android:paddingRight="16dp"
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/goal_type_edit_text"
+        style="?secondaryText"
+        android:hint="@string/goal_type_hint"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
         android:textSize="32sp"
-        android:popupTheme="?popUpMenuTheme"
-        android:spinnerMode="dropdown"
+        android:textCursorDrawable="@null"
         app:layout_constraintStart_toStartOf="@+id/name_edit_text"
         app:layout_constraintTop_toTopOf="@+id/goal_type_textview" />
 
@@ -67,12 +66,12 @@
         style="?basicHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
+        android:layout_marginLeft="16dp"
         android:textSize="32sp"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
         android:text="@string/goal_start_date"
-        app:layout_constraintStart_toStartOf="@+id/goal_type_textview"
+        app:layout_constraintStart_toEndOf="@+id/goal_start_date_button"
         app:layout_constraintTop_toBottomOf="@+id/goal_type_textview" />
 
     <TextView
@@ -81,8 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="32sp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
+
         app:layout_constraintStart_toStartOf="@+id/goal_start_date"
         app:layout_constraintTop_toBottomOf="@+id/goal_start_date"
         tools:text="@string/goal_start_date" />
@@ -92,11 +90,9 @@
         android:id="@+id/goal_start_date_button"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
-        app:layout_constraintStart_toEndOf="@+id/goal_start_date"
+        android:background="@drawable/ic_calendar"
+        app:layout_constraintStart_toStartOf="@+id/goal_type_textview"
         app:layout_constraintTop_toTopOf="@+id/goal_start_date" />
 
 
@@ -106,11 +102,11 @@
         android:layout_width="wrap_content"
         android:textSize="32sp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:text="@string/goal_end_date"
-        app:layout_constraintStart_toStartOf="@+id/name_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/goal_end_date_button"
         app:layout_constraintTop_toTopOf="@+id/goal_start_date" />
 
     <TextView
@@ -128,36 +124,31 @@
         android:id="@+id/goal_end_date_button"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="0dp"
         android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
-        app:layout_constraintStart_toEndOf="@+id/goal_end_date"
+        app:layout_constraintStart_toStartOf="@+id/name_edit_text"
         app:layout_constraintTop_toTopOf="@+id/goal_end_date" />
 
     <Button
         android:id="@+id/notes_button"
-        android:layout_width="96dp"
+        android:layout_width="92dp"
         android:layout_height="96dp"
         android:layout_marginEnd="64dp"
         android:layout_marginRight="64dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/ic_blank_note"
-        app:layout_constraintEnd_toStartOf="@+id/delete_goal_editor"
+        app:layout_constraintEnd_toStartOf="@+id/add_goal_editor"
         app:layout_constraintTop_toBottomOf="@+id/goal_start_date_display" />
 
     <Button
         android:id="@+id/delete_goal_editor"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginStart="64dp"
         android:background="@drawable/ic_trash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_goal_editor"
         app:layout_constraintTop_toTopOf="@+id/notes_button" />
 
     <Button
@@ -166,8 +157,11 @@
         android:layout_height="96dp"
         android:layout_marginLeft="64dp"
         android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
         android:background="@drawable/ic_save"
-        app:layout_constraintStart_toEndOf="@+id/delete_goal_editor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/notes_button" />
 
 
@@ -179,7 +173,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/ic_fail"
-        app:layout_constraintEnd_toStartOf="@+id/delete_goal_editor"
+        app:layout_constraintEnd_toStartOf="@+id/add_goal_editor"
         app:layout_constraintTop_toBottomOf="@+id/notes_button" />
 
     <Button
@@ -190,7 +184,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/ic_checkmark"
-        app:layout_constraintStart_toEndOf="@+id/delete_goal_editor"
+        app:layout_constraintStart_toEndOf="@+id/add_goal_editor"
         app:layout_constraintTop_toBottomOf="@+id/notes_button" />
 
 

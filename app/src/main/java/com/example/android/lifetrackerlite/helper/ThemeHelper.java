@@ -27,7 +27,9 @@ public final class ThemeHelper {
             return R.style.PinkPopUpMenuTheme;
         } else if (mTheme == R.style.BlueAppTheme) {
             return R.style.BluePopUpMenuTheme;
-        } else {
+        } else if (mTheme == R.style.RedAppTheme) {
+            return R.style.RedPopUpMenuTheme;
+        }else {
             return R.style.DefaultPopUpMenuTheme;
         }
 

@@ -350,6 +350,10 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkBlue);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsBlue);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentBlue);
+        } else if (theme == R.style.RedAppTheme) {
+            backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkRed);
+            axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsRed);
+            seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentRed);
         } else {
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
@@ -362,6 +366,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         gridLabelRenderer.setGridColor(axisColor);
         gridLabelRenderer.setHorizontalLabelsColor(axisColor);
         gridLabelRenderer.setVerticalLabelsColor(axisColor);
+        //For tablets, a "big screen" tag is applied to the GraphView and text size is made bigger on the graph.
+        if (mStreakGraph.getTag().toString().equals(this.getResources().getString(R.string.wide_screen))){
+            gridLabelRenderer.setTextSize(48f);
+            gridLabelRenderer.reloadStyles();
+        }
         graphView.addSeries(series);
     }
 }

@@ -19,6 +19,7 @@
             android:id="@+id/longest_streak_length_header_textview"
             style="?basicHeaderTextLight"
             android:layout_width="0dp"
+            android:textSize="24sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
@@ -28,6 +29,7 @@
             android:id="@+id/longest_streak_length_textview"
             style="?secondaryTextLight"
             android:layout_width="0dp"
+            android:textSize="24sp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
@@ -50,6 +52,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:textSize="24sp"
         android:layout_weight="1"
         android:text="@string/average_streak_length" />
 
@@ -61,6 +64,7 @@
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
         tools:text="Length Days"
+        android:textSize="24sp"
         />
 
     </LinearLayout>
@@ -70,15 +74,16 @@
         android:layout_height="wrap_content"
         style="?basicHeaderTextLight"
         android:text="@string/streak_trend"
+        android:textSize="24sp"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"/>
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="500dp"
+        android:tag="@string/wide_screen"
         android:id="@+id/streak_graph"
-        android:layout_margin="8dp"
-        android:tag="@string/regular_screen"/>
+        android:layout_margin="16dp"/>
 
 
 
@@ -91,6 +96,7 @@
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:text="@string/historical_streaks_details"
+        android:textSize="24sp"
   />
 
     <ScrollView

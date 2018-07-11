@@ -286,6 +286,9 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         } else if (theme.equals(getString(R.string.settings_theme_value_blue))){
             setTheme(R.style.BlueAppTheme);
             ThemeHelper.setTheme(R.style.BlueAppTheme);
+        } else if (theme.equals(getString(R.string.settings_theme_value_red))){
+            setTheme(R.style.RedAppTheme);
+            ThemeHelper.setTheme(R.style.RedAppTheme);
         }
         else {
             setTheme(R.style.AppTheme);

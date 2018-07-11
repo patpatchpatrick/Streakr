@@ -209,7 +209,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
                 int goalOrder = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry.COLUMN_GOAL_ORDER));
                 int goalID = cursor.getInt(cursor.getColumnIndexOrThrow(GoalsHabitsEntry._ID));
                 mGoalOrderList.add(goalOrder);
-                mGoalOrderToIDMap.put(goalOrder,  goalID);
+                mGoalOrderToIDMap.put(goalOrder, goalID);
             }
 
         }
@@ -271,8 +271,16 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
         //Set streak details string
         String streakDetailsString = "";
-        streakDetailsString += Long.toString(streakLengthDays) + " days" + "\n";
-        streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
+        //If the streak is in the future (completion percentage will be negative), then show the streak
+        //details text as "Future Date" instead of a negative streak and percentage
+        if (streakCompletionPercent < 0) {
+            streakDetailsString += "Future Date";
+            streakCompletionPercent = 0;
+        } else {
+            streakDetailsString += Long.toString(streakLengthDays) + " days" + "\n";
+            streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
+        }
+
 
         if (goalCompleted == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
             //If the goal is completed, show the comppleted goal star icon and show a full percentView

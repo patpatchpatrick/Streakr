@@ -510,9 +510,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Get values from editor entry views
         String nameString = mNameEditText.getText().toString().trim();
+        String goalType = mGoalTypeEditText.getText().toString().trim();
 
         //Ensure fields are properly defined before inserting or completing a goal
-        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate() || mGoalOrHabit == GoalsHabitsEntry.NEITHER) {
+        if (nameString.isEmpty() || nameString == null || undefinedStartDate() || undefinedEndDate()
+                || mGoalOrHabit == GoalsHabitsEntry.NEITHER || goalType.isEmpty() || goalType == null) {
             Toast.makeText(this, this.getResources().getString(R.string.all_fields_populated), Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -546,7 +548,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Insert values into database
         Uri uri = getContentResolver().insert(GoalsHabitsEntry.CONTENT_URI, values);
 
-        Toast.makeText(this, this.getResources().getString(R.string.goal_inserted), Toast.LENGTH_SHORT).show();
+        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+            Toast.makeText(this, this.getResources().getString(R.string.habit_inserted), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, this.getResources().getString(R.string.goal_inserted), Toast.LENGTH_SHORT).show();
+        }
 
         clearStartAndEndDates();
         return true;
@@ -575,7 +581,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         int rowsUpdated = getContentResolver().update(mCurrentGoalUri, values, null, null);
 
-        Toast.makeText(this, this.getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT).show();
+        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+            Toast.makeText(this, this.getResources().getString(R.string.habit_updated), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, this.getResources().getString(R.string.goal_updated), Toast.LENGTH_SHORT).show();
+        }
 
         clearStartAndEndDates();
 
@@ -1021,7 +1031,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         // Dialog to confirm if user wants to delete goal
 
         AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme())).create();
-        alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
+        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+            alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_habit_header));
+        } else {
+            alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_header));
+        }
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.delete_goal_message));
 
         // Dismiss dialog if cancelled
@@ -1070,7 +1084,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
                         //Delete the goal
                         int rowsDeleted = getContentResolver().delete(mCurrentGoalUri, null, null);
-                        Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.goal_deleted), Toast.LENGTH_SHORT).show();
+                        if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
+                            Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.habit_deleted), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.goal_deleted), Toast.LENGTH_SHORT).show();
+                        }
                         clearStartAndEndDates();
                         clearFailDate();
                         finish();

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="array_goal_types">
-
-        <!-- Goal type drop-down spinner options -->
-        <item>@string/goal_type_other</item>
-        <item>@string/goal_type_fitness</item>
-        <item>@string/goal_type_read</item>
-    </string-array>
-
     <!-- Settings arrays -->
 
     <!-- Theme selection settings arrays -->
@@ -16,12 +8,14 @@
         <item>@string/settings_theme_label_default</item>
         <item>@string/settings_theme_label_pink</item>
         <item>@string/settings_theme_label_blue</item>
+        <item>@string/settings_theme_label_red</item>
     </array>
 
     <array name="settings_theme_values">
         <item>@string/settings_theme_value_default</item>
         <item>@string/settings_theme_value_pink</item>
         <item>@string/settings_theme_value_blue</item>
+        <item>@string/settings_theme_value_red</item>
     </array>
 
 

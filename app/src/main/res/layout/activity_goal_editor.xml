@@ -50,6 +50,7 @@
         style="?secondaryText"
         android:hint="@string/goal_type_hint"
         android:layout_width="150dp"
+        android:textCursorDrawable="@null"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/name_edit_text"
         app:layout_constraintTop_toTopOf="@+id/goal_type_textview" />
@@ -83,7 +84,6 @@
         android:id="@+id/goal_start_date_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-
         android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
         app:layout_constraintStart_toStartOf="@+id/goal_type_textview"
@@ -144,7 +144,7 @@
     <Button
         android:id="@+id/add_goal_editor"
         android:background="@drawable/ic_save"
-        android:layout_width="44dp"
+        android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

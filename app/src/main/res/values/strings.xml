@@ -30,7 +30,7 @@
     <string name="add_habit_button">Add Habit</string>
     <string name="delete_habit_button">Delete Habit</string>
     <string name="historical_streaks">Historical Streaks</string>
-    <string name="view_streak_details"><u>View Streak History Details</u></string>
+    <string name="view_streak_details"><u>View Streak History</u></string>
     <string name="failure_date">Failure Date</string>
 
 

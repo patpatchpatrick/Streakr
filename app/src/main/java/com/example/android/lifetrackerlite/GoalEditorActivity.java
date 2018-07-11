@@ -687,13 +687,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private void setAddGoalWorkspace() {
         //Set up workspace and strings for Add Goal mode
         setTitle(R.string.add_goal_activity_title);
-        mDeleteGoal.setVisibility(View.GONE);
+        mDeleteGoal.setVisibility(View.INVISIBLE);
         mGoalNameTextView.setText(R.string.goal_name);
         mGoalTypeTextView.setText(R.string.goal_type);
-        mFailResetStreak.setVisibility(View.GONE);
-        mGoalCompleted.setVisibility(View.GONE);
-        mHistoricalStreaksHeader.setVisibility(View.GONE);
-        mNotesButton.setVisibility(View.GONE);
+        mFailResetStreak.setVisibility(View.INVISIBLE);
+        mGoalCompleted.setVisibility(View.INVISIBLE);
+        mHistoricalStreaksHeader.setVisibility(View.INVISIBLE);
+        mNotesButton.setVisibility(View.INVISIBLE);
         mViewStreakDetails.setVisibility(View.INVISIBLE);
 
     }
@@ -701,13 +701,13 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private void setAddHabitWorkspace() {
         //Set up workspace and strings for Add Habit mode
         setTitle(R.string.add_habit_activity_title);
-        mDeleteGoal.setVisibility(View.GONE);
+        mDeleteGoal.setVisibility(View.INVISIBLE);
         mGoalNameTextView.setText(R.string.habit_name);
         mGoalTypeTextView.setText(R.string.habit_type);
-        mFailResetStreak.setVisibility(View.GONE);
-        mGoalCompleted.setVisibility(View.GONE);
-        mHistoricalStreaksHeader.setVisibility(View.GONE);
-        mNotesButton.setVisibility(View.GONE);
+        mFailResetStreak.setVisibility(View.INVISIBLE);
+        mGoalCompleted.setVisibility(View.INVISIBLE);
+        mHistoricalStreaksHeader.setVisibility(View.INVISIBLE);
+        mNotesButton.setVisibility(View.INVISIBLE);
         mViewStreakDetails.setVisibility(View.INVISIBLE);
     }
 

@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite.helper;
+package com.patrickdoyle30.android.streakr.helper;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.android.lifetrackerlite.R;
+import com.patrickdoyle30.android.streakr.R;
 
 public class PercentView extends View {
 

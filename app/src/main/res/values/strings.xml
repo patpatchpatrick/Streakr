@@ -102,10 +102,42 @@
     <string name="settings_theme_value_black">black theme</string>
     <string name="pref_show_completed_goals_key" translatable="false">show_completed_goals</string>
     <string name="pref_show_completed_goals_title">Show Completed Goals</string>
+    <string name="pref_libraries">Libraries/Licenses</string>
 
     <!-- Tags [CHAR LIMIT=TBD] -->
     <string name="wide_screen">wide screen</string>
     <string name="regular_screen">regular screen</string>
+
+    <!-- Content Descriptions for Accessibility [CHAR LIMIT=TBD] -->
+    <string name="cd_start_date">start date picker</string>
+    <string name="cd_end_date">end date picker</string>
+    <string name="cd_notes">notes button</string>
+    <string name="cd_save">save button</string>
+    <string name="cd_delete">delete button</string>
+    <string name="cd_reset">reset button</string>
+    <string name="cd_complete">complete goal or habit button</string>
+    <string name="cd_settings">settings button</string>
+    <string name="cd_add_goal">add goal button</string>
+    <string name="cd_add_habit">add habit button</string>
+    <string name="cd_streak_graph">graph of streak progress</string>
+    <string name="cd_goal_icon">goal or habit icon</string>
+
+    <!-- Licenses [CHAR LIMIT=TBD] -->
+    <string name="libraries_used">Libraries Used</string>
+    <string name="graph_view">GraphView</string>
+    <string name="graph_view_license">Copyright 2016 Jonas Gehring
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at \n \n
+
+    http://www.apache.org/licenses/LICENSE-2.0 \n \n
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</string>
 
 
 </resources>

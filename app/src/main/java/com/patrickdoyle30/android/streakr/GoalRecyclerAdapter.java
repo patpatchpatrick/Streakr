@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite;
+package com.patrickdoyle30.android.streakr;
 
 import android.app.Activity;
 import android.content.ContentUris;
@@ -18,12 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
-import com.example.android.lifetrackerlite.data.LTContract;
-import com.example.android.lifetrackerlite.helper.OnStartDragListener;
-import com.example.android.lifetrackerlite.helper.PercentView;
-import com.example.android.lifetrackerlite.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
+import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
+import com.patrickdoyle30.android.streakr.data.LTContract;
+import com.patrickdoyle30.android.streakr.helper.OnStartDragListener;
+import com.patrickdoyle30.android.streakr.helper.PercentView;
+import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -281,6 +281,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
         }
 
+        int currentTheme = ThemeHelper.getTheme();
 
         if (goalCompleted == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
             //If the goal is completed, show the comppleted goal star icon and show a full percentView
@@ -288,7 +289,13 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
             holder.percentView.setPercentage(100);
             holder.goalCompleteImageView.setVisibility(View.VISIBLE);
-            holder.percentView.setColor(ThemeHelper.getTheme());
+
+            if (currentTheme == R.style.BlackAppTheme) {
+                //If black theme is being used, set goal complete icon to black version of icon
+                holder.goalCompleteImageView.setImageResource(R.drawable.ic_star_black);
+            }
+
+            holder.percentView.setColor(currentTheme);
             holder.streakLengthView.setVisibility(View.INVISIBLE);
 
         } else {
@@ -301,14 +308,14 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
 
             holder.streakLengthView.setText(streakDetailsString);
             // If the black theme is being used, change the text color to dark
-            if (ThemeHelper.getTheme() == R.style.BlackAppTheme){
+            if (currentTheme == R.style.BlackAppTheme){
                 holder.streakLengthView.setTextColor(ContextCompat.getColor(context,  R.color.colorPrimaryLightBlack));
             }
 
             //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
             holder.percentView.setPercentage(streakCompletionPercent);
             //Set the color of the percentView  based on whatever user-selected theme is being used
-            holder.percentView.setColor(ThemeHelper.getTheme());
+            holder.percentView.setColor(currentTheme);
         }
 
         // Set an onTouchListener on the view, and when the view is touched, begin drag/drop

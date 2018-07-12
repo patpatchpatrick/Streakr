@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite.data;
+package com.patrickdoyle30.android.streakr.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,10 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.android.lifetrackerlite.GoalEditorActivity;
-import com.example.android.lifetrackerlite.GoalRecyclerAdapter;
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
+import com.patrickdoyle30.android.streakr.GoalEditorActivity;
+import com.patrickdoyle30.android.streakr.GoalRecyclerAdapter;
+import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
+import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
 
 public class LTProvider extends ContentProvider {
 

@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite.data;
+package com.patrickdoyle30.android.streakr.data;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -13,7 +13,7 @@ public final class LTContract {
     //Contract for DB used to store data for this app
 
     //URI Information
-    public static final String CONTENT_AUTHORITY = "com.example.android.lifetrackerlite";
+    public static final String CONTENT_AUTHORITY = "com.patrickdoyle30.android.streakr";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_GOALSHABITS = "goalshabits";
     public static final String PATH_STREAKS = "streaks";

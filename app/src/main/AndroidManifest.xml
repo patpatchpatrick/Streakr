@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.lifetrackerlite">
+    package="com.patrickdoyle30.android.streakr">
 
     <application
         android:allowBackup="true"
@@ -11,8 +11,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".GoalsHabitsFeatureActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,17 +25,19 @@
 
         <provider
             android:name=".data.LTProvider"
-            android:authorities="com.example.android.lifetrackerlite"
+            android:authorities="com.patrickdoyle30.android.streakr"
             android:exported="false" />
 
         <activity android:name=".StreakDetailsActivity" />
-        <activity android:name=".SettingsActivity"
-            android:parentActivityName=".GoalsHabitsFeatureActivity">
-
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".GoalsHabitsFeatureActivity"></activity>
+        <activity android:name=".Libraries">
+            <intent-filter>
+                <action android:name="libraries.intent.action"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-
     </application>
-
-
 
 </manifest>

@@ -1,12 +1,12 @@
-package com.example.android.lifetrackerlite.data;
+package com.patrickdoyle30.android.streakr.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.android.lifetrackerlite.GoalEditorActivity;
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
+import com.patrickdoyle30.android.streakr.GoalEditorActivity;
+import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
+import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
 
 public class LTDbHelper extends SQLiteOpenHelper {
 

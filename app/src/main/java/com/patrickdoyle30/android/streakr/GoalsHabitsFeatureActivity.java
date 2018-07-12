@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite;
+package com.patrickdoyle30.android.streakr;
 
 import android.app.ActionBar;
 import android.app.LoaderManager;
@@ -30,11 +30,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.helper.GoalItemTouchHelperCallback;
-import com.example.android.lifetrackerlite.helper.ItemTouchHelperAdapter;
-import com.example.android.lifetrackerlite.helper.OnStartDragListener;
-import com.example.android.lifetrackerlite.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
+import com.patrickdoyle30.android.streakr.helper.GoalItemTouchHelperCallback;
+import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
+import com.patrickdoyle30.android.streakr.helper.OnStartDragListener;
+import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
 
 import java.util.HashMap;
 

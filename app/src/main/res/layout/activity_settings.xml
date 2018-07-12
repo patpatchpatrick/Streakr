@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_settings"
-    android:name="com.example.android.lifetrackerlite.SettingsFragment"
+    android:name="com.patrickdoyle30.android.streakr.SettingsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 

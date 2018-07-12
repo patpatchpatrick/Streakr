@@ -1,6 +1,6 @@
-package com.example.android.lifetrackerlite.helper;
+package com.patrickdoyle30.android.streakr.helper;
 
-import com.example.android.lifetrackerlite.R;
+import com.patrickdoyle30.android.streakr.R;
 
 public final class ThemeHelper {
 

@@ -17,4 +17,9 @@
         android:key="@string/pref_show_completed_goals_key"
         android:title="@string/pref_show_completed_goals_title" />
 
+    <Preference android:title="@string/pref_libraries" >
+        <intent android:action="libraries.intent.action"
+            />
+    </Preference>
+
 </PreferenceScreen>

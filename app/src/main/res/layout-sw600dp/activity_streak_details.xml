@@ -83,7 +83,8 @@
         android:layout_height="500dp"
         android:tag="@string/wide_screen"
         android:id="@+id/streak_graph"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:contentDescription="@string/cd_streak_graph"/>
 
 
 

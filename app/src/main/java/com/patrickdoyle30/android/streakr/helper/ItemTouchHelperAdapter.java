@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite.helper;
+package com.patrickdoyle30.android.streakr.helper;
 
 // Interface to provide callbacks to notify if an item is moved or swiped to update the data accordingly
 public interface ItemTouchHelperAdapter {

@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite;
+package com.patrickdoyle30.android.streakr;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.lifetrackerlite.data.LTContract;
+import com.patrickdoyle30.android.streakr.data.LTContract;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;

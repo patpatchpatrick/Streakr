@@ -87,7 +87,8 @@
         android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
         app:layout_constraintStart_toStartOf="@+id/goal_type_textview"
-        app:layout_constraintTop_toTopOf="@+id/goal_start_date" />
+        app:layout_constraintTop_toTopOf="@+id/goal_start_date"
+        android:contentDescription="@string/cd_start_date"/>
 
 
     <TextView
@@ -118,7 +119,8 @@
         android:background="@drawable/ic_calendar"
         android:paddingRight="16dp"
         app:layout_constraintStart_toStartOf="@+id/name_edit_text"
-        app:layout_constraintTop_toTopOf="@+id/goal_end_date" />
+        app:layout_constraintTop_toTopOf="@+id/goal_end_date"
+        android:contentDescription="@string/cd_end_date"/>
 
     <Button
         android:id="@+id/notes_button"
@@ -129,7 +131,8 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/ic_blank_note"
         app:layout_constraintEnd_toStartOf="@+id/add_goal_editor"
-        app:layout_constraintTop_toBottomOf="@+id/goal_start_date_display" />
+        app:layout_constraintTop_toBottomOf="@+id/goal_start_date_display"
+        android:contentDescription="@string/cd_notes"/>
 
     <Button
         android:id="@+id/delete_goal_editor"
@@ -139,7 +142,8 @@
         android:layout_marginLeft="64dp"
         android:layout_marginStart="64dp"
         app:layout_constraintStart_toEndOf="@+id/add_goal_editor"
-        app:layout_constraintTop_toTopOf="@+id/notes_button"/>
+        app:layout_constraintTop_toTopOf="@+id/notes_button"
+        android:contentDescription="@string/cd_delete"/>
 
     <Button
         android:id="@+id/add_goal_editor"
@@ -153,7 +157,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/notes_button" />
+        app:layout_constraintTop_toTopOf="@+id/notes_button"
+        android:contentDescription="@string/cd_save"/>
 
 
     <Button
@@ -165,7 +170,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/ic_fail"
         app:layout_constraintEnd_toStartOf="@+id/add_goal_editor"
-        app:layout_constraintTop_toBottomOf="@+id/notes_button" />
+        app:layout_constraintTop_toBottomOf="@+id/notes_button"
+        android:contentDescription="@string/cd_reset"/>
 
     <Button
         android:id="@+id/goal_completed"
@@ -176,7 +182,8 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/ic_checkmark"
         app:layout_constraintStart_toEndOf="@+id/add_goal_editor"
-        app:layout_constraintTop_toBottomOf="@+id/notes_button" />
+        app:layout_constraintTop_toBottomOf="@+id/notes_button"
+        android:contentDescription="@string/cd_complete"/>
 
 
     <TextView

@@ -95,7 +95,8 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_habit" />
+            app:srcCompat="@drawable/ic_habit"
+            android:contentDescription="@string/cd_add_habit"/>
 
 
         <android.support.design.widget.FloatingActionButton
@@ -103,7 +104,8 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_goal" />
+            app:srcCompat="@drawable/ic_goal"
+            android:contentDescription="@string/cd_add_goal"/>
 
 
     </LinearLayout>
@@ -117,7 +119,8 @@
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_settings" />
+        app:srcCompat="@drawable/ic_settings"
+        android:contentDescription="@string/cd_settings"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

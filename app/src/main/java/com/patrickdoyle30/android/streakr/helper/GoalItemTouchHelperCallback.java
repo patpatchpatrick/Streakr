@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite.helper;
+package com.patrickdoyle30.android.streakr.helper;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

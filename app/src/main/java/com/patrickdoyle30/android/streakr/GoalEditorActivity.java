@@ -1,4 +1,4 @@
-package com.example.android.lifetrackerlite;
+package com.patrickdoyle30.android.streakr;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -30,9 +30,9 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
-import com.example.android.lifetrackerlite.data.LTContract.StreaksEntry;
-import com.example.android.lifetrackerlite.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
+import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
+import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

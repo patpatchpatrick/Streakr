@@ -1,11 +1,11 @@
-package com.example.android.lifetrackerlite;
+package com.patrickdoyle30.android.streakr;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.android.lifetrackerlite.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -15,6 +15,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getWindow().setBackgroundDrawable(null);
+        getSupportActionBar().hide();
     }
 
     @Override

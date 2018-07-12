@@ -59,7 +59,7 @@
         tools:text="Test" />
 
 
-    <com.example.android.lifetrackerlite.helper.PercentView
+    <com.patrickdoyle30.android.streakr.helper.PercentView
         android:id="@+id/percent_view"
         android:layout_width="128dp"
         android:layout_height="128dp"

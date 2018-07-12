@@ -9,6 +9,7 @@
         <item>@string/settings_theme_label_pink</item>
         <item>@string/settings_theme_label_blue</item>
         <item>@string/settings_theme_label_red</item>
+        <item>@string/settings_theme_label_black</item>
     </array>
 
     <array name="settings_theme_values">
@@ -16,6 +17,7 @@
         <item>@string/settings_theme_value_pink</item>
         <item>@string/settings_theme_value_blue</item>
         <item>@string/settings_theme_value_red</item>
+        <item>@string/settings_theme_value_black</item>
     </array>
 
 

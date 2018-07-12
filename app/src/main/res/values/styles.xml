@@ -84,6 +84,27 @@
         <item name="iconSecondaryColor">@color/colorAccentRed</item>
     </style>
 
+    <!-- Red application theme. -->
+    <style name="BlackAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryBlack</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>
+        <item name="colorAccent">@color/colorAccentBlack</item>
+        <item name="colorTextAndIcons">@color/colorTextAndIconsBlack</item>
+        <item name="goalListBackgroundSelector">@drawable/list_goalshabits_item_selector_black</item>
+        <item name="preferenceTheme">@style/BlackPreferenceTheme</item>
+        <item name="basicHeaderText">@style/BlackThemeBasicHeaderText</item>
+        <item name="basicHeaderTextLight">@style/BlackThemeBasicHeaderTextLight</item>
+        <item name="secondaryText">@style/BlackThemeSecondaryText</item>
+        <item name="secondaryTextLight">@style/BlackThemeSecondaryTextLight</item>
+        <item name="popUpMenuTheme">@style/BlackPopUpMenuTheme</item>
+        <item name="backgroundTheme">@style/BlackBackgroundTheme</item>
+        <item name="backgroundThemeDark">@style/BlackBackgroundThemeDark</item>
+        <item name="iconPrimaryColor">@color/colorPrimaryTextBlack</item>
+        <item name="iconPrimaryColorLight">@color/colorPrimaryLightBlack</item>
+        <item name="iconSecondaryColor">@color/colorAccentBlack</item>
+    </style>
+
     <!-- Styles that correspond to each theme -->
 
     <!-- BasicHeaderText style as well as overrides for the different themes available -->
@@ -102,6 +123,9 @@
     </style>
     <style name="RedThemeBasicHeaderText" parent="@style/BasicHeaderText">
         <item name="android:textColor" >@color/colorPrimaryTextRed</item>
+    </style>
+    <style name="BlackThemeBasicHeaderText" parent="@style/BasicHeaderText">
+        <item name="android:textColor" >@color/colorPrimaryTextBlack</item>
     </style>
 
     <!-- SecondaryText style as well as overrides for the different themes available -->
@@ -123,6 +147,10 @@
     <style name="RedThemeSecondaryText" parent="@style/SecondaryText">
         <item name="android:textColor" >@color/colorSecondaryTextRed</item>
         <item name="android:backgroundTint">@color/colorSecondaryTextRed</item>
+    </style>
+    <style name="BlackThemeSecondaryText" parent="@style/SecondaryText">
+        <item name="android:textColor" >@color/colorSecondaryTextBlack</item>
+        <item name="android:backgroundTint">@color/colorSecondaryTextBlack</item>
     </style>
 
     <!-- BasicHeaderTextLight style as well as overrides for the different themes available -->
@@ -146,6 +174,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorTextAndIconsRed</item>
     </style>
+    <style name="BlackThemeBasicHeaderTextLight">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextAndIconsBlack</item>
+    </style>
 
     <!-- SecondaryTextLight style as well as overrides for the different themes available -->
     <style name="SecondaryTextLight">
@@ -162,6 +194,9 @@
     </style>
     <style name="RedThemeSecondaryTextLight">
         <item name="android:textColor">@color/colorPrimaryLightRed</item>
+    </style>
+    <style name="BlackThemeSecondaryTextLight">
+        <item name="android:textColor">@color/colorPrimaryLightBlack</item>
     </style>
 
     <!-- Override and set popUpMenuTheme depending on user selected Theme. -->
@@ -190,6 +225,11 @@
         <item name="android:textColor">@color/colorTextAndIconsRed</item>
         <item name="colorAccent">@color/colorAccentRed</item>
     </style>
+    <style name="BlackPopUpMenuTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@color/colorPrimaryDarkBlack</item>
+        <item name="android:textColor">@color/colorTextAndIconsBlack</item>
+        <item name="colorAccent">@color/colorAccentBlack</item>
+    </style>
 
     <!-- Override and set background style depending on user selected Theme. -->
     <style name="BackgroundTheme">
@@ -207,6 +247,9 @@
     <style name="RedBackgroundTheme" parent="BackgroundTheme">
         <item name="android:background">@color/colorPrimaryLightRed</item>
     </style>
+    <style name="BlackBackgroundTheme" parent="BackgroundTheme">
+        <item name="android:background">@color/colorPrimaryLightBlack</item>
+    </style>
 
     <!-- Override and set dark background style depending on user selected Theme. -->
     <style name="BackgroundThemeDark">
@@ -223,6 +266,9 @@
     </style>
     <style name="RedBackgroundThemeDark">
         <item name="android:background">@color/colorPrimaryDarkRed</item>
+    </style>
+    <style name="BlackBackgroundThemeDark">
+        <item name="android:background">@color/colorPrimaryDarkBlack</item>
     </style>
 
     <!-- Override and set preference themes depending on user selected Theme. -->
@@ -245,6 +291,11 @@
         <item name="android:background">@drawable/list_goalshabits_item_selector_red</item>
         <item name="android:textColor">@color/colorPrimaryTextRed</item>
         <item name="colorAccent">@color/colorAccentRed</item>
+    </style>
+    <style name="BlackPreferenceTheme" parent ="PopUpMenuTheme">
+        <item name="android:background">@drawable/list_goalshabits_item_selector_black</item>
+        <item name="android:textColor">@color/colorPrimaryTextBlack</item>
+        <item name="colorAccent">@color/colorAccentBlack</item>
     </style>
 
 

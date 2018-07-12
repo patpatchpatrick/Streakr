@@ -354,7 +354,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkRed);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsRed);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentRed);
-        } else {
+        } else if (theme == R.style.BlackAppTheme) {
+            backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkBlack);
+            axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsBlack);
+            seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentBlack);
+        }else {
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent);

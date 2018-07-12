@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.lifetrackerlite.data.LTContract.GoalsHabitsEntry;
@@ -46,7 +47,10 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private static final int GOALSHABITS_LOADER = 0;
 
     private RecyclerView mRecyclerView;
-    private ImageView mEmptyView;
+    private ImageView mEmptyViewArrow1;
+    private ImageView mEmptyViewArrow2;
+    private TextView mEmptyViewText1;
+    private TextView mEmptyViewText2;
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
     private Integer mNumberGoals = -2;
@@ -63,11 +67,15 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
 
-        mEmptyView = (ImageView) findViewById(R.id.recycler_empty_view);
+        mEmptyViewArrow1 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_1);
+        mEmptyViewArrow2 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_2);
+        mEmptyViewText1 = (TextView) findViewById(R.id.recycler_empty_view_text_1);
+        mEmptyViewText2 = (TextView) findViewById(R.id.recycler_empty_view_text_2);
 
         // Add new goal button
-        FloatingActionButton addGoalButton = findViewById(R.id.add_goal);
-        addGoalButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton mAddGoalButton = (FloatingActionButton) findViewById(R.id.add_goal);
+        // If the black theme is being used, make the button icons dark
+        mAddGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -92,8 +100,10 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         });
 
         // Add new habit button
-        FloatingActionButton addHabitButton = findViewById(R.id.add_habit);
-        addHabitButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton mAddHabitButton = (FloatingActionButton) findViewById(R.id.add_habit);
+
+
+        mAddHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -118,6 +128,13 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         });
 
         mSettingsButton = findViewById(R.id.settings_button);
+
+        // If dark theme is being used, set the floating action buttons to the dark drawable
+        if (ThemeHelper.getTheme() == R.style.BlackAppTheme) {
+            mAddGoalButton.setImageResource(R.drawable.ic_goal_black);
+            mAddHabitButton.setImageResource(R.drawable.ic_habit_black);
+            mSettingsButton.setImageResource(R.drawable.ic_settings_black);
+        }
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +176,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 GoalsHabitsEntry.COLUMN_GOAL_END_DATE,
                 GoalsHabitsEntry.COLUMN_GOAL_COMPLETED};
 
-        if (mShowCompletedGoals == false){
+        if (mShowCompletedGoals == false) {
 
             //Query the table for only incomplete goals if the showCompleteGoals preference is set to false
             String selection = GoalsHabitsEntry.COLUMN_GOAL_COMPLETED + "=?";
@@ -181,15 +198,18 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mNumberGoals = cursor.getCount();
         Log.d(TAG, "" + mNumberGoals);
 
-        if (mAdapter.getItemCount() <=0)
-        {
+        if (mAdapter.getItemCount() <= 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
-            mEmptyView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+            mEmptyViewArrow1.setVisibility(View.VISIBLE);
+            mEmptyViewArrow2.setVisibility(View.VISIBLE);
+            mEmptyViewText1.setVisibility(View.VISIBLE);
+            mEmptyViewText2.setVisibility(View.VISIBLE);
+        } else {
             mRecyclerView.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.INVISIBLE);
+            mEmptyViewArrow1.setVisibility(View.INVISIBLE);
+            mEmptyViewArrow2.setVisibility(View.INVISIBLE);
+            mEmptyViewText1.setVisibility(View.INVISIBLE);
+            mEmptyViewText2.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -256,19 +276,16 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.settings_theme_key))){
+        if (key.equals(getString(R.string.settings_theme_key))) {
             //TODO only recreate the app  if the theme preference is changed
             //If the app theme is changed, the theme must be first set by the app and then the app
             //must be created for the new theme to be applied immediately
             setTheme(sharedPreferences);
             GoalsHabitsFeatureActivity.this.recreate();
-            Log.d(TAG, "theme change");
-        } else if (key.equals(getString(R.string.pref_show_completed_goals_key))){
+        } else if (key.equals(getString(R.string.pref_show_completed_goals_key))) {
             mShowCompletedGoals = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_show_goals_default));
             getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
-            Log.d(TAG,  "ShowGoals: " + mShowCompletedGoals);
-
         }
 
     }
@@ -277,20 +294,22 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         //Set the app theme based on the theme selected in settings/preferences
         String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
-        if (theme.equals(getString(R.string.settings_theme_value_default))){
+        if (theme.equals(getString(R.string.settings_theme_value_default))) {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_pink))){
+        } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
             setTheme(R.style.PinkAppTheme);
             ThemeHelper.setTheme(R.style.PinkAppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_blue))){
+        } else if (theme.equals(getString(R.string.settings_theme_value_blue))) {
             setTheme(R.style.BlueAppTheme);
             ThemeHelper.setTheme(R.style.BlueAppTheme);
-        } else if (theme.equals(getString(R.string.settings_theme_value_red))){
+        } else if (theme.equals(getString(R.string.settings_theme_value_red))) {
             setTheme(R.style.RedAppTheme);
             ThemeHelper.setTheme(R.style.RedAppTheme);
-        }
-        else {
+        } else if (theme.equals(getString(R.string.settings_theme_value_black))) {
+            setTheme(R.style.BlackAppTheme);
+            ThemeHelper.setTheme(R.style.BlackAppTheme);
+        } else {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);
         }

@@ -300,6 +300,10 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             holder.streakLengthView.setVisibility(View.VISIBLE);
 
             holder.streakLengthView.setText(streakDetailsString);
+            // If the black theme is being used, change the text color to dark
+            if (ThemeHelper.getTheme() == R.style.BlackAppTheme){
+                holder.streakLengthView.setTextColor(ContextCompat.getColor(context,  R.color.colorPrimaryLightBlack));
+            }
 
             //Set the percent on the percentView so that percentView pie chart gets filled out accordingly
             holder.percentView.setPercentage(streakCompletionPercent);

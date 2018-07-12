@@ -78,7 +78,10 @@ public class PercentView extends View {
         } else if (theme == R.style.RedAppTheme) {
             paint.setColor(getContext().getResources().getColor(R.color.colorAccentRed));
             bgpaint.setColor(getContext().getResources().getColor(R.color.colorTextAndIconsRed));
-        } else {
+        } else if (theme == R.style.BlackAppTheme) {
+            paint.setColor(getContext().getResources().getColor(R.color.colorAccentBlack));
+            bgpaint.setColor(getContext().getResources().getColor(R.color.colorTextAndIconsBlack));
+        }else {
             paint.setColor(getContext().getResources().getColor(R.color.colorAccent));
             bgpaint.setColor(getContext().getResources().getColor(R.color.colorTextAndIcons));
         }

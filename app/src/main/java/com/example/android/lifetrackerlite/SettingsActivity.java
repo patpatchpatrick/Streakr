@@ -44,6 +44,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         } else if (theme.equals(getString(R.string.settings_theme_value_red))) {
             setTheme(R.style.RedAppTheme);
             ThemeHelper.setTheme(R.style.RedAppTheme);
+        }else if (theme.equals(getString(R.string.settings_theme_value_black))) {
+            setTheme(R.style.BlackAppTheme);
+            ThemeHelper.setTheme(R.style.BlackAppTheme);
         }else {
             setTheme(R.style.AppTheme);
             ThemeHelper.setTheme(R.style.AppTheme);

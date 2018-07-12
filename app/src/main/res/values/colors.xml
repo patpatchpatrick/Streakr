@@ -44,6 +44,17 @@
     <color name="colorSecondaryTextRed">#757575</color>
     <color name="colorTextAndIconsRed">#FFFFFF</color>
 
+    <!-- Black theme colors -->
+    <color name="colorPrimaryBlack">#263238</color>
+    <color name="colorPrimaryDarkBlack">#000a12</color>
+    <color name="colorPrimaryLightBlack">#4f5b62</color>
+    <color name="colorAccentBlack">#FFFF8B</color>
+    <color name="colorDividerBlack">#fafafa</color>
+    <color name="colorDateBlack">#757575</color>
+    <color name="colorPrimaryTextBlack">#fafafa</color>
+    <color name="colorSecondaryTextBlack">#c7c7c7</color>
+    <color name="colorTextAndIconsBlack">#FFFFFF</color>
+
 
     <!-- Color for a streak history details -->
     <color name="streakDetails">#4A7BA7</color>

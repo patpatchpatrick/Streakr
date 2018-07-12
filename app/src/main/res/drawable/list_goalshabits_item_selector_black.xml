@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Selector for goals/habits list items -->
+    <item android:drawable="@color/colorPrimaryBlack" android:state_pressed="true" />
+    <item android:drawable="@color/colorPrimaryBlack" android:state_activated="true" />
+    <item android:drawable="@color/colorPrimaryBlack" android:state_selected="true" />
+
+    <item android:drawable="@color/colorPrimaryLightBlack" />
+
+
+</selector>

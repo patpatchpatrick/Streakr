@@ -111,7 +111,8 @@
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:id="@+id/streak_graph" />
+        android:id="@+id/streak_graph"
+        android:tag="@string/regular_screen"/>
 
     </LinearLayout>
 

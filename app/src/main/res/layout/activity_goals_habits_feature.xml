@@ -103,18 +103,31 @@
 
     </LinearLayout>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/settings_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/settings_background"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_margin="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        app:srcCompat="@drawable/ic_settings"
+        app:srcCompat="@drawable/ic_circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="@string/cd_settings"/>
+
+    <ImageView
+        android:id="@+id/settings_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:contentDescription="@string/cd_settings"
+        app:layout_constraintStart_toStartOf="@+id/settings_background"
+        app:layout_constraintTop_toTopOf="@+id/settings_background"
+        app:srcCompat="@drawable/ic_settings" />
+
+
 
 
 

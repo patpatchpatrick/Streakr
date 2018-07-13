@@ -54,7 +54,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
     private Integer mNumberGoals = -2;
-    private FloatingActionButton mSettingsButton;
+    private ImageView mSettingsButton;
     private boolean mShowCompletedGoals;
 
     @Override
@@ -127,7 +127,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             }
         });
 
-        mSettingsButton = findViewById(R.id.settings_button);
+        mSettingsButton = findViewById(R.id.settings_icon);
 
         // If dark theme is being used, set the floating action buttons to the dark drawable
         if (ThemeHelper.getTheme() == R.style.BlackAppTheme) {

@@ -30,6 +30,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
 import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
@@ -49,6 +51,8 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     private static final String TAG = StreakDetailsActivity.class.getSimpleName();
     private static final int STREAK_LOADER = 2;
+
+    private AdView mAdView;
 
     private int mCurrentGoalID = -1;
     private long mCurrentStreakLengthDays = -1;
@@ -77,6 +81,11 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         setContentView(R.layout.activity_streak_details);
         setTitle(R.string.streak_details);
         getSupportActionBar().hide();
+
+        //Load the AdView to display banner advertisement
+        AdRequest adRequest=new AdRequest.Builder().build();
+        mAdView=(AdView)this.findViewById(R.id.adView);
+        mAdView.loadAd(adRequest);
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);

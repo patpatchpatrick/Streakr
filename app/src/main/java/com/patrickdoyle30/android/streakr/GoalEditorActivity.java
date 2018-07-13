@@ -30,6 +30,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
 import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
@@ -46,6 +48,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private static final int GOAL_EDIT_LOADER = 1;
     private static final int STREAK_LOADER = 2;
     private boolean mLoadingNote = false;
+
+    private AdView mAdView;
 
     private int mNumberOfGoals;
     private int mNumberOfStreaks;
@@ -131,6 +135,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
+
+        //Load the AdView to display banner advertisement
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView = (AdView)this.findViewById(R.id.adView);
+        mAdView.loadAd(adRequest);
+
 
         //Get the intent that created activity to determine if activity should be in "insert mode"
         //for inserting a new goal or "edit mode" for editing an existing goal.

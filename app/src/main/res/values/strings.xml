@@ -139,5 +139,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.</string>
 
+    <!-- Ads Strings [CHAR LIMIT=TBD] -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_ad_unit_id">		ca-app-pub-3940256099942544/8691691433</string>
 
 </resources>

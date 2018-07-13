@@ -30,6 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.helper.GoalItemTouchHelperCallback;
 import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
@@ -45,6 +48,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private static final String TAG = GoalsHabitsFeatureActivity.class.getSimpleName();
 
     private static final int GOALSHABITS_LOADER = 0;
+
+    private InterstitialAd mInterstitial;
 
     private RecyclerView mRecyclerView;
     private ImageView mEmptyViewArrow1;
@@ -71,6 +76,31 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mEmptyViewArrow2 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_2);
         mEmptyViewText1 = (TextView) findViewById(R.id.recycler_empty_view_text_1);
         mEmptyViewText2 = (TextView) findViewById(R.id.recycler_empty_view_text_2);
+
+        //Create and load a new interstitial ad (displayed in onListItemClickListener)
+        mInterstitial = new InterstitialAd(this);
+        mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        mInterstitial.setAdListener(new AdListener(){
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Toast.makeText(GoalsHabitsFeatureActivity.this,  "Ad Loaded", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitial.loadAd(adRequest);
 
         // Add new goal button
         FloatingActionButton mAddGoalButton = (FloatingActionButton) findViewById(R.id.add_goal);
@@ -248,6 +278,11 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
+
+        // Display the interstitial ad
+        if (mInterstitial.isLoaded()){
+            mInterstitial.show();
+        }
 
     }
 

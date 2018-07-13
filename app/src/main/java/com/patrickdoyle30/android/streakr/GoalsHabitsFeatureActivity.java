@@ -3,6 +3,7 @@ package com.patrickdoyle30.android.streakr;
 import android.app.ActionBar;
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -54,6 +55,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private RecyclerView mRecyclerView;
     private ImageView mEmptyViewArrow1;
     private ImageView mEmptyViewArrow2;
+    private ImageView mStreakrLogo;
     private TextView mEmptyViewText1;
     private TextView mEmptyViewText2;
     private GoalRecyclerAdapter mAdapter;
@@ -74,8 +76,10 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         mEmptyViewArrow1 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_1);
         mEmptyViewArrow2 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_2);
+        mStreakrLogo = (ImageView) findViewById(R.id.streakr_logo);
         mEmptyViewText1 = (TextView) findViewById(R.id.recycler_empty_view_text_1);
         mEmptyViewText2 = (TextView) findViewById(R.id.recycler_empty_view_text_2);
+
 
         //Create and load a new interstitial ad (displayed in onListItemClickListener)
         mInterstitial = new InterstitialAd(this);
@@ -160,10 +164,16 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mSettingsButton = findViewById(R.id.settings_icon);
 
         // If dark theme is being used, set the floating action buttons to the dark drawable
+        // Set other icons and text colors to black theme colors as well
         if (ThemeHelper.getTheme() == R.style.BlackAppTheme) {
             mAddGoalButton.setImageResource(R.drawable.ic_goal_black);
             mAddHabitButton.setImageResource(R.drawable.ic_habit_black);
             mSettingsButton.setImageResource(R.drawable.ic_settings_black);
+            mEmptyViewText1.setTextColor(ContextCompat.getColor(this, R.color.colorTextAndIconsBlack));
+            mEmptyViewText2.setTextColor(ContextCompat.getColor(this, R.color.colorTextAndIconsBlack));
+            mEmptyViewArrow1.setImageResource(R.drawable.ic_down_arrow_black);
+            mEmptyViewArrow2.setImageResource(R.drawable.ic_down_arrow_black);
+
         }
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,12 +244,14 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             mEmptyViewArrow2.setVisibility(View.VISIBLE);
             mEmptyViewText1.setVisibility(View.VISIBLE);
             mEmptyViewText2.setVisibility(View.VISIBLE);
+            mStreakrLogo.setVisibility(View.VISIBLE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmptyViewArrow1.setVisibility(View.INVISIBLE);
             mEmptyViewArrow2.setVisibility(View.INVISIBLE);
             mEmptyViewText1.setVisibility(View.INVISIBLE);
             mEmptyViewText2.setVisibility(View.INVISIBLE);
+            mStreakrLogo.setVisibility(View.INVISIBLE);
         }
 
     }

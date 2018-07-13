@@ -196,7 +196,7 @@
         <item name="android:textColor">@color/colorPrimaryLightRed</item>
     </style>
     <style name="BlackThemeSecondaryTextLight">
-        <item name="android:textColor">@color/colorPrimaryLightBlack</item>
+        <item name="android:textColor">@color/colorSecondaryTextBlack</item>
     </style>
 
     <!-- Override and set popUpMenuTheme depending on user selected Theme. -->

@@ -14,8 +14,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_circle" />
-                            <entry key="sourceFile" value="C:\Users\patri\Desktop\circle.svg" />
+                            <entry key="height" value="581" />
+                            <entry key="outputName" value="ic_streakr_logo" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\patri\Desktop\Streakr Logo.svg" />
+                            <entry key="width" value="450" />
                           </map>
                         </option>
                       </PersistentState>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LifeTrackerLite</string>
+    <string name="app_name">Streakr</string>
 
     <!-- Labels for different app features [CHAR LIMIT=TBD] -->
     <string name="feature_goals_habits">Goals/Habits</string>

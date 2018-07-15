@@ -71,7 +71,6 @@ public class LTProvider extends ContentProvider {
                 cursor = database.query(GoalsHabitsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case STREAKS:
-                //TODO Update the query to only query streaks of a specific ID depending on what goal you are querying streaks for
                 //Query the table for all streaks
                 cursor = database.query(StreaksEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;

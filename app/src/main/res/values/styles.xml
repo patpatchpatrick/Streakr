@@ -275,22 +275,26 @@
     <style name="DefaultPreferenceTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@drawable/list_goalshabits_item_selector</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorSecondaryText</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
     <style name="PinkPreferenceTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@drawable/list_goalshabits_item_selector_pink</item>
         <item name="android:textColor">@color/colorPrimaryTextPink</item>
         <item name="colorAccent">@color/colorAccentPink</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
     <style name="BluePreferenceTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@drawable/list_goalshabits_item_selector_blue</item>
         <item name="android:textColor">@color/colorPrimaryTextBlue</item>
         <item name="colorAccent">@color/colorAccentBlue</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
     <style name="RedPreferenceTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@drawable/list_goalshabits_item_selector_red</item>
         <item name="android:textColor">@color/colorPrimaryTextRed</item>
         <item name="colorAccent">@color/colorAccentRed</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
     <style name="BlackPreferenceTheme" parent ="PopUpMenuTheme">
         <item name="android:background">@drawable/list_goalshabits_item_selector_black</item>

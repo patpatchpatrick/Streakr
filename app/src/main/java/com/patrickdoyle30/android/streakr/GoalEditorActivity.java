@@ -734,7 +734,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         null);
 
             case STREAK_LOADER:
-                //TODO figure out way to only load streaks for current goal
 
                 String[] streakProjection = {
                         StreaksEntry._ID,
@@ -755,7 +754,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         StreaksEntry.COLUMN_STREAK_FAIL_DATE + " DESC");
         }
 
-        //TODO  Figure out what to return in default scenario
         return null;
 
     }
@@ -992,7 +990,6 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             SimpleDateFormat failSdf = new SimpleDateFormat("MMMM d, yyyy");
             String failDateString = "";
             failDateString += failSdf.format(failDateMillis);
-            Log.d(TAG, "fdate: " + failDateString);
             TextView failDateDisplay = (TextView) dialogView.findViewById(R.id.failure_date_display);
             failDateDisplay.setText(failDateString);
         }

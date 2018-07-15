@@ -131,7 +131,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         switch (id) {
 
             case STREAK_LOADER:
-                //TODO figure out way to only load streaks for current goal
 
                 String[] streakProjection = {
                         StreaksEntry._ID,
@@ -203,8 +202,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
                     totalStreakDays += streakLengthDays;
                     averageStreakCount++;
 
-                    Log.d(TAG, "loader check" + averageStreakCount);
-
 
                 }
 
@@ -226,7 +223,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
                 //TODO fix calculation to show decimal to one digit
                 //Calculate average streak length
-                Log.d("Before Calc", "" + averageStreakCount);
                 if (averageStreakCount != 0) {
                     averageStreakLength = totalStreakDays / averageStreakCount;
                 }
@@ -256,8 +252,6 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onStreakListItemClick(final int clickedStreakPosition, final int clickedStreakID, final String note) {
-
-        Log.d(TAG, "" + clickedStreakID);
 
         //Inflate new popup window to edit notes related to goal/streak
         LayoutInflater inflater = getLayoutInflater();

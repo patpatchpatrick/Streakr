@@ -83,8 +83,6 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
     @Override
     public void onItemDropped() {
 
-        //TODO  make sure to update provider class to fix "Notify Change"  in updateGoal method
-
         // When an item is dropped via drag/drop we need to update the values of the orders of the goals.
         // The new goal order is contained in the mGoalOrderList ArrayList.
         // The values of the orders of the goals and the IDs of the goals are mapped in the mGoalOrderToIDMap HashMap.

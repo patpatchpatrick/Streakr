@@ -21,7 +21,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.settings_theme_key))) {
-            //TODO only recreate the app  if the theme preference is changed
             //If the app theme is changed, the theme must be first set by the app and then the app
             //must be created for the new theme to be applied immediately
             setTheme(sharedPreferences);

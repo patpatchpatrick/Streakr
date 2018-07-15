@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.helper.GoalItemTouchHelperCallback;
@@ -51,6 +53,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private static final int GOALSHABITS_LOADER = 0;
 
     private InterstitialAd mInterstitial;
+    private AdView mAdView;
 
     private RecyclerView mRecyclerView;
     private ImageView mEmptyViewArrow1;
@@ -73,6 +76,11 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         getSupportActionBar().hide();
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
+
+        //Load the AdView to display banner advertisement
+        AdRequest adRequestBanner = new AdRequest.Builder().build();
+        mAdView = (AdView)this.findViewById(R.id.adView);
+        mAdView.loadAd(adRequestBanner);
 
         mEmptyViewArrow1 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_1);
         mEmptyViewArrow2 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_2);
@@ -236,7 +244,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         //Pass in the new cursor and whether or not completed goals should be shown
         mAdapter.swapCursor(cursor);
         mNumberGoals = cursor.getCount();
-        Log.d(TAG, "" + mNumberGoals);
 
         if (mAdapter.getItemCount() <= 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -273,7 +280,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         // Set the URI on the intent of the goal clicked to be the id of the clicked item
         Uri currentGoalUri = ContentUris.withAppendedId(GoalsHabitsEntry.CONTENT_URI, clickedGoalID);
 
-        Log.d(TAG, "Clicked Goal ID" + clickedGoalID);
 
         //Set the data on the intent to be the current URI
         intent.setData(currentGoalUri);
@@ -300,7 +306,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     // Start dragging the viewHolder when the startDrag callback is received from the GoalRecyclerAdapter
     // The drag is initiated when the view is touched
-    //TODO indicate where the view  should be touched for drag to start
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemtouchHelper.startDrag(viewHolder);
@@ -310,6 +315,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     protected void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitial.loadAd(adRequest);
     }
 
 
@@ -324,7 +331,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.settings_theme_key))) {
-            //TODO only recreate the app  if the theme preference is changed
             //If the app theme is changed, the theme must be first set by the app and then the app
             //must be created for the new theme to be applied immediately
             setTheme(sharedPreferences);
@@ -336,6 +342,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         }
 
     }
+
+
 
     private void setTheme(SharedPreferences sharedPreferences) {
 

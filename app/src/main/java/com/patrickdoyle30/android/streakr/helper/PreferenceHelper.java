@@ -2,13 +2,26 @@ package com.patrickdoyle30.android.streakr.helper;
 
 import com.patrickdoyle30.android.streakr.R;
 
-public final class ThemeHelper {
+public final class PreferenceHelper {
 
     //Class to help set menus, colors, etc... based on whichever theme the user has selected
 
     private static int mTheme;
+    private static boolean mAdFree;
 
-    private ThemeHelper() {
+    private PreferenceHelper() {
+    }
+
+    public static void setAdFree(Boolean adFreePaidFor) {
+        if (adFreePaidFor){
+            mAdFree = true;
+        } else {
+            mAdFree = false;
+        }
+    }
+
+    public static boolean getAdFree(){
+        return mAdFree;
     }
 
     public static void setTheme(int theme) {

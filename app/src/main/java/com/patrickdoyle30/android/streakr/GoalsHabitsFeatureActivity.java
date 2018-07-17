@@ -40,11 +40,12 @@ import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.helper.GoalItemTouchHelperCallback;
 import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
 import com.patrickdoyle30.android.streakr.helper.OnStartDragListener;
-import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.PreferenceHelper;
 
 import java.util.HashMap;
 
 import static android.support.v7.widget.DividerItemDecoration.HORIZONTAL;
+import static com.patrickdoyle30.android.streakr.helper.PreferenceHelper.setAdFree;
 
 public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -66,6 +67,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private Integer mNumberGoals = -2;
     private ImageView mSettingsButton;
     private boolean mShowCompletedGoals;
+    private boolean mAdFree = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +81,14 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         //Load the AdView to display banner advertisement
         AdRequest adRequestBanner = new AdRequest.Builder().build();
-        mAdView = (AdView)this.findViewById(R.id.adView);
-        mAdView.loadAd(adRequestBanner);
+        mAdView = (AdView) this.findViewById(R.id.adView);
+
+        // If user has paid for "adFree", then don't show the adView
+        if (mAdFree) {
+            mAdView.setVisibility(View.GONE);
+        } else {
+            mAdView.loadAd(adRequestBanner);
+        }
 
         mEmptyViewArrow1 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_1);
         mEmptyViewArrow2 = (ImageView) findViewById(R.id.recycler_empty_view_arrow_2);
@@ -89,30 +97,34 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mEmptyViewText2 = (TextView) findViewById(R.id.recycler_empty_view_text_2);
 
 
-        //Create and load a new interstitial ad (displayed in onListItemClickListener)
-        mInterstitial = new InterstitialAd(this);
-        mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        mInterstitial.setAdListener(new AdListener(){
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                Toast.makeText(GoalsHabitsFeatureActivity.this,  "Ad Loaded", Toast.LENGTH_SHORT);
-            }
+        // If the user has not purchased ad removal, create and load a new interstitial ad (displayed in onListItemClickListener)
 
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-            }
+        if (!mAdFree ) {
 
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
+            mInterstitial = new InterstitialAd(this);
+            mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+            mInterstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    Toast.makeText(GoalsHabitsFeatureActivity.this, "Ad Loaded", Toast.LENGTH_SHORT);
+                }
 
-            }
-        });
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+                }
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mInterstitial.loadAd(adRequest);
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+
+                }
+            });
+
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mInterstitial.loadAd(adRequest);
+        }
 
         // Add new goal button
         FloatingActionButton mAddGoalButton = (FloatingActionButton) findViewById(R.id.add_goal);
@@ -173,7 +185,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         // If dark theme is being used, set the floating action buttons to the dark drawable
         // Set other icons and text colors to black theme colors as well
-        if (ThemeHelper.getTheme() == R.style.BlackAppTheme) {
+        if (PreferenceHelper.getTheme() == R.style.BlackAppTheme) {
             mAddGoalButton.setImageResource(R.drawable.ic_goal_black);
             mAddHabitButton.setImageResource(R.drawable.ic_habit_black);
             mSettingsButton.setImageResource(R.drawable.ic_settings_black);
@@ -205,6 +217,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         //Initialize loader for goals data
         getLoaderManager().initLoader(GOALSHABITS_LOADER, null, this);
+
 
 
     }
@@ -252,6 +265,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             mEmptyViewText1.setVisibility(View.VISIBLE);
             mEmptyViewText2.setVisibility(View.VISIBLE);
             mStreakrLogo.setVisibility(View.VISIBLE);
+            mAdView.setVisibility(View.GONE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmptyViewArrow1.setVisibility(View.INVISIBLE);
@@ -259,6 +273,9 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             mEmptyViewText1.setVisibility(View.INVISIBLE);
             mEmptyViewText2.setVisibility(View.INVISIBLE);
             mStreakrLogo.setVisibility(View.INVISIBLE);
+            if (!mAdFree){
+                mAdView.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -297,11 +314,15 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
 
-        // Display the interstitial ad
-        if (mInterstitial.isLoaded()){
-            mInterstitial.show();
-        }
+        // Display the interstitial ad if user has not purchased "adFree"
 
+        if (!mAdFree ) {
+
+            if (mInterstitial.isLoaded()) {
+                mInterstitial.show();
+            }
+
+        }
     }
 
     // Start dragging the viewHolder when the startDrag callback is received from the GoalRecyclerAdapter
@@ -315,8 +336,11 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     protected void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mInterstitial.loadAd(adRequest);
+
+        if (!mAdFree ) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mInterstitial.loadAd(adRequest);
+        }
     }
 
 
@@ -325,6 +349,11 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         setTheme(sharedPreferences);
         mShowCompletedGoals = sharedPreferences.getBoolean(getString(R.string.pref_show_completed_goals_key),
                 getResources().getBoolean(R.bool.pref_show_goals_default));
+        //Determine if the user has purchased ad removal using shared preferences boolean value for ad removal.
+        //If they have, set the mAdFree boolean value in the PreferenceHelper used throughout the app so that
+        //other activities will know whether or not to remove ads.
+        mAdFree = sharedPreferences.getBoolean(getResources().getString(R.string.pref_remove_ads_key), false);
+        setAdFree(mAdFree);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -339,10 +368,12 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
             mShowCompletedGoals = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_show_goals_default));
             getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
+        } else if (key.equals((getString(R.string.pref_remove_ads_key)))){
+            mAdFree = sharedPreferences.getBoolean(key, false);
+            GoalsHabitsFeatureActivity.this.recreate();
         }
 
     }
-
 
 
     private void setTheme(SharedPreferences sharedPreferences) {
@@ -351,22 +382,22 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
         if (theme.equals(getString(R.string.settings_theme_value_default))) {
             setTheme(R.style.AppTheme);
-            ThemeHelper.setTheme(R.style.AppTheme);
+            PreferenceHelper.setTheme(R.style.AppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
             setTheme(R.style.PinkAppTheme);
-            ThemeHelper.setTheme(R.style.PinkAppTheme);
+            PreferenceHelper.setTheme(R.style.PinkAppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_blue))) {
             setTheme(R.style.BlueAppTheme);
-            ThemeHelper.setTheme(R.style.BlueAppTheme);
+            PreferenceHelper.setTheme(R.style.BlueAppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_red))) {
             setTheme(R.style.RedAppTheme);
-            ThemeHelper.setTheme(R.style.RedAppTheme);
+            PreferenceHelper.setTheme(R.style.RedAppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_black))) {
             setTheme(R.style.BlackAppTheme);
-            ThemeHelper.setTheme(R.style.BlackAppTheme);
+            PreferenceHelper.setTheme(R.style.BlackAppTheme);
         } else {
             setTheme(R.style.AppTheme);
-            ThemeHelper.setTheme(R.style.AppTheme);
+            PreferenceHelper.setTheme(R.style.AppTheme);
         }
 
     }

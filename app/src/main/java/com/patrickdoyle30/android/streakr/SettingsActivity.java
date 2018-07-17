@@ -5,7 +5,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.PreferenceHelper;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -34,22 +34,22 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         String theme = (sharedPreferences.getString(getString(R.string.settings_theme_key), getString(R.string.settings_theme_value_default)));
         if (theme.equals(getString(R.string.settings_theme_value_default))) {
             setTheme(R.style.AppTheme);
-            ThemeHelper.setTheme(R.style.AppTheme);
+            PreferenceHelper.setTheme(R.style.AppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_pink))) {
             setTheme(R.style.PinkAppTheme);
-            ThemeHelper.setTheme(R.style.PinkAppTheme);
+            PreferenceHelper.setTheme(R.style.PinkAppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_blue))) {
             setTheme(R.style.BlueAppTheme);
-            ThemeHelper.setTheme(R.style.BlueAppTheme);
+            PreferenceHelper.setTheme(R.style.BlueAppTheme);
         } else if (theme.equals(getString(R.string.settings_theme_value_red))) {
             setTheme(R.style.RedAppTheme);
-            ThemeHelper.setTheme(R.style.RedAppTheme);
+            PreferenceHelper.setTheme(R.style.RedAppTheme);
         }else if (theme.equals(getString(R.string.settings_theme_value_black))) {
             setTheme(R.style.BlackAppTheme);
-            ThemeHelper.setTheme(R.style.BlackAppTheme);
+            PreferenceHelper.setTheme(R.style.BlackAppTheme);
         }else {
             setTheme(R.style.AppTheme);
-            ThemeHelper.setTheme(R.style.AppTheme);
+            PreferenceHelper.setTheme(R.style.AppTheme);
         }
 
     }

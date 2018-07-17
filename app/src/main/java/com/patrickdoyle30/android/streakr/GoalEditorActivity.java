@@ -34,7 +34,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
-import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.PreferenceHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +50,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private boolean mLoadingNote = false;
 
     private AdView mAdView;
+    private Boolean mAdFree = false;
 
     private int mNumberOfGoals;
     private int mNumberOfStreaks;
@@ -128,19 +129,27 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Set up theme from user-selected shared preference theme before activity is created
-        setTheme(ThemeHelper.getTheme());
+        setTheme(PreferenceHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goal_editor);
         getSupportActionBar().hide();
 
+        // Determine if the user has purchased adFree.  This boolean value will be used to remove ads
+        mAdFree = PreferenceHelper.getAdFree();
+
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
 
-        //Load the AdView to display banner advertisement
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView = (AdView)this.findViewById(R.id.adView);
-        mAdView.loadAd(adRequest);
-
+        //If user hasn't purchased adFree, load the AdView to display banner advertisement.  Otherwise,
+        // remove advertisement
+        if (!mAdFree) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView = (AdView) this.findViewById(R.id.adView);
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView = (AdView) this.findViewById(R.id.adView);
+            mAdView.setVisibility(View.GONE);
+        }
 
         //Get the intent that created activity to determine if activity should be in "insert mode"
         //for inserting a new goal or "edit mode" for editing an existing goal.
@@ -451,7 +460,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         //Dialog box to prompt user if they are sure they would like to complete the goal/habit
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, PreferenceHelper.getPopUpTheme()));
         //If the goal is complete, restart the goal and set dialogue text accordingly
         //If the goal is not complete, complete the goal and set the dialogue text accordingly
         if (mGoalComplete == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
@@ -966,7 +975,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     }
 
     private void showResetStreakDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme())).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, PreferenceHelper.getPopUpTheme())).create();
         alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_header));
         alertDialog.setMessage(GoalEditorActivity.this.getResources().getString(R.string.reset_streak_message));
 
@@ -1037,7 +1046,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
         // Dialog to confirm if user wants to delete goal
 
-        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme())).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, PreferenceHelper.getPopUpTheme())).create();
         if (mGoalOrHabit == GoalsHabitsEntry.HABIT) {
             alertDialog.setTitle(GoalEditorActivity.this.getResources().getString(R.string.delete_habit_header));
         } else {
@@ -1140,7 +1149,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, ThemeHelper.getPopUpTheme()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, PreferenceHelper.getPopUpTheme()));
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
@@ -1251,7 +1260,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
 
 
             // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), ThemeHelper.getPopUpTheme(), (GoalEditorActivity) getActivity(), year, month, day);
+            return new DatePickerDialog(getActivity(), PreferenceHelper.getPopUpTheme(), (GoalEditorActivity) getActivity(), year, month, day);
         }
 
 

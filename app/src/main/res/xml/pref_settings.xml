@@ -22,4 +22,8 @@
             />
     </Preference>
 
+    <Preference android:title="@string/pref_remove_ads" >
+        <intent android:action="inAppBilling.intent.action"
+            />
+    </Preference>
 </PreferenceScreen>

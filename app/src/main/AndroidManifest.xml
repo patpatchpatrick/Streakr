@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.patrickdoyle30.android.streakr">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/streakr_icon"
@@ -9,8 +13,8 @@
         android:roundIcon="@drawable/streakr_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
@@ -35,21 +39,25 @@
         <activity android:name=".StreakDetailsActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".GoalsHabitsFeatureActivity"></activity>
+            android:parentActivityName=".GoalsHabitsFeatureActivity" />
         <activity android:name=".Libraries">
             <intent-filter>
-                <action android:name="libraries.intent.action"/>
+                <action android:name="libraries.intent.action" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity android:name=".InAppBillingActivity">
+            <intent-filter>
+                <action android:name="inAppBilling.intent.action" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="com.android.vending.BILLING" />
-
 
 </manifest>

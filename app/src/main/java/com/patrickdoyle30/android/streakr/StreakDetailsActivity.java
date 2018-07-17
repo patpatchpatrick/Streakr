@@ -34,7 +34,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.data.LTContract.StreaksEntry;
-import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.PreferenceHelper;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
@@ -53,6 +53,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
     private static final int STREAK_LOADER = 2;
 
     private AdView mAdView;
+    private Boolean mAdFree = false;
 
     private int mCurrentGoalID = -1;
     private long mCurrentStreakLengthDays = -1;
@@ -76,16 +77,25 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeHelper.getTheme());
+        setTheme(PreferenceHelper.getTheme());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streak_details);
         setTitle(R.string.streak_details);
         getSupportActionBar().hide();
 
-        //Load the AdView to display banner advertisement
-        AdRequest adRequest=new AdRequest.Builder().build();
-        mAdView=(AdView)this.findViewById(R.id.adView);
-        mAdView.loadAd(adRequest);
+        //Determine if user has paid for ad removal
+        mAdFree = PreferenceHelper.getAdFree();
+
+        //If user hasn't purchase adFree, load the AdView to display banner advertisement.  Otherwise,
+        // remove the adView
+        if (!mAdFree) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView = (AdView) this.findViewById(R.id.adView);
+            mAdView.loadAd(adRequest);
+        } else {
+            mAdView = (AdView) this.findViewById(R.id.adView);
+            mAdView.setVisibility(View.GONE);
+        }
 
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
@@ -343,7 +353,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         int backgroundColor;
         int axisColor;
         int seriesColor;
-        int theme = ThemeHelper.getTheme();
+        int theme = PreferenceHelper.getTheme();
 
         if (theme == R.style.PinkAppTheme) {
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkPink);
@@ -361,7 +371,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDarkBlack);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIconsBlack);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccentBlack);
-        }else {
+        } else {
             backgroundColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorPrimaryDark);
             axisColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorTextAndIcons);
             seriesColor = ContextCompat.getColor(StreakDetailsActivity.this, R.color.colorAccent);
@@ -374,7 +384,7 @@ public class StreakDetailsActivity extends AppCompatActivity implements LoaderMa
         gridLabelRenderer.setHorizontalLabelsColor(axisColor);
         gridLabelRenderer.setVerticalLabelsColor(axisColor);
         //For tablets, a "big screen" tag is applied to the GraphView and text size is made bigger on the graph.
-        if (mStreakGraph.getTag().toString().equals(this.getResources().getString(R.string.wide_screen))){
+        if (mStreakGraph.getTag().toString().equals(this.getResources().getString(R.string.wide_screen))) {
             gridLabelRenderer.setTextSize(48f);
             gridLabelRenderer.reloadStyles();
         }

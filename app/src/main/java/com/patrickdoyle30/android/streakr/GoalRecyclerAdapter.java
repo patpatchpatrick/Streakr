@@ -23,7 +23,7 @@ import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
 import com.patrickdoyle30.android.streakr.data.LTContract;
 import com.patrickdoyle30.android.streakr.helper.OnStartDragListener;
 import com.patrickdoyle30.android.streakr.helper.PercentView;
-import com.patrickdoyle30.android.streakr.helper.ThemeHelper;
+import com.patrickdoyle30.android.streakr.helper.PreferenceHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -279,7 +279,7 @@ public class GoalRecyclerAdapter extends RecyclerView.Adapter<GoalRecyclerAdapte
             streakDetailsString += Integer.toString(streakCompletionPercent) + "%";
         }
 
-        int currentTheme = ThemeHelper.getTheme();
+        int currentTheme = PreferenceHelper.getTheme();
 
         if (goalCompleted == GoalsHabitsEntry.GOAL_COMPLETED_YES) {
             //If the goal is completed, show the comppleted goal star icon and show a full percentView

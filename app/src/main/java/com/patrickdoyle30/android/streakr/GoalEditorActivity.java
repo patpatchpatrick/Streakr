@@ -10,9 +10,12 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.PersistableBundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,7 +55,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
     private AdView mAdView;
     private Boolean mAdFree = false;
 
-    private int mNumberOfGoals;
+    private int mTotalNumberOfGoals;
     private int mNumberOfStreaks;
     private int mGoalOrHabit;
     private int mDateType;
@@ -159,9 +162,8 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         //Check if you are editing a goal or a habit. if neither then set the default value to NEITHER
         mGoalOrHabit = intent.getIntExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.NEITHER);
 
-        //Determine the number of goals in cursor received from GoalsHabitsFeatureActivity
-        //Use this number to determine what the goal order of new goal should be
-        mNumberOfGoals = intent.getIntExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, -2);
+        //Get the total number of goals from pref helper (used to determine goal order)
+        mTotalNumberOfGoals = PreferenceHelper.getTotalGoals();
 
         //Find views to read user input from
         mGoalTypeEditText = (EditText) findViewById(R.id.goal_type_edit_text);
@@ -240,7 +242,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 mCurrentGoalID = savedInstanceState.getInt(LIFECYCLE_CURRENT_GOAL_ID);
             }
             if (savedInstanceState.containsKey(LIFECYCLE_NUMBER_OF_GOALS)) {
-                mNumberOfGoals = savedInstanceState.getInt(LIFECYCLE_NUMBER_OF_GOALS);
+                mTotalNumberOfGoals = savedInstanceState.getInt(LIFECYCLE_NUMBER_OF_GOALS);
             }
             if (savedInstanceState.containsKey(LIFECYCLE_CURRENT_URI)) {
                 mCurrentGoalUri = Uri.parse(savedInstanceState.getString(LIFECYCLE_CURRENT_URI));
@@ -339,6 +341,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                 if (mCurrentGoalUri == null) {
                     //Insert Goal when Add Goal button is clicked if in "Insert Mode"
                     goalUpdatedorInserted = insertGoal();
+                    if (goalUpdatedorInserted){
+                        // If goal successfully inserted, update total number of goals.
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(GoalEditorActivity.this);
+                        PreferenceHelper.setTotalGoals(mTotalNumberOfGoals, sharedPreferences, GoalEditorActivity.this);
+                    }
                 } else {
                     //Update Gal when Add Goal button is clicked  if in "Edit Mode"
                     goalUpdatedorInserted = updateGoal();
@@ -554,9 +561,11 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         long startDate = dateToUnixTime(mStartYear, mStartMonth, mStartDay);
         long endDate = dateToUnixTime(mEndYear, mEndMonth, mEndDay);
 
+        //Increate total  number of goals by 1
+        mTotalNumberOfGoals++;
 
         ContentValues values = new ContentValues();
-        values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberOfGoals);
+        values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mTotalNumberOfGoals);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_NAME, nameString);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, mGoalOrHabit);
         values.put(GoalsHabitsEntry.COLUMN_GOAL_TYPE, goalTypeString);
@@ -1089,7 +1098,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         //from the goal's order to account for deleted goal and update the database
                         String selection = GoalsHabitsEntry.COLUMN_GOAL_ORDER + "=?";
                         String[] selectionArgs;
-                        for (int firstGoalToUpdate = currentGoalOrder + 1; firstGoalToUpdate <= mNumberOfGoals; firstGoalToUpdate++) {
+                        for (int firstGoalToUpdate = currentGoalOrder + 1; firstGoalToUpdate <= mTotalNumberOfGoals; firstGoalToUpdate++) {
                             selectionArgs = new String[]{String.valueOf(firstGoalToUpdate)};
                             ContentValues values = new ContentValues();
                             values.put(GoalsHabitsEntry.COLUMN_GOAL_ORDER, firstGoalToUpdate - 1);
@@ -1105,6 +1114,10 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         } else {
                             Toast.makeText(GoalEditorActivity.this, GoalEditorActivity.this.getResources().getString(R.string.goal_deleted), Toast.LENGTH_SHORT).show();
                         }
+                        //Decrease total number of goals and notify the preference helper to set sharedPreference value
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(GoalEditorActivity.this);
+                        mTotalNumberOfGoals--;
+                        PreferenceHelper.setTotalGoals(mTotalNumberOfGoals, sharedPreferences, GoalEditorActivity.this);
                         clearStartAndEndDates();
                         clearFailDate();
                         finish();
@@ -1348,7 +1361,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putString(LIFECYCLE_STREAK_DATA, streakDataString);
         outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
-        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
+        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mTotalNumberOfGoals);
 
     }
 
@@ -1385,7 +1398,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
         outState.putString(LIFECYCLE_STREAK_DATA, streakDataString);
         outState.putString(LIFECYCLE_STREAK_DATA_LENGTH, streakDataLengthString);
         outState.putInt(LIFECYCLE_CURRENT_GOAL_ID, mCurrentGoalID);
-        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mNumberOfGoals);
+        outState.putInt(LIFECYCLE_NUMBER_OF_GOALS, mTotalNumberOfGoals);
         outState.putLong(LIFECYCLE_STREAK_LENGTH, mStreakLengthDays);
         outState.putInt(GoalsHabitsEntry.COLUMN_GOAL_COMPLETED, mGoalComplete);
 

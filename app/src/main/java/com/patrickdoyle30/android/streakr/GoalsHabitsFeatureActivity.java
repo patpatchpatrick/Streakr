@@ -46,6 +46,7 @@ import java.util.HashMap;
 
 import static android.support.v7.widget.DividerItemDecoration.HORIZONTAL;
 import static com.patrickdoyle30.android.streakr.helper.PreferenceHelper.setAdFree;
+import static com.patrickdoyle30.android.streakr.helper.PreferenceHelper.setTotalGoals;
 
 public class GoalsHabitsFeatureActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, GoalRecyclerAdapter.ListItemClickListener, OnStartDragListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -64,7 +65,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
     private TextView mEmptyViewText2;
     private GoalRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemtouchHelper;
-    private Integer mNumberGoals = -2;
+    private Integer mTotalNumberGoals = -2;
     private ImageView mSettingsButton;
     private boolean mShowCompletedGoals;
     private boolean mAdFree = false;
@@ -136,15 +137,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
 
-                // If number of goals  is not fully loaded (i.e. is still the default of -2), return
-                // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
-                //  This data is used to determine goal order (used for drag and drop functionality)
-                if (mNumberGoals == -2) {
-                    Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
-                            Toast.LENGTH_SHORT);
-                    return;
-                }
-                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
                 //Send over an extra int to indicate editing a goal
                 intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.GOAL);
@@ -164,15 +156,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
                 //New intent to open the editor activity in "insert mode"
                 Intent intent = new Intent(GoalsHabitsFeatureActivity.this, GoalEditorActivity.class);
 
-                // If number of goals  is not fully loaded (i.e. is still the default of -2), return
-                // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
-                //  This data is used to determine goal order (used for drag and drop functionality)
-                if (mNumberGoals == -2) {
-                    Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
-                            Toast.LENGTH_SHORT);
-                    return;
-                }
-                intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
                 //Send over an extra int to indicate editing a habit
                 intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_OR_HABIT, GoalsHabitsEntry.HABIT);
@@ -256,7 +239,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
         //Pass in the new cursor and whether or not completed goals should be shown
         mAdapter.swapCursor(cursor);
-        mNumberGoals = cursor.getCount();
 
         if (mAdapter.getItemCount() <= 0) {
             mRecyclerView.setVisibility(View.INVISIBLE);
@@ -301,15 +283,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         //Set the data on the intent to be the current URI
         intent.setData(currentGoalUri);
 
-        // If number of goals  is not fully loaded (i.e. is still the default of -2), return
-        // If number of goals is loaded, pass over the data of number of cursor goals to editor activity
-        //  This data is used to determine goal order (used for drag and drop functionality)
-        if (mNumberGoals == -2) {
-            Toast.makeText(GoalsHabitsFeatureActivity.this, GoalsHabitsFeatureActivity.this.getResources().getString(R.string.please_wait_data_load),
-                    Toast.LENGTH_SHORT);
-            return;
-        }
-        intent.putExtra(GoalsHabitsEntry.COLUMN_GOAL_ORDER, mNumberGoals);
 
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
@@ -354,6 +327,9 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         //other activities will know whether or not to remove ads.
         mAdFree = sharedPreferences.getBoolean(getResources().getString(R.string.pref_remove_ads_key), false);
         setAdFree(mAdFree);
+        //Get the total  current number of goals and set it on the preference helper
+        mTotalNumberGoals = sharedPreferences.getInt(getResources().getString(R.string.pref_total_goals_key), 0);
+        setTotalGoals(mTotalNumberGoals, sharedPreferences, this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 

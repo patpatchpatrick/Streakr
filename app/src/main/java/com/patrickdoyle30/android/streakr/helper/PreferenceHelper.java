@@ -1,5 +1,10 @@
 package com.patrickdoyle30.android.streakr.helper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.patrickdoyle30.android.streakr.GoalEditorActivity;
 import com.patrickdoyle30.android.streakr.R;
 
 public final class PreferenceHelper {
@@ -10,6 +15,7 @@ public final class PreferenceHelper {
 
     private static int mTheme;
     private static boolean mAdFree;
+    private static int mTotalGoals;
 
     private PreferenceHelper() {
     }
@@ -22,6 +28,17 @@ public final class PreferenceHelper {
         } else {
             mAdFree = false;
         }
+    }
+
+    public static void setTotalGoals(int totalGoals, SharedPreferences sharedPreferences, Context context){
+        //Keep track of total number of goals (used to track order of goals in recyclerview in goalshabitsfeature activity
+        sharedPreferences.edit().putInt(context.getResources().getString(R.string.pref_total_goals_key),  totalGoals).commit();
+        mTotalGoals = totalGoals;
+    }
+
+    public static int getTotalGoals(){
+        //Keep track of total number of goals (used to track order of goals in recyclerview in goalshabitsfeature activity
+        return mTotalGoals;
     }
 
     public static boolean getAdFree(){

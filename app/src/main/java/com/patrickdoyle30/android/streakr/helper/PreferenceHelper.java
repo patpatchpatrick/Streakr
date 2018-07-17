@@ -4,7 +4,9 @@ import com.patrickdoyle30.android.streakr.R;
 
 public final class PreferenceHelper {
 
+    //Class to help set preferences throughout the app (track themes and in-app purchases
     //Class to help set menus, colors, etc... based on whichever theme the user has selected
+
 
     private static int mTheme;
     private static boolean mAdFree;
@@ -13,6 +15,8 @@ public final class PreferenceHelper {
     }
 
     public static void setAdFree(Boolean adFreePaidFor) {
+        //Track if user has purchased "ad removal" for the app.  This check is used throughout the app
+        //to determine whether or not to show ads.
         if (adFreePaidFor){
             mAdFree = true;
         } else {

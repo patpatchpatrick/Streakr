@@ -79,6 +79,7 @@
     <string name="all_fields_populated">All Fields Must Be Populated</string>
     <string name="date_fields_populated">Date Fields Must Be Populated</string>
     <string name="please_wait_data_load">Please Wait for Data to Load</string>
+    <string name="billing_connection_failure">Billing connection not established. Connect to a network and retry.</string>
 
     <!-- Streak Details Strings [CHAR LIMIT=TBD] -->
     <string name="streak_details">Streak Details</string>

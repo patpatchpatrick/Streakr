@@ -104,6 +104,7 @@
     <string name="pref_show_completed_goals_key" translatable="false">show_completed_goals</string>
     <string name="pref_show_completed_goals_title">Show Completed Goals</string>
     <string name="pref_libraries">Libraries/Licenses</string>
+    <string name="pref_privacy_policy">Privacy Policy</string>
     <string name="pref_remove_ads">Remove Advertisements</string>
     <string name="pref_ad_removal_purchased">Ad Removal Purchased</string>
     <string name="pref_remove_ads_key">adFree</string>

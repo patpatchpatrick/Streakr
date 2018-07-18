@@ -17,13 +17,20 @@
         android:key="@string/pref_show_completed_goals_key"
         android:title="@string/pref_show_completed_goals_title" />
 
+    <Preference android:title="@string/pref_remove_ads" >
+        <intent android:action="inAppBilling.intent.action"
+            />
+    </Preference>
+
     <Preference android:title="@string/pref_libraries" >
         <intent android:action="libraries.intent.action"
             />
     </Preference>
 
-    <Preference android:title="@string/pref_remove_ads" >
-        <intent android:action="inAppBilling.intent.action"
+    <Preference android:title="@string/pref_privacy_policy" >
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/patpatchpatrick/Streakr/blob/master/Streakr%20Privacy%20Policy.txt"
             />
     </Preference>
+
 </PreferenceScreen>

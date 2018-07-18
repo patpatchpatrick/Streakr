@@ -86,6 +86,13 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         //Load the AdView to display banner advertisement
         AdRequest adRequestBanner = new AdRequest.Builder().build();
         mAdView = (AdView) this.findViewById(R.id.adView);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                Log.d("Banner Ad Fail: ", "" + i);
+            }
+        });
 
         // If user has paid for "adFree", then don't show the adView
         if (mAdFree) {
@@ -106,17 +113,17 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         if (!mAdFree ) {
 
             mInterstitial = new InterstitialAd(this);
-            mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+            mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id_real));
             mInterstitial.setAdListener(new AdListener() {
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
-                    Toast.makeText(GoalsHabitsFeatureActivity.this, "Ad Loaded", Toast.LENGTH_SHORT);
                 }
 
                 @Override
                 public void onAdFailedToLoad(int i) {
                     super.onAdFailedToLoad(i);
+                    Log.d("Inter Ad Fail: ", "" + i);
                 }
 
                 @Override
@@ -296,6 +303,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
             if (mInterstitial.isLoaded()) {
                 mInterstitial.show();
+            } else {
+                Log.d(TAG, "The interstitial wasn't loaded yet.");
             }
 
         }

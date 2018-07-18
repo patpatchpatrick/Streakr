@@ -125,7 +125,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"
+            ads:adUnitId="@string/banner_ad_unit_id_real"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ></com.google.android.gms.ads.AdView>

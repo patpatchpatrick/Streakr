@@ -146,7 +146,7 @@ See the License for the specific language governing permissions and
 limitations under the License.</string>
 
     <!-- Ads Strings [CHAR LIMIT=TBD] -->
-    <string name="banner_ad_unit_id">ca-app-pub-9852829648923660/9713600466</string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-9852829648923660/7634232034</string>
+    <string name="banner_ad_unit_id_real">ca-app-pub-9852829648923660/9713600466</string>
+    <string name="interstitial_ad_unit_id_real">ca-app-pub-9852829648923660/7634232034</string>
 
 </resources>

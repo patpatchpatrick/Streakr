@@ -14,4 +14,4 @@ Android Goal and Habit Tracking App
 
 It's time to reorganize your life and improve your efficiency.  Get your life back on track!  Get Streaking with Streakr!
 
-![Streakr Screenshots](https://raw.githubusercontent.com/patpatchpatrick/Streakr/master/app/docs/images/streakr-screenshots.png)
+![Streakr Screenshots](https://raw.githubusercontent.com/patpatchpatrick/Streakr/master/app/docs/images/streakr-website-project-page.png)

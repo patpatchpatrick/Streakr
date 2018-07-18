@@ -1,6 +1,8 @@
 # Streakr
 Android Goal and Habit Tracking App 
 
+[View on Google Play Store](https://play.google.com/store/apps/details?id=com.patrickdoyle30.android.streakr)
+
 <b>Eliminate your habits and accomplish your goals with Streakr!  Streakr is a simple to use app to track goals and habits, go on streaks and organize your life!</b>
 
 📈 With Streakr, you can easily see how your streaks are trending over time and keep track of your progress to ensure you're heading in the right direction.  Continue to improve your streak and increase performance.  Win the battle against yourself!

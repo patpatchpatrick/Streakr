@@ -36,6 +36,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.patrickdoyle30.android.streakr.data.LTContract.GoalsHabitsEntry;
 import com.patrickdoyle30.android.streakr.helper.GoalItemTouchHelperCallback;
 import com.patrickdoyle30.android.streakr.helper.ItemTouchHelperAdapter;
@@ -79,6 +80,8 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         getSupportActionBar().hide();
         //Set background drawable to null to increase performance (decrease overdraw) since we are drawing a background over it
         getWindow().setBackgroundDrawable(null);
+
+        MobileAds.initialize(this, "ca-app-pub-9852829648923660~9358377247");
 
         //Load the AdView to display banner advertisement
         AdRequest adRequestBanner = new AdRequest.Builder().build();

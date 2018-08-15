@@ -55,7 +55,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
 
     private static final int GOALSHABITS_LOADER = 0;
 
-    private InterstitialAd mInterstitial;
     private AdView mAdView;
 
     private RecyclerView mRecyclerView;
@@ -108,34 +107,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         mEmptyViewText2 = (TextView) findViewById(R.id.recycler_empty_view_text_2);
 
 
-        // If the user has not purchased ad removal, create and load a new interstitial ad (displayed in onListItemClickListener)
-
-        if (!mAdFree ) {
-
-            mInterstitial = new InterstitialAd(this);
-            mInterstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id_real));
-            mInterstitial.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                }
-
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    super.onAdFailedToLoad(i);
-                    Log.d("Inter Ad Fail: ", "" + i);
-                }
-
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-
-                }
-            });
-
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mInterstitial.loadAd(adRequest);
-        }
 
         // Add new goal button
         FloatingActionButton mAddGoalButton = (FloatingActionButton) findViewById(R.id.add_goal);
@@ -297,17 +268,7 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         // Launch the intent to the editor activity to open the activity in "edit mode"
         startActivity(intent);
 
-        // Display the interstitial ad if user has not purchased "adFree"
 
-        if (!mAdFree ) {
-
-            if (mInterstitial.isLoaded()) {
-                mInterstitial.show();
-            } else {
-                Log.d(TAG, "The interstitial wasn't loaded yet.");
-            }
-
-        }
     }
 
     // Start dragging the viewHolder when the startDrag callback is received from the GoalRecyclerAdapter
@@ -322,10 +283,6 @@ public class GoalsHabitsFeatureActivity extends AppCompatActivity implements Loa
         super.onResume();
         getLoaderManager().restartLoader(GOALSHABITS_LOADER, null, this);
 
-        if (!mAdFree ) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mInterstitial.loadAd(adRequest);
-        }
     }
 
 

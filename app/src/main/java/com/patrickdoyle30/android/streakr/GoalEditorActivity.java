@@ -1029,6 +1029,7 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                         //so that a new streak can be started
                         if (insertStreak()) {
                             clearFailDate();
+                            resetStartDate();
                         }
                     }
                 });
@@ -1049,6 +1050,18 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
                     }
                 });
         alertDialog.show();
+    }
+
+    private void resetStartDate() {
+        Calendar startCal =  Calendar.getInstance();
+        mStartYear = startCal.get(Calendar.YEAR);
+        mStartMonth = startCal.get(Calendar.MONTH);
+        mStartDay = startCal.get(Calendar.DAY_OF_MONTH);
+        mStartDateSet = true;
+        long startDateMillis = dateToUnixTime(mStartYear, mStartMonth, mStartDay) * 1000;
+        SimpleDateFormat startSdf = new SimpleDateFormat("MMMM d, yyyy");
+        String startDateString = startSdf.format(startDateMillis);
+        mGoalStartDateDisplay.setText(startDateString);
     }
 
     private void showDeleteGoalDialog() {
@@ -1410,8 +1423,12 @@ public class GoalEditorActivity extends AppCompatActivity implements DatePickerD
             mNotesButton.setBackgroundDrawable(ContextCompat.getDrawable(GoalEditorActivity.this, R.drawable.ic_blank_note));
         } else {
             mNotesButton.setBackgroundDrawable(ContextCompat.getDrawable(GoalEditorActivity.this, R.drawable.ic_notesvg));
+            String[] test = {"yo", "hii"};
+            test[0].charAt(0);
         }
     }
+
+
 
 
 }

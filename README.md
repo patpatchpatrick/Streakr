@@ -10,6 +10,7 @@ Android Goal and Habit Tracking App
 ❌<b>Defeat a habit.</b>  Is there a vice or habit you want to get rid of but are struggling to do so?  With Streakr, you can track your historical progress to make sure you're headed in the right direction. You can associate each streak with a note.  Use notes to track what is working and what is not.  Shoot for longer and longer streaks until you eliminate your habit once and for all!
 
 💥<b>NEW</b> Custom Themes to Personalize Your App Experience!
+
 💥<b>NEW</b> Remove Ads with One-Time In App Purchase!
 
 It's time to reorganize your life and improve your efficiency.  Get your life back on track!  Get Streaking with Streakr!

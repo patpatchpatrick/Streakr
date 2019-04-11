@@ -1,6 +1,8 @@
 # Streakr
 Android Goal and Habit Tracking App 
 
+[Medium Article Discussing How I Integrated Google Play Billing Library into App](https://medium.com/@patpatchpatrick/adding-the-google-play-billing-library-to-your-application-fbeb9ec03151 "Medium Article Discussing How I Integrated Google Play Billing Library into App")
+
 ### 1. Track Streaks of Goals/Habits.  View Historical Data to Track Progres. 
 
 ![Streakr Screenshots](https://raw.githubusercontent.com/patpatchpatrick/Streakr/master/app/docs/images/gif1.gif)
